@@ -64,8 +64,42 @@
                                     Command="{Binding DataContext.SelectCellCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                     CommandParameter="{Binding}">
                                 <Grid Width="50" Height="50">
+                                    <Polygon Points="11,18 18,4 25,20"
+                                             Fill="{Binding Piece.EarBrush}"
+                                             Stroke="#70452C"
+                                             StrokeThickness="1"
+                                             Opacity="0">
+                                        <Polygon.Style>
+                                            <Style TargetType="Polygon">
+                                                <Setter Property="Opacity" Value="0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsOccupied}" Value="True">
+                                                        <Setter Property="Opacity" Value="1" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Polygon.Style>
+                                    </Polygon>
+                                    <Polygon Points="25,20 32,4 39,18"
+                                             Fill="{Binding Piece.EarBrush}"
+                                             Stroke="#70452C"
+                                             StrokeThickness="1">
+                                        <Polygon.Style>
+                                            <Style TargetType="Polygon">
+                                                <Setter Property="Opacity" Value="0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsOccupied}" Value="True">
+                                                        <Setter Property="Opacity" Value="1" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Polygon.Style>
+                                    </Polygon>
                                     <Ellipse x:Name="PieceBody"
-                                             Fill="{Binding PieceBrush}"
+                                             Width="42"
+                                             Height="42"
+                                             Margin="4,8,4,0"
+                                             Fill="{Binding Piece.BodyBrush}"
                                              Stroke="#70452C"
                                              StrokeThickness="2">
                                         <Ellipse.Style>
@@ -79,12 +113,13 @@
                                             </Style>
                                         </Ellipse.Style>
                                     </Ellipse>
-                                    <TextBlock Text="{Binding FaceText}"
+                                    <TextBlock Text="{Binding Piece.FaceText}"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
+                                               Margin="0,8,0,0"
                                                FontWeight="Bold"
                                                FontSize="11"
-                                               Foreground="#FFF9F0" />
+                                               Foreground="{Binding Piece.FaceBrush}" />
                                     <Border BorderBrush="#FFE06B"
                                             BorderThickness="3"
                                             CornerRadius="25"
@@ -165,12 +200,31 @@
                             <DataTemplate>
                                 <Border Background="{StaticResource CellHoverBrush}"
                                         CornerRadius="14"
-                                        Padding="10,6"
+                                        Padding="8"
                                         Margin="0,0,8,0">
-                                    <TextBlock Text="{Binding}"
-                                               Foreground="{StaticResource TextPrimaryBrush}"
-                                               FontSize="13"
-                                               FontWeight="SemiBold" />
+                                    <Grid Width="42" Height="36">
+                                        <Polygon Points="9,14 15,3 21,16"
+                                                 Fill="{Binding EarBrush}"
+                                                 Stroke="#70452C"
+                                                 StrokeThickness="1" />
+                                        <Polygon Points="21,16 27,3 33,14"
+                                                 Fill="{Binding EarBrush}"
+                                                 Stroke="#70452C"
+                                                 StrokeThickness="1" />
+                                        <Ellipse Width="34"
+                                                 Height="30"
+                                                 Margin="4,8,4,0"
+                                                 Fill="{Binding BodyBrush}"
+                                                 Stroke="#70452C"
+                                                 StrokeThickness="1" />
+                                        <TextBlock Text="{Binding Label}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,8,0,0"
+                                                   Foreground="{Binding FaceBrush}"
+                                                   FontSize="12"
+                                                   FontWeight="Bold" />
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
