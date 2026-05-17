@@ -68,28 +68,12 @@
                                              Fill="{Binding PieceBrush}"
                                              Stroke="#70452C"
                                              StrokeThickness="2"
-                                             Opacity="0"
-                                             RenderTransformOrigin="0.5,0.5">
-                                        <Ellipse.RenderTransform>
-                                            <ScaleTransform ScaleX="0.86" ScaleY="0.86" />
-                                        </Ellipse.RenderTransform>
+                                             Opacity="0">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsOccupied}" Value="True">
                                                         <Setter Property="Opacity" Value="1" />
-                                                        <DataTrigger.EnterActions>
-                                                            <BeginStoryboard>
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
-                                                                                     To="1"
-                                                                                     Duration="0:0:0.16" />
-                                                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
-                                                                                     To="1"
-                                                                                     Duration="0:0:0.16" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
