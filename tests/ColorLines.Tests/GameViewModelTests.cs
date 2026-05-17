@@ -175,6 +175,16 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void PieceViewModelProvidesThemeAssetPath()
+    {
+        var orange = PieceViewModel.FromPiece(PieceKind.Orange);
+        var blueGray = PieceViewModel.FromPiece(PieceKind.BlueGray);
+
+        Assert.Equal("/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/orange.png", orange.AssetPath);
+        Assert.Equal("/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/bluegray.png", blueGray.AssetPath);
+    }
+
+    [Fact]
     public void GameViewModelExposesDefaultThemeAndSettings()
     {
         var viewModel = GameViewModel.CreateForNewGame();

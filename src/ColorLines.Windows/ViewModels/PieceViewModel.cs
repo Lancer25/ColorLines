@@ -13,7 +13,8 @@ public sealed record PieceViewModel(
     Brush EarBrush,
     Brush HighlightBrush,
     Brush ShadowBrush,
-    Brush InnerEarBrush)
+    Brush InnerEarBrush,
+    string AssetPath)
 {
     public static PieceViewModel FromPiece(PieceKind piece)
     {
@@ -32,7 +33,8 @@ public sealed record PieceViewModel(
             bodyBrush,
             Brushes.White,
             new SolidColorBrush(Color.FromArgb(80, 74, 45, 35)),
-            Brushes.LightPink);
+            Brushes.LightPink,
+            ToAssetPath(piece));
     }
 
     private static string ToLabel(PieceKind piece)
@@ -63,5 +65,22 @@ public sealed record PieceViewModel(
             PieceKind.BlueGray => Brushes.SteelBlue,
             _ => Brushes.Transparent
         };
+    }
+
+    private static string ToAssetPath(PieceKind piece)
+    {
+        var fileName = piece switch
+        {
+            PieceKind.Orange => "orange",
+            PieceKind.Gray => "gray",
+            PieceKind.Tuxedo => "tuxedo",
+            PieceKind.Calico => "calico",
+            PieceKind.Black => "black",
+            PieceKind.White => "white",
+            PieceKind.BlueGray => "bluegray",
+            _ => string.Empty
+        };
+
+        return $"/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/{fileName}.png";
     }
 }

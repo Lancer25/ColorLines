@@ -24,10 +24,10 @@
 - Modify: `src/ColorLines.Windows/ViewModels/PieceViewModel.cs`
 - Modify: `tests/ColorLines.Tests/GameViewModelTests.cs`
 
-- [ ] Add a failing test named `PieceViewModelProvidesThemeAssetPath`.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter PieceViewModelProvidesThemeAssetPath`; expect compile failure for missing `AssetPath`.
-- [ ] Add `AssetPath` to `PieceViewModel` and map each `PieceKind` to `/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/<kind>.png`.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter GameViewModelTests`; expect pass.
+- [x] Add a failing test named `PieceViewModelProvidesThemeAssetPath`.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter PieceViewModelProvidesThemeAssetPath`; expect compile failure for missing `AssetPath`.
+- [x] Add `AssetPath` to `PieceViewModel` and map each `PieceKind` to `/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/<kind>.png`.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter GameViewModelTests`; expect pass.
 - [ ] Commit with `feat: map pieces to cat assets`.
 
 ## Task 2: Add First-Pass Cat PNG Assets
