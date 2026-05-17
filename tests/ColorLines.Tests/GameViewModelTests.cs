@@ -126,4 +126,24 @@ public sealed class GameViewModelTests
         Assert.Equal("=^.^=", cell.FaceText);
         Assert.True(cell.IsSelected);
     }
+
+    [Fact]
+    public void GameViewModelExposesDefaultThemeAndSettings()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        Assert.Equal("Cozy Board", viewModel.SelectedThemeName);
+        Assert.True(viewModel.IsSoundEnabled);
+        Assert.Equal("Full", viewModel.AnimationIntensity);
+    }
+
+    [Fact]
+    public void ToggleSoundSwitchesSoundSetting()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        viewModel.ToggleSoundCommand.Execute(null);
+
+        Assert.False(viewModel.IsSoundEnabled);
+    }
 }

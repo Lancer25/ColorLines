@@ -5,6 +5,7 @@ using System.Windows.Input;
 using ColorLines.Core.Board;
 using ColorLines.Core.Game;
 using ColorLines.Core.Rules;
+using ColorLines.Windows.Themes;
 
 namespace ColorLines.Windows.ViewModels;
 
@@ -16,6 +17,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private int score;
     private string statusText;
     private TurnFeedback feedback;
+    private bool isSoundEnabled;
+    private string animationIntensity;
 
     public GameViewModel(GameEngine engine, GameState state)
     {
@@ -24,10 +27,13 @@ public sealed class GameViewModel : INotifyPropertyChanged
         score = state.Score;
         statusText = "Select a cat to move.";
         feedback = TurnFeedback.Neutral;
+        isSoundEnabled = true;
+        animationIntensity = "Full";
         Cells = new ObservableCollection<CellViewModel>();
         NextPieces = new ObservableCollection<string>();
         SelectCellCommand = new RelayCommand(SelectCell, parameter => parameter is CellViewModel);
         NewGameCommand = new RelayCommand(_ => NewGame());
+        ToggleSoundCommand = new RelayCommand(_ => IsSoundEnabled = !IsSoundEnabled);
         RefreshFromState();
     }
 
@@ -40,6 +46,10 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public ICommand SelectCellCommand { get; }
 
     public ICommand NewGameCommand { get; }
+
+    public ICommand ToggleSoundCommand { get; }
+
+    public string SelectedThemeName => ThemeCatalog.DefaultTheme.DisplayName;
 
     public int Score
     {
@@ -85,6 +95,32 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public bool IsGameOver => state.Status == GameStatus.GameOver || Feedback.IsGameOver;
 
     public string ScoreDeltaText => Feedback.HasScore ? $"+{Feedback.ScoreDelta}" : string.Empty;
+
+    public bool IsSoundEnabled
+    {
+        get => isSoundEnabled;
+        private set
+        {
+            if (isSoundEnabled != value)
+            {
+                isSoundEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public string AnimationIntensity
+    {
+        get => animationIntensity;
+        private set
+        {
+            if (animationIntensity != value)
+            {
+                animationIntensity = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public static GameViewModel CreateForNewGame()
     {
