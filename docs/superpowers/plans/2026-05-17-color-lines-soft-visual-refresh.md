@@ -27,7 +27,7 @@
 - [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter PieceViewModelProvidesAvatarAccentBrushes`; expect compile failure for missing properties.
 - [x] Add `HighlightBrush`, `ShadowBrush`, and `InnerEarBrush` to `PieceViewModel`.
 - [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter GameViewModelTests`; expect pass.
-- [ ] Commit with `feat: add cat avatar accent brushes`.
+- [x] Commit with `feat: add cat avatar accent brushes`.
 
 ## Task 2: Replace Hard Rings With Soft Visuals
 
@@ -35,12 +35,12 @@
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] Add a failing WPF smoke assertion for `CatFaceLayer` and `MoveFeedbackGlow`.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect failure because the new named elements do not exist.
-- [ ] Replace the cell feedback borders with soft `Ellipse`/`Border` glow layers named `MoveFeedbackGlow`, `SpawnFeedbackGlow`, `ClearFeedbackGlow`, and `RejectFeedbackGlow`.
-- [ ] Replace text-based cat faces with shape-based face elements inside a named `CatFaceLayer`.
-- [ ] Update next-cat previews to use the same smaller avatar style.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
+- [x] Add a failing WPF smoke assertion for `CatFaceLayer` and `MoveFeedbackGlow`.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect failure because the new named elements do not exist.
+- [x] Replace the cell feedback borders with soft `Ellipse`/`Border` glow layers named `MoveFeedbackGlow`, `SpawnFeedbackGlow`, `ClearFeedbackGlow`, and `RejectFeedbackGlow`.
+- [x] Replace text-based cat faces with shape-based face elements inside a named `CatFaceLayer`.
+- [x] Update next-cat previews to use the same smaller avatar style.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
 - [ ] Commit with `feat: soften board visuals`.
 
 ## Task 3: Verify And Launch

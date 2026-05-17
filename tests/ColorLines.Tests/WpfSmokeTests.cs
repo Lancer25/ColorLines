@@ -35,11 +35,14 @@ public sealed class WpfSmokeTests
 
                 var pieceBody = FindVisualChildren<Ellipse>(occupiedButton)
                     .First(ellipse => ellipse.Name == "PieceBody");
-                var moveFeedbackRing = FindVisualChildren<Border>(occupiedButton)
-                    .First(border => border.Name == "MoveFeedbackRing");
+                var moveFeedbackGlow = FindVisualChildren<Ellipse>(occupiedButton)
+                    .First(ellipse => ellipse.Name == "MoveFeedbackGlow");
+                var catFaceLayer = FindVisualChildren<Grid>(occupiedButton)
+                    .First(grid => grid.Name == "CatFaceLayer");
 
                 Assert.Equal(1, pieceBody.Opacity);
-                Assert.Equal(0, moveFeedbackRing.Opacity);
+                Assert.Equal(0, moveFeedbackGlow.Opacity);
+                Assert.Equal(1, catFaceLayer.Opacity);
                 window.Close();
             }
             catch (Exception exception)
