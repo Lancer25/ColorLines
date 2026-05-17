@@ -76,9 +76,15 @@ public sealed class GameViewModel : INotifyPropertyChanged
             {
                 feedback = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsGameOver));
+                OnPropertyChanged(nameof(ScoreDeltaText));
             }
         }
     }
+
+    public bool IsGameOver => state.Status == GameStatus.GameOver || Feedback.IsGameOver;
+
+    public string ScoreDeltaText => Feedback.HasScore ? $"+{Feedback.ScoreDelta}" : string.Empty;
 
     public static GameViewModel CreateForNewGame()
     {
@@ -116,6 +122,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         selectedPosition = null;
         Score = state.Score;
         Feedback = BuildFeedback(result);
+        OnPropertyChanged(nameof(IsGameOver));
         StatusText = BuildStatusText(result);
         RefreshFromState();
     }
@@ -126,6 +133,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         selectedPosition = null;
         Score = state.Score;
         Feedback = TurnFeedback.Neutral;
+        OnPropertyChanged(nameof(IsGameOver));
         StatusText = "Select a cat to move.";
         RefreshFromState();
     }

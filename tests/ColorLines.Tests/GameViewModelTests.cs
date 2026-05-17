@@ -108,4 +108,13 @@ public sealed class GameViewModelTests
         Assert.True(viewModel.Feedback.WasRejected);
         Assert.Contains("Select a cat", viewModel.StatusText);
     }
+
+    [Fact]
+    public void NewGameIsNotGameOver()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        Assert.False(viewModel.IsGameOver);
+        Assert.Equal(string.Empty, viewModel.ScoreDeltaText);
+    }
 }
