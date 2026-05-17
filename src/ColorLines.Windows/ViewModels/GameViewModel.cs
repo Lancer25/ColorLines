@@ -15,6 +15,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private BoardPosition? selectedPosition;
     private int score;
     private string statusText;
+    private TurnFeedback feedback;
 
     public GameViewModel(GameEngine engine, GameState state)
     {
@@ -22,6 +23,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         this.state = state;
         score = state.Score;
         statusText = "Select a cat to move.";
+        feedback = TurnFeedback.Neutral;
         Cells = new ObservableCollection<CellViewModel>();
         NextPieces = new ObservableCollection<string>();
         SelectCellCommand = new RelayCommand(SelectCell, parameter => parameter is CellViewModel);
@@ -65,6 +67,19 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
     }
 
+    public TurnFeedback Feedback
+    {
+        get => feedback;
+        private set
+        {
+            if (feedback != value)
+            {
+                feedback = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public static GameViewModel CreateForNewGame()
     {
         var engine = new GameEngine(new SystemRandomSource());
@@ -91,6 +106,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
         if (selectedPosition is null)
         {
+            Feedback = new TurnFeedback(false, true, false, false, false, 0);
             StatusText = "Select a cat before choosing a target.";
             return;
         }
@@ -99,6 +115,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         state = result.State;
         selectedPosition = null;
         Score = state.Score;
+        Feedback = BuildFeedback(result);
         StatusText = BuildStatusText(result);
         RefreshFromState();
     }
@@ -108,6 +125,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         state = engine.NewGame();
         selectedPosition = null;
         Score = state.Score;
+        Feedback = TurnFeedback.Neutral;
         StatusText = "Select a cat to move.";
         RefreshFromState();
     }
@@ -149,6 +167,17 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
 
         return "Select a cat to move.";
+    }
+
+    private static TurnFeedback BuildFeedback(GameTurnResult result)
+    {
+        return new TurnFeedback(
+            result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.PieceMoved),
+            result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.MoveRejected),
+            result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.PiecesSpawned),
+            result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.LinesCleared),
+            result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.GameOver),
+            result.Events.LastOrDefault(gameEvent => gameEvent.Kind == GameEventKind.ScoreChanged)?.ScoreDelta ?? 0);
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

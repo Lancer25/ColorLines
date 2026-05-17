@@ -86,4 +86,26 @@ public sealed class GameViewModelTests
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsSelected);
         Assert.Equal("Select a cat to move.", viewModel.StatusText);
     }
+
+    [Fact]
+    public void NewGameStartsWithNeutralFeedback()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        Assert.False(viewModel.Feedback.HasScore);
+        Assert.False(viewModel.Feedback.IsGameOver);
+        Assert.Equal(0, viewModel.Feedback.ScoreDelta);
+    }
+
+    [Fact]
+    public void ClickingEmptyCellWithoutSelectionShowsRejectedFeedback()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+        var empty = viewModel.Cells.First(cell => !cell.IsOccupied);
+
+        viewModel.SelectCellCommand.Execute(empty);
+
+        Assert.True(viewModel.Feedback.WasRejected);
+        Assert.Contains("Select a cat", viewModel.StatusText);
+    }
 }
