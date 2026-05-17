@@ -22,6 +22,10 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private TurnFeedback feedback;
     private bool isSoundEnabled;
     private string animationIntensity;
+    private HashSet<BoardPosition> movedPositions;
+    private HashSet<BoardPosition> spawnedPositions;
+    private HashSet<BoardPosition> clearedPositions;
+    private HashSet<BoardPosition> rejectedPositions;
 
     public GameViewModel(GameEngine engine, GameState state, int highScore = 0)
     {
@@ -33,6 +37,10 @@ public sealed class GameViewModel : INotifyPropertyChanged
         feedback = TurnFeedback.Neutral;
         isSoundEnabled = true;
         animationIntensity = "Full";
+        movedPositions = new HashSet<BoardPosition>();
+        spawnedPositions = new HashSet<BoardPosition>();
+        clearedPositions = new HashSet<BoardPosition>();
+        rejectedPositions = new HashSet<BoardPosition>();
         Cells = new ObservableCollection<CellViewModel>();
         NextPieces = new ObservableCollection<PieceViewModel>();
         SelectCellCommand = new RelayCommand(SelectCell, parameter => parameter is CellViewModel);
@@ -187,6 +195,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
         if (piece is not null)
         {
+            ClearCellFeedback();
             selectedPosition = position;
             StatusText = $"Selected {piece}. Choose an empty cell.";
             RefreshFromState();
@@ -195,8 +204,11 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
         if (selectedPosition is null)
         {
+            ClearCellFeedback();
+            rejectedPositions.Add(position);
             Feedback = new TurnFeedback(false, true, false, false, false, 0);
             StatusText = "Select a cat before choosing a target.";
+            RefreshFromState();
             return;
         }
 
@@ -205,6 +217,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         selectedPosition = null;
         Score = state.Score;
         Feedback = BuildFeedback(result);
+        StoreCellFeedback(result);
         OnPropertyChanged(nameof(IsGameOver));
         StatusText = BuildStatusText(result);
         RefreshFromState();
@@ -214,6 +227,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         state = engine.NewGame();
         selectedPosition = null;
+        ClearCellFeedback();
         Score = state.Score;
         Feedback = TurnFeedback.Neutral;
         OnPropertyChanged(nameof(IsGameOver));
@@ -227,9 +241,13 @@ public sealed class GameViewModel : INotifyPropertyChanged
         foreach (var cell in state.Board.Cells())
         {
             var isSelected = selectedPosition == cell.Position;
+            var wasMovedTo = movedPositions.Contains(cell.Position);
+            var wasSpawned = spawnedPositions.Contains(cell.Position);
+            var wasCleared = clearedPositions.Contains(cell.Position);
+            var wasRejectedTarget = rejectedPositions.Contains(cell.Position);
             Cells.Add(cell.Piece is null
-                ? CellViewModel.Empty(cell.Position.Row, cell.Position.Column)
-                : CellViewModel.Occupied(cell.Position.Row, cell.Position.Column, cell.Piece.Value, isSelected));
+                ? CellViewModel.Empty(cell.Position.Row, cell.Position.Column, wasMovedTo, wasSpawned, wasCleared, wasRejectedTarget)
+                : CellViewModel.Occupied(cell.Position.Row, cell.Position.Column, cell.Piece.Value, isSelected, wasMovedTo, wasSpawned, wasCleared, wasRejectedTarget));
         }
 
         NextPieces.Clear();
@@ -269,6 +287,46 @@ public sealed class GameViewModel : INotifyPropertyChanged
             result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.LinesCleared),
             result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.GameOver),
             result.Events.LastOrDefault(gameEvent => gameEvent.Kind == GameEventKind.ScoreChanged)?.ScoreDelta ?? 0);
+    }
+
+    private void StoreCellFeedback(GameTurnResult result)
+    {
+        ClearCellFeedback();
+
+        foreach (var gameEvent in result.Events)
+        {
+            switch (gameEvent.Kind)
+            {
+                case GameEventKind.PieceMoved:
+                    if (gameEvent.Positions.Count > 0)
+                    {
+                        movedPositions.Add(gameEvent.Positions[^1]);
+                    }
+
+                    break;
+                case GameEventKind.PiecesSpawned:
+                    spawnedPositions.UnionWith(gameEvent.Positions);
+                    break;
+                case GameEventKind.LinesCleared:
+                    clearedPositions.UnionWith(gameEvent.Positions);
+                    break;
+                case GameEventKind.MoveRejected:
+                    if (gameEvent.Positions.Count > 0)
+                    {
+                        rejectedPositions.Add(gameEvent.Positions[^1]);
+                    }
+
+                    break;
+            }
+        }
+    }
+
+    private void ClearCellFeedback()
+    {
+        movedPositions.Clear();
+        spawnedPositions.Clear();
+        clearedPositions.Clear();
+        rejectedPositions.Clear();
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

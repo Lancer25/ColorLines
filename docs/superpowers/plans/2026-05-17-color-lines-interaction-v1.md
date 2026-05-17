@@ -27,11 +27,11 @@
 - Modify: `src/ColorLines.Windows/ViewModels/GameViewModel.cs`
 - Modify: `tests/ColorLines.Tests/GameViewModelTests.cs`
 
-- [ ] Add failing tests for rejected target feedback and move target feedback.
-- [ ] Add feedback flags to `CellViewModel`.
-- [ ] Store latest moved/spawned/cleared/rejected positions in `GameViewModel`.
-- [ ] Refresh cells with those flags.
-- [ ] Run view model tests.
+- [x] Add failing tests for rejected target feedback and move target feedback.
+- [x] Add feedback flags to `CellViewModel`.
+- [x] Store latest moved/spawned/cleared/rejected positions in `GameViewModel`.
+- [x] Refresh cells with those flags.
+- [x] Run view model tests.
 - [ ] Commit with `feat: add cell feedback flags`.
 
 ### Task 2: Add WPF Feedback Rings

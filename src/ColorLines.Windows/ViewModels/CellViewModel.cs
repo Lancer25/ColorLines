@@ -9,16 +9,56 @@ public sealed record CellViewModel(
     bool IsSelected,
     string PieceLabel,
     string PieceName,
-    PieceViewModel? Piece)
+    PieceViewModel? Piece,
+    bool WasMovedTo,
+    bool WasSpawned,
+    bool WasCleared,
+    bool WasRejectedTarget)
 {
-    public static CellViewModel Empty(int row, int column)
+    public static CellViewModel Empty(
+        int row,
+        int column,
+        bool wasMovedTo = false,
+        bool wasSpawned = false,
+        bool wasCleared = false,
+        bool wasRejectedTarget = false)
     {
-        return new CellViewModel(row, column, false, false, string.Empty, string.Empty, null);
+        return new CellViewModel(
+            row,
+            column,
+            false,
+            false,
+            string.Empty,
+            string.Empty,
+            null,
+            wasMovedTo,
+            wasSpawned,
+            wasCleared,
+            wasRejectedTarget);
     }
 
-    public static CellViewModel Occupied(int row, int column, PieceKind piece, bool isSelected)
+    public static CellViewModel Occupied(
+        int row,
+        int column,
+        PieceKind piece,
+        bool isSelected,
+        bool wasMovedTo = false,
+        bool wasSpawned = false,
+        bool wasCleared = false,
+        bool wasRejectedTarget = false)
     {
         var viewModel = PieceViewModel.FromPiece(piece);
-        return new CellViewModel(row, column, true, isSelected, viewModel.Label, viewModel.Name, viewModel);
+        return new CellViewModel(
+            row,
+            column,
+            true,
+            isSelected,
+            viewModel.Label,
+            viewModel.Name,
+            viewModel,
+            wasMovedTo,
+            wasSpawned,
+            wasCleared,
+            wasRejectedTarget);
     }
 }

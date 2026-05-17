@@ -1,3 +1,6 @@
+using ColorLines.Core.Board;
+using ColorLines.Core.Game;
+using ColorLines.Core.Rules;
 using ColorLines.Windows.ViewModels;
 using ColorLines.Windows.Services;
 
@@ -108,7 +111,25 @@ public sealed class GameViewModelTests
         viewModel.SelectCellCommand.Execute(empty);
 
         Assert.True(viewModel.Feedback.WasRejected);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == empty.Row && cell.Column == empty.Column && cell.WasRejectedTarget);
         Assert.Contains("Select a cat", viewModel.StatusText);
+    }
+
+    [Fact]
+    public void SuccessfulMoveMarksTargetCellAsMovedTo()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 1);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+
+        Assert.True(viewModel.Feedback.WasMoved);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.WasMovedTo);
     }
 
     [Fact]
@@ -186,5 +207,13 @@ public sealed class GameViewModelTests
         Assert.Equal("Full", save.AnimationIntensity);
         Assert.Equal("CozyBoard", save.ThemeId);
         Assert.NotNull(save.Game);
+    }
+
+    private sealed class SequenceRandomSource : IRandomSource
+    {
+        public int Next(int exclusiveMax)
+        {
+            return 0;
+        }
     }
 }
