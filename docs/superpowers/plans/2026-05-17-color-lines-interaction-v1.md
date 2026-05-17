@@ -43,15 +43,15 @@
 - [x] Add layered borders for moved, spawned, cleared, and rejected cells.
 - [x] Add a smoke test that a highlighted moved or selected visual can be created.
 - [x] Run WPF smoke tests.
-- [ ] Commit with `feat: add board feedback rings`.
+- [x] Commit with `feat: add board feedback rings`.
 
 ### Task 3: Verify And Launch
 
-- [ ] Run `dotnet test ColorLines.sln`.
-- [ ] Run `dotnet build ColorLines.sln`.
-- [ ] Launch WPF exe.
-- [ ] Confirm process responds.
-- [ ] Inspect `git status --short --branch`.
+- [x] Run `dotnet test ColorLines.sln`.
+- [x] Run `dotnet build ColorLines.sln`.
+- [x] Launch WPF exe.
+- [x] Confirm process responds.
+- [x] Inspect `git status --short --branch`.
 
 ## Self-Review
 
