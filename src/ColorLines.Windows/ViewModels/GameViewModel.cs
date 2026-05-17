@@ -5,6 +5,8 @@ using System.Windows.Input;
 using ColorLines.Core.Board;
 using ColorLines.Core.Game;
 using ColorLines.Core.Rules;
+using ColorLines.Core.Storage;
+using ColorLines.Windows.Services;
 using ColorLines.Windows.Themes;
 
 namespace ColorLines.Windows.ViewModels;
@@ -15,16 +17,18 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private GameState state;
     private BoardPosition? selectedPosition;
     private int score;
+    private int highScore;
     private string statusText;
     private TurnFeedback feedback;
     private bool isSoundEnabled;
     private string animationIntensity;
 
-    public GameViewModel(GameEngine engine, GameState state)
+    public GameViewModel(GameEngine engine, GameState state, int highScore = 0)
     {
         this.engine = engine;
         this.state = state;
         score = state.Score;
+        this.highScore = Math.Max(highScore, score);
         statusText = "Select a cat to move.";
         feedback = TurnFeedback.Neutral;
         isSoundEnabled = true;
@@ -59,6 +63,23 @@ public sealed class GameViewModel : INotifyPropertyChanged
             if (score != value)
             {
                 score = value;
+                if (score > HighScore)
+                {
+                    HighScore = score;
+                }
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public int HighScore
+    {
+        get => highScore;
+        private set
+        {
+            if (highScore != value)
+            {
+                highScore = value;
                 OnPropertyChanged();
             }
         }
@@ -126,6 +147,32 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         var engine = new GameEngine(new SystemRandomSource());
         return new GameViewModel(engine, engine.NewGame());
+    }
+
+    public static GameViewModel CreateFromSave(LocalSaveData? save)
+    {
+        var engine = new GameEngine(new SystemRandomSource());
+        var state = save?.Game is null ? engine.NewGame() : GameSnapshotMapper.ToState(save.Game);
+        var viewModel = new GameViewModel(engine, state, save?.HighScore ?? 0);
+        if (save is not null)
+        {
+            viewModel.isSoundEnabled = save.IsSoundEnabled;
+            viewModel.animationIntensity = save.AnimationIntensity;
+        }
+
+        return viewModel;
+    }
+
+    public LocalSaveData CreateSaveData(WindowPlacementData window)
+    {
+        return new LocalSaveData(
+            1,
+            HighScore,
+            IsSoundEnabled,
+            AnimationIntensity,
+            ThemeCatalog.DefaultTheme.Id,
+            GameSnapshotMapper.FromState(state),
+            window);
     }
 
     private void SelectCell(object? parameter)

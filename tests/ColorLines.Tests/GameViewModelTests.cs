@@ -1,4 +1,5 @@
 using ColorLines.Windows.ViewModels;
+using ColorLines.Windows.Services;
 
 namespace ColorLines.Tests;
 
@@ -145,5 +146,31 @@ public sealed class GameViewModelTests
         viewModel.ToggleSoundCommand.Execute(null);
 
         Assert.False(viewModel.IsSoundEnabled);
+    }
+
+    [Fact]
+    public void CreateFromSaveRestoresHighScoreAndSettings()
+    {
+        var save = new LocalSaveData(1, 99, false, "Reduced", "CozyBoard", null, new WindowPlacementData(800, 600));
+
+        var viewModel = GameViewModel.CreateFromSave(save);
+
+        Assert.Equal(99, viewModel.HighScore);
+        Assert.False(viewModel.IsSoundEnabled);
+        Assert.Equal("Reduced", viewModel.AnimationIntensity);
+    }
+
+    [Fact]
+    public void CreateSaveDataExportsCurrentSettings()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+        viewModel.ToggleSoundCommand.Execute(null);
+
+        var save = viewModel.CreateSaveData(new WindowPlacementData(1000, 720));
+
+        Assert.False(save.IsSoundEnabled);
+        Assert.Equal("Full", save.AnimationIntensity);
+        Assert.Equal("CozyBoard", save.ThemeId);
+        Assert.NotNull(save.Game);
     }
 }
