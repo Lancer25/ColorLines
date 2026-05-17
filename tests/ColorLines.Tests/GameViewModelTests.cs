@@ -47,4 +47,43 @@ public sealed class GameViewModelTests
         Assert.Equal("C", cell.PieceLabel);
         Assert.Equal("Calico", cell.PieceName);
     }
+
+    [Fact]
+    public void GameViewModelStartsWithBoardScoreAndNextPieces()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        Assert.Equal(81, viewModel.Cells.Count);
+        Assert.Equal(0, viewModel.Score);
+        Assert.Equal(3, viewModel.NextPieces.Count);
+        Assert.Equal("Select a cat to move.", viewModel.StatusText);
+    }
+
+    [Fact]
+    public void SelectingOccupiedCellMarksItSelected()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+        var occupied = viewModel.Cells.First(cell => cell.IsOccupied);
+
+        viewModel.SelectCellCommand.Execute(occupied);
+
+        var selected = viewModel.Cells.Single(cell => cell.IsSelected);
+        Assert.Equal(occupied.Row, selected.Row);
+        Assert.Equal(occupied.Column, selected.Column);
+        Assert.Contains("Selected", viewModel.StatusText);
+    }
+
+    [Fact]
+    public void NewGameCommandResetsScoreAndSelection()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+        var occupied = viewModel.Cells.First(cell => cell.IsOccupied);
+        viewModel.SelectCellCommand.Execute(occupied);
+
+        viewModel.NewGameCommand.Execute(null);
+
+        Assert.Equal(0, viewModel.Score);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsSelected);
+        Assert.Equal("Select a cat to move.", viewModel.StatusText);
+    }
 }
