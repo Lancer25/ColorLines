@@ -40,9 +40,10 @@
 - Create: `src/ColorLines.Windows/Assets/Themes/CozyBoard/pieces/black.png`
 - Create: `src/ColorLines.Windows/Assets/Themes/CozyBoard/pieces/white.png`
 - Create: `src/ColorLines.Windows/Assets/Themes/CozyBoard/pieces/bluegray.png`
+- Create: `tools/split_cat_sprite.py`
 
-- [ ] Generate or create transparent PNG cat avatar assets for every `PieceKind`.
-- [ ] Verify each PNG exists and is non-empty.
+- [x] Generate or create transparent PNG cat avatar assets for every `PieceKind`.
+- [x] Verify each PNG exists and is non-empty.
 - [ ] Commit with `art: add cat piece png assets`.
 
 ## Task 3: Render Image Assets In WPF
