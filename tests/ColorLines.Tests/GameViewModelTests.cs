@@ -117,4 +117,13 @@ public sealed class GameViewModelTests
         Assert.False(viewModel.IsGameOver);
         Assert.Equal(string.Empty, viewModel.ScoreDeltaText);
     }
+
+    [Fact]
+    public void CellViewModelProvidesCatFaceSymbol()
+    {
+        var cell = CellViewModel.Occupied(1, 2, ColorLines.Core.Game.PieceKind.Orange, true);
+
+        Assert.Equal("=^.^=", cell.FaceText);
+        Assert.True(cell.IsSelected);
+    }
 }

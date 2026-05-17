@@ -10,16 +10,17 @@ public sealed record CellViewModel(
     bool IsSelected,
     string PieceLabel,
     string PieceName,
+    string FaceText,
     Brush PieceBrush)
 {
     public static CellViewModel Empty(int row, int column)
     {
-        return new CellViewModel(row, column, false, false, string.Empty, string.Empty, Brushes.Transparent);
+        return new CellViewModel(row, column, false, false, string.Empty, string.Empty, string.Empty, Brushes.Transparent);
     }
 
     public static CellViewModel Occupied(int row, int column, PieceKind piece, bool isSelected)
     {
-        return new CellViewModel(row, column, true, isSelected, ToLabel(piece), piece.ToString(), ToBrush(piece));
+        return new CellViewModel(row, column, true, isSelected, ToLabel(piece), piece.ToString(), "=^.^=", ToBrush(piece));
     }
 
     private static string ToLabel(PieceKind piece)
