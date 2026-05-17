@@ -23,10 +23,10 @@
 - Modify: `src/ColorLines.Windows/ViewModels/PieceViewModel.cs`
 - Modify: `tests/ColorLines.Tests/GameViewModelTests.cs`
 
-- [ ] Add a failing test named `PieceViewModelProvidesAvatarAccentBrushes`.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter PieceViewModelProvidesAvatarAccentBrushes`; expect compile failure for missing properties.
-- [ ] Add `HighlightBrush`, `ShadowBrush`, and `InnerEarBrush` to `PieceViewModel`.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter GameViewModelTests`; expect pass.
+- [x] Add a failing test named `PieceViewModelProvidesAvatarAccentBrushes`.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter PieceViewModelProvidesAvatarAccentBrushes`; expect compile failure for missing properties.
+- [x] Add `HighlightBrush`, `ShadowBrush`, and `InnerEarBrush` to `PieceViewModel`.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter GameViewModelTests`; expect pass.
 - [ ] Commit with `feat: add cat avatar accent brushes`.
 
 ## Task 2: Replace Hard Rings With Soft Visuals

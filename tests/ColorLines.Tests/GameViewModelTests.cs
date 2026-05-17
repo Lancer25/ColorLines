@@ -164,6 +164,17 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void PieceViewModelProvidesAvatarAccentBrushes()
+    {
+        var orange = PieceViewModel.FromPiece(PieceKind.Orange);
+
+        Assert.NotNull(orange.HighlightBrush);
+        Assert.NotNull(orange.ShadowBrush);
+        Assert.NotNull(orange.InnerEarBrush);
+        Assert.NotEqual(orange.BodyBrush.ToString(), orange.InnerEarBrush.ToString());
+    }
+
+    [Fact]
     public void GameViewModelExposesDefaultThemeAndSettings()
     {
         var viewModel = GameViewModel.CreateForNewGame();

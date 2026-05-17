@@ -10,7 +10,10 @@ public sealed record PieceViewModel(
     string FaceText,
     Brush BodyBrush,
     Brush FaceBrush,
-    Brush EarBrush)
+    Brush EarBrush,
+    Brush HighlightBrush,
+    Brush ShadowBrush,
+    Brush InnerEarBrush)
 {
     public static PieceViewModel FromPiece(PieceKind piece)
     {
@@ -26,7 +29,10 @@ public sealed record PieceViewModel(
             "=^.^=",
             bodyBrush,
             faceBrush,
-            bodyBrush);
+            bodyBrush,
+            Brushes.White,
+            new SolidColorBrush(Color.FromArgb(80, 74, 45, 35)),
+            Brushes.LightPink);
     }
 
     private static string ToLabel(PieceKind piece)
