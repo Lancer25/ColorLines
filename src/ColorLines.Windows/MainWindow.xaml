@@ -67,10 +67,10 @@
                                     <Ellipse x:Name="PieceBody"
                                              Fill="{Binding PieceBrush}"
                                              Stroke="#70452C"
-                                             StrokeThickness="2"
-                                             Opacity="0">
+                                             StrokeThickness="2">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
+                                                <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsOccupied}" Value="True">
                                                         <Setter Property="Opacity" Value="1" />
