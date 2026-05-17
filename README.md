@@ -31,6 +31,12 @@ Run Windows app:
 dotnet run --project src/ColorLines.Windows/ColorLines.Windows.csproj
 ```
 
+Publish a local Windows build:
+
+```powershell
+dotnet publish src/ColorLines.Windows/ColorLines.Windows.csproj -c Release -r win-x64 --self-contained false
+```
+
 ## Design
 
 The product design is documented in `docs/superpowers/specs/2026-05-17-color-lines-wpf-design.md`.
@@ -38,3 +44,7 @@ The product design is documented in `docs/superpowers/specs/2026-05-17-color-lin
 ## Theme Resources
 
 The first theme is `CozyBoard`. Resource placeholders live under `src/ColorLines.Windows/Assets/Themes/CozyBoard/` with `board`, `pieces`, `effects`, and `sounds` folders.
+
+## Local Data
+
+The Windows app stores local save data at `%LOCALAPPDATA%\ColorLines\save.json`. The file contains high score, sound setting, animation intensity, selected theme id, recent game state, and window size.
