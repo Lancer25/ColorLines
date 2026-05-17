@@ -8,6 +8,7 @@
         MinHeight="620"
         Background="#FFF7EF">
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <Style x:Key="BoardCellButton" TargetType="Button">
             <Setter Property="Margin" Value="4" />
             <Setter Property="Padding" Value="0" />
@@ -62,30 +63,47 @@
                             <Button Style="{StaticResource BoardCellButton}"
                                     Command="{Binding DataContext.SelectCellCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                     CommandParameter="{Binding}">
-                                <Grid Width="48" Height="48">
-                                    <Ellipse Fill="{Binding PieceBrush}"
+                                <Grid Width="50" Height="50">
+                                    <Ellipse x:Name="PieceBody"
+                                             Fill="{Binding PieceBrush}"
                                              Stroke="#70452C"
                                              StrokeThickness="2"
-                                             Opacity="0">
+                                             Opacity="0"
+                                             RenderTransformOrigin="0.5,0.5">
+                                        <Ellipse.RenderTransform>
+                                            <ScaleTransform ScaleX="0.86" ScaleY="0.86" />
+                                        </Ellipse.RenderTransform>
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsOccupied}" Value="True">
                                                         <Setter Property="Opacity" Value="1" />
+                                                        <DataTrigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                                                     To="1"
+                                                                                     Duration="0:0:0.16" />
+                                                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                                                     To="1"
+                                                                                     Duration="0:0:0.16" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.EnterActions>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Ellipse.Style>
                                     </Ellipse>
-                                    <TextBlock Text="{Binding PieceLabel}"
+                                    <TextBlock Text="{Binding FaceText}"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
                                                FontWeight="Bold"
-                                               FontSize="18"
+                                               FontSize="11"
                                                Foreground="#FFF9F0" />
                                     <Border BorderBrush="#FFE06B"
                                             BorderThickness="3"
-                                            CornerRadius="24"
+                                            CornerRadius="25"
                                             Opacity="0">
                                         <Border.Style>
                                             <Style TargetType="Border">
@@ -130,6 +148,10 @@
                     <TextBlock Text="{Binding Score}"
                                Foreground="#4A2D23"
                                FontSize="34"
+                               FontWeight="Bold" />
+                    <TextBlock Text="{Binding ScoreDeltaText}"
+                               Foreground="#D96B2B"
+                               FontSize="18"
                                FontWeight="Bold" />
                 </StackPanel>
             </Border>
@@ -177,5 +199,37 @@
                     FontSize="15"
                     FontWeight="SemiBold" />
         </StackPanel>
+
+        <Border Grid.ColumnSpan="2"
+                Background="#99000000"
+                Visibility="{Binding IsGameOver, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Width="320"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="#FFFFFB"
+                    CornerRadius="14"
+                    Padding="24">
+                <StackPanel>
+                    <TextBlock Text="Game Over"
+                               FontSize="30"
+                               FontWeight="Bold"
+                               Foreground="#4A2D23"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="The board is full."
+                               Margin="0,8,0,20"
+                               FontSize="15"
+                               Foreground="#8A6655"
+                               HorizontalAlignment="Center" />
+                    <Button Content="New Game"
+                            Command="{Binding NewGameCommand}"
+                            Height="42"
+                            Background="#7C4D2E"
+                            Foreground="#FFFFFB"
+                            BorderThickness="0"
+                            FontSize="15"
+                            FontWeight="SemiBold" />
+                </StackPanel>
+            </Border>
+        </Border>
     </Grid>
 </Window>
