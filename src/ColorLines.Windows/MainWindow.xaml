@@ -162,12 +162,15 @@
                                             </Style>
                                         </Ellipse.Style>
                                     </Ellipse>
-                                    <Polygon Points="11,18 18,4 25,20"
-                                             Fill="{Binding Piece.EarBrush}"
-                                             Stroke="#70452C"
-                                             StrokeThickness="1">
-                                        <Polygon.Style>
-                                            <Style TargetType="Polygon">
+                                    <Image x:Name="PieceImage"
+                                           Width="48"
+                                           Height="48"
+                                           Source="{Binding Piece.AssetPath}"
+                                           Stretch="Uniform"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           IsHitTestVisible="False">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsOccupied}" Value="True">
@@ -175,124 +178,8 @@
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
-                                        </Polygon.Style>
-                                    </Polygon>
-                                    <Polygon Points="15,16 18,9 22,18"
-                                             Fill="{Binding Piece.InnerEarBrush}">
-                                        <Polygon.Style>
-                                            <Style TargetType="Polygon">
-                                                <Setter Property="Opacity" Value="0" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsOccupied}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Polygon.Style>
-                                    </Polygon>
-                                    <Polygon Points="25,20 32,4 39,18"
-                                             Fill="{Binding Piece.EarBrush}"
-                                             Stroke="#70452C"
-                                             StrokeThickness="1">
-                                        <Polygon.Style>
-                                            <Style TargetType="Polygon">
-                                                <Setter Property="Opacity" Value="0" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsOccupied}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Polygon.Style>
-                                    </Polygon>
-                                    <Polygon Points="28,18 32,9 35,16"
-                                             Fill="{Binding Piece.InnerEarBrush}">
-                                        <Polygon.Style>
-                                            <Style TargetType="Polygon">
-                                                <Setter Property="Opacity" Value="0" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsOccupied}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Polygon.Style>
-                                    </Polygon>
-                                    <Ellipse x:Name="PieceBody"
-                                             Width="42"
-                                             Height="42"
-                                             Margin="4,7,4,0"
-                                             Fill="{Binding Piece.BodyBrush}"
-                                             Stroke="#70452C"
-                                             StrokeThickness="1.6">
-                                        <Ellipse.Style>
-                                            <Style TargetType="Ellipse">
-                                                <Setter Property="Opacity" Value="0" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsOccupied}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Ellipse.Style>
-                                    </Ellipse>
-                                    <Ellipse Width="16"
-                                             Height="8"
-                                             Margin="9,14,0,0"
-                                             HorizontalAlignment="Left"
-                                             VerticalAlignment="Top"
-                                             Fill="{Binding Piece.HighlightBrush}"
-                                             Opacity="0.24" />
-                                    <Grid x:Name="CatFaceLayer"
-                                          Margin="0,8,0,0"
-                                          IsHitTestVisible="False">
-                                        <Grid.Style>
-                                            <Style TargetType="Grid">
-                                                <Setter Property="Opacity" Value="0" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsOccupied}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Grid.Style>
-                                        <Ellipse Width="4"
-                                                 Height="6"
-                                                 Margin="14,15,0,0"
-                                                 HorizontalAlignment="Left"
-                                                 VerticalAlignment="Top"
-                                                 Fill="{Binding Piece.FaceBrush}" />
-                                        <Ellipse Width="4"
-                                                 Height="6"
-                                                 Margin="32,15,0,0"
-                                                 HorizontalAlignment="Left"
-                                                 VerticalAlignment="Top"
-                                                 Fill="{Binding Piece.FaceBrush}" />
-                                        <Ellipse Width="4"
-                                                 Height="3"
-                                                 Margin="23,23,0,0"
-                                                 HorizontalAlignment="Left"
-                                                 VerticalAlignment="Top"
-                                                 Fill="{Binding Piece.FaceBrush}" />
-                                        <Path Data="M 21 27 Q 25 31 29 27"
-                                              Stroke="{Binding Piece.FaceBrush}"
-                                              StrokeThickness="1.4"
-                                              Fill="{x:Null}"
-                                              StrokeStartLineCap="Round"
-                                              StrokeEndLineCap="Round" />
-                                        <Ellipse Width="7"
-                                                 Height="4"
-                                                 Margin="9,25,0,0"
-                                                 HorizontalAlignment="Left"
-                                                 VerticalAlignment="Top"
-                                                 Fill="#55FFC0CB" />
-                                        <Ellipse Width="7"
-                                                 Height="4"
-                                                 Margin="34,25,0,0"
-                                                 HorizontalAlignment="Left"
-                                                 VerticalAlignment="Top"
-                                                 Fill="#55FFC0CB" />
-                                    </Grid>
+                                        </Image.Style>
+                                    </Image>
                                 </Grid>
                             </Button>
                         </DataTemplate>
@@ -362,53 +249,15 @@
                                         Padding="8"
                                         Margin="0,0,8,0">
                                     <Grid Width="42" Height="36">
-                                        <Polygon Points="9,14 15,3 21,16"
-                                                 Fill="{Binding EarBrush}"
-                                                 Stroke="#70452C"
-                                                 StrokeThickness="1" />
-                                        <Polygon Points="13,13 15,7 18,15"
-                                                 Fill="{Binding InnerEarBrush}" />
-                                        <Polygon Points="21,16 27,3 33,14"
-                                                 Fill="{Binding EarBrush}"
-                                                 Stroke="#70452C"
-                                                 StrokeThickness="1" />
-                                        <Polygon Points="24,15 27,7 30,13"
-                                                 Fill="{Binding InnerEarBrush}" />
                                         <Ellipse Width="34"
                                                  Height="20"
                                                  VerticalAlignment="Bottom"
                                                  Fill="#332C1B14" />
-                                        <Ellipse Width="34"
-                                                 Height="30"
-                                                 Margin="4,8,4,0"
-                                                 Fill="{Binding BodyBrush}"
-                                                 Stroke="#70452C"
-                                                 StrokeThickness="1" />
-                                        <Ellipse Width="12"
-                                                 Height="5"
-                                                 Margin="10,12,0,0"
-                                                 HorizontalAlignment="Left"
-                                                 VerticalAlignment="Top"
-                                                 Fill="{Binding HighlightBrush}"
-                                                 Opacity="0.24" />
-                                        <Ellipse Width="3"
-                                                 Height="5"
-                                                 Margin="13,18,0,0"
-                                                 HorizontalAlignment="Left"
-                                                 VerticalAlignment="Top"
-                                                 Fill="{Binding FaceBrush}" />
-                                        <Ellipse Width="3"
-                                                 Height="5"
-                                                 Margin="26,18,0,0"
-                                                 HorizontalAlignment="Left"
-                                                 VerticalAlignment="Top"
-                                                 Fill="{Binding FaceBrush}" />
-                                        <Ellipse Width="4"
-                                                 Height="3"
-                                                 Margin="19,25,0,0"
-                                                 HorizontalAlignment="Left"
-                                                 VerticalAlignment="Top"
-                                                 Fill="{Binding FaceBrush}" />
+                                        <Image Width="42"
+                                               Height="42"
+                                               Source="{Binding AssetPath}"
+                                               Stretch="Uniform"
+                                               RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Grid>
                                 </Border>
                             </DataTemplate>

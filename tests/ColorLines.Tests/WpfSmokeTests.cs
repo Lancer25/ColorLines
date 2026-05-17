@@ -33,16 +33,13 @@ public sealed class WpfSmokeTests
                     .First(button => button.DataContext is CellViewModel { IsOccupied: true });
                 occupiedButton.ApplyTemplate();
 
-                var pieceBody = FindVisualChildren<Ellipse>(occupiedButton)
-                    .First(ellipse => ellipse.Name == "PieceBody");
+                var pieceImage = FindVisualChildren<Image>(occupiedButton)
+                    .First(image => image.Name == "PieceImage");
                 var moveFeedbackGlow = FindVisualChildren<Ellipse>(occupiedButton)
                     .First(ellipse => ellipse.Name == "MoveFeedbackGlow");
-                var catFaceLayer = FindVisualChildren<Grid>(occupiedButton)
-                    .First(grid => grid.Name == "CatFaceLayer");
 
-                Assert.Equal(1, pieceBody.Opacity);
+                Assert.Equal(1, pieceImage.Opacity);
                 Assert.Equal(0, moveFeedbackGlow.Opacity);
-                Assert.Equal(1, catFaceLayer.Opacity);
                 window.Close();
             }
             catch (Exception exception)

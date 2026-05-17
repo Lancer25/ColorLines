@@ -44,7 +44,7 @@
 
 - [x] Generate or create transparent PNG cat avatar assets for every `PieceKind`.
 - [x] Verify each PNG exists and is non-empty.
-- [ ] Commit with `art: add cat piece png assets`.
+- [x] Commit with `art: add cat piece png assets`.
 
 ## Task 3: Render Image Assets In WPF
 
@@ -52,11 +52,11 @@
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] Add a failing WPF smoke assertion for a named `PieceImage`.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect failure because `PieceImage` does not exist yet.
-- [ ] Replace board-piece WPF shape avatar elements with `<Image x:Name="PieceImage" Source="{Binding Piece.AssetPath}" ... />`.
-- [ ] Replace next-piece preview shape avatar elements with image-bound previews.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
+- [x] Add a failing WPF smoke assertion for a named `PieceImage`.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect failure because `PieceImage` does not exist yet.
+- [x] Replace board-piece WPF shape avatar elements with `<Image x:Name="PieceImage" Source="{Binding Piece.AssetPath}" ... />`.
+- [x] Replace next-piece preview shape avatar elements with image-bound previews.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
 - [ ] Commit with `feat: render cat piece images`.
 
 ## Task 4: Verify And Launch
