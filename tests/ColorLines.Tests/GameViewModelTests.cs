@@ -124,8 +124,21 @@ public sealed class GameViewModelTests
     {
         var cell = CellViewModel.Occupied(1, 2, ColorLines.Core.Game.PieceKind.Orange, true);
 
-        Assert.Equal("=^.^=", cell.FaceText);
+        Assert.NotNull(cell.Piece);
+        Assert.Equal("=^.^=", cell.Piece.FaceText);
         Assert.True(cell.IsSelected);
+    }
+
+    [Fact]
+    public void PieceViewModelUsesReadableCatColors()
+    {
+        var white = PieceViewModel.FromPiece(ColorLines.Core.Game.PieceKind.White);
+        var black = PieceViewModel.FromPiece(ColorLines.Core.Game.PieceKind.Black);
+
+        Assert.Equal("White", white.Name);
+        Assert.Equal("W", white.Label);
+        Assert.Equal("=^.^=", white.FaceText);
+        Assert.NotEqual(white.FaceBrush.ToString(), black.FaceBrush.ToString());
     }
 
     [Fact]
