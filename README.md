@@ -34,3 +34,7 @@ dotnet run --project src/ColorLines.Windows/ColorLines.Windows.csproj
 ## Design
 
 The product design is documented in `docs/superpowers/specs/2026-05-17-color-lines-wpf-design.md`.
+
+## Theme Resources
+
+The first theme is `CozyBoard`. Resource placeholders live under `src/ColorLines.Windows/Assets/Themes/CozyBoard/` with `board`, `pieces`, `effects`, and `sounds` folders.

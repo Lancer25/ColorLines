@@ -6,14 +6,14 @@
         Height="760"
         MinWidth="820"
         MinHeight="620"
-        Background="#FFF7EF">
+        Background="{StaticResource AppBackgroundBrush}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <Style x:Key="BoardCellButton" TargetType="Button">
             <Setter Property="Margin" Value="4" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="#FFF8E7" />
-            <Setter Property="BorderBrush" Value="#E8B982" />
+            <Setter Property="Background" Value="{StaticResource CellBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource CellBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -29,7 +29,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="CellFrame" Property="Background" Value="#FFF0CF" />
+                                <Setter TargetName="CellFrame" Property="Background" Value="{StaticResource CellHoverBrush}" />
                                 <Setter TargetName="CellFrame" Property="BorderBrush" Value="#D98B4A" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -46,8 +46,8 @@
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0"
-                Background="#FFE1BB"
-                BorderBrush="#D79B63"
+                Background="{StaticResource BoardBackgroundBrush}"
+                BorderBrush="{StaticResource BoardBorderBrush}"
                 BorderThickness="2"
                 CornerRadius="16"
                 Padding="20">
@@ -111,14 +111,14 @@
             <TextBlock Text="Color Lines"
                        FontSize="34"
                        FontWeight="Bold"
-                       Foreground="#4A2D23" />
+                       Foreground="{StaticResource TextPrimaryBrush}" />
             <TextBlock Text="{Binding StatusText}"
                        Margin="0,6,0,26"
                        TextWrapping="Wrap"
                        FontSize="15"
-                       Foreground="#8A6655" />
+                       Foreground="{StaticResource TextMutedBrush}" />
 
-            <Border Background="#FFFFFB"
+            <Border Background="{StaticResource PanelBackgroundBrush}"
                     BorderBrush="#E8CFB7"
                     BorderThickness="1"
                     CornerRadius="10"
@@ -126,21 +126,21 @@
                     Margin="0,0,0,14">
                 <StackPanel>
                     <TextBlock Text="Score"
-                               Foreground="#8A6655"
+                               Foreground="{StaticResource TextMutedBrush}"
                                FontSize="13"
                                FontWeight="SemiBold" />
                     <TextBlock Text="{Binding Score}"
-                               Foreground="#4A2D23"
+                               Foreground="{StaticResource TextPrimaryBrush}"
                                FontSize="34"
                                FontWeight="Bold" />
                     <TextBlock Text="{Binding ScoreDeltaText}"
-                               Foreground="#D96B2B"
+                               Foreground="{StaticResource ScoreAccentBrush}"
                                FontSize="18"
                                FontWeight="Bold" />
                 </StackPanel>
             </Border>
 
-            <Border Background="#FFFFFB"
+            <Border Background="{StaticResource PanelBackgroundBrush}"
                     BorderBrush="#E8CFB7"
                     BorderThickness="1"
                     CornerRadius="10"
@@ -148,7 +148,7 @@
                     Margin="0,0,0,14">
                 <StackPanel>
                     <TextBlock Text="Next Cats"
-                               Foreground="#8A6655"
+                               Foreground="{StaticResource TextMutedBrush}"
                                FontSize="13"
                                FontWeight="SemiBold" />
                     <ItemsControl ItemsSource="{Binding NextPieces}" Margin="0,10,0,0">
@@ -159,12 +159,12 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="#FFF0CF"
+                                <Border Background="{StaticResource CellHoverBrush}"
                                         CornerRadius="14"
                                         Padding="10,6"
                                         Margin="0,0,8,0">
                                     <TextBlock Text="{Binding}"
-                                               Foreground="#4A2D23"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
                                                FontSize="13"
                                                FontWeight="SemiBold" />
                                 </Border>
@@ -177,11 +177,44 @@
             <Button Content="New Game"
                     Command="{Binding NewGameCommand}"
                     Height="42"
-                    Background="#7C4D2E"
+                    Background="{StaticResource AccentBrush}"
                     Foreground="#FFFFFB"
                     BorderThickness="0"
                     FontSize="15"
                     FontWeight="SemiBold" />
+
+            <Border Background="{StaticResource PanelBackgroundBrush}"
+                    BorderBrush="#E8CFB7"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="18"
+                    Margin="0,14,0,0">
+                <StackPanel>
+                    <TextBlock Text="Settings"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="13"
+                               FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding SelectedThemeName}"
+                               Margin="0,8,0,0"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontSize="15" />
+                    <TextBlock Text="{Binding AnimationIntensity, StringFormat=Animation: {0}}"
+                               Margin="0,4,0,0"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="13" />
+                    <Button Content="Toggle Sound"
+                            Command="{Binding ToggleSoundCommand}"
+                            Height="34"
+                            Margin="0,12,0,0"
+                            Background="{StaticResource CellHoverBrush}"
+                            Foreground="{StaticResource TextPrimaryBrush}"
+                            BorderBrush="{StaticResource CellBorderBrush}" />
+                    <TextBlock Text="{Binding IsSoundEnabled, StringFormat=Sound enabled: {0}}"
+                               Margin="0,6,0,0"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="12" />
+                </StackPanel>
+            </Border>
         </StackPanel>
 
         <Border Grid.ColumnSpan="2"
@@ -190,24 +223,24 @@
             <Border Width="320"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Background="#FFFFFB"
+                    Background="{StaticResource PanelBackgroundBrush}"
                     CornerRadius="14"
                     Padding="24">
                 <StackPanel>
                     <TextBlock Text="Game Over"
                                FontSize="30"
                                FontWeight="Bold"
-                               Foreground="#4A2D23"
+                               Foreground="{StaticResource TextPrimaryBrush}"
                                HorizontalAlignment="Center" />
                     <TextBlock Text="The board is full."
                                Margin="0,8,0,20"
                                FontSize="15"
-                               Foreground="#8A6655"
+                               Foreground="{StaticResource TextMutedBrush}"
                                HorizontalAlignment="Center" />
                     <Button Content="New Game"
                             Command="{Binding NewGameCommand}"
                             Height="42"
-                            Background="#7C4D2E"
+                            Background="{StaticResource AccentBrush}"
                             Foreground="#FFFFFB"
                             BorderThickness="0"
                             FontSize="15"
