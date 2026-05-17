@@ -133,6 +133,10 @@
                                Foreground="{StaticResource TextPrimaryBrush}"
                                FontSize="34"
                                FontWeight="Bold" />
+                    <TextBlock Text="{Binding HighScore, StringFormat=Best: {0}}"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="14"
+                               FontWeight="SemiBold" />
                     <TextBlock Text="{Binding ScoreDeltaText}"
                                Foreground="{StaticResource ScoreAccentBrush}"
                                FontSize="18"

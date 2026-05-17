@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Windows;
 using ColorLines.Windows;
+using ColorLines.Windows.Services;
 
 namespace ColorLines.Tests;
 
@@ -15,7 +16,8 @@ public sealed class WpfSmokeTests
             try
             {
                 EnsureThemeResources();
-                var window = new MainWindow
+                var savePath = Path.Combine(Path.GetTempPath(), $"color-lines-window-{Guid.NewGuid():N}.json");
+                var window = new MainWindow(new LocalSaveService(savePath))
                 {
                     ShowInTaskbar = false,
                     WindowState = System.Windows.WindowState.Minimized
