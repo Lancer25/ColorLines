@@ -32,7 +32,7 @@
 - [x] Store latest moved/spawned/cleared/rejected positions in `GameViewModel`.
 - [x] Refresh cells with those flags.
 - [x] Run view model tests.
-- [ ] Commit with `feat: add cell feedback flags`.
+- [x] Commit with `feat: add cell feedback flags`.
 
 ### Task 2: Add WPF Feedback Rings
 
@@ -40,9 +40,9 @@
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] Add layered borders for moved, spawned, cleared, and rejected cells.
-- [ ] Add a smoke test that a highlighted moved or selected visual can be created.
-- [ ] Run WPF smoke tests.
+- [x] Add layered borders for moved, spawned, cleared, and rejected cells.
+- [x] Add a smoke test that a highlighted moved or selected visual can be created.
+- [x] Run WPF smoke tests.
 - [ ] Commit with `feat: add board feedback rings`.
 
 ### Task 3: Verify And Launch

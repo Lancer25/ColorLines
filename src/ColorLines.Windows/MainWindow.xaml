@@ -64,6 +64,73 @@
                                     Command="{Binding DataContext.SelectCellCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                     CommandParameter="{Binding}">
                                 <Grid Width="50" Height="50">
+                                    <Border x:Name="ClearFeedbackRing"
+                                            BorderBrush="#FF8BA7"
+                                            BorderThickness="3"
+                                            CornerRadius="14"
+                                            IsHitTestVisible="False">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Opacity" Value="0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding WasCleared}" Value="True">
+                                                        <Setter Property="Opacity" Value="0.95" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                    <Border x:Name="SpawnFeedbackRing"
+                                            BorderBrush="#62B96C"
+                                            BorderThickness="3"
+                                            CornerRadius="16"
+                                            Margin="2"
+                                            IsHitTestVisible="False">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Opacity" Value="0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding WasSpawned}" Value="True">
+                                                        <Setter Property="Opacity" Value="0.9" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                    <Border x:Name="MoveFeedbackRing"
+                                            BorderBrush="#68A9FF"
+                                            BorderThickness="3"
+                                            CornerRadius="18"
+                                            Margin="3"
+                                            IsHitTestVisible="False">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Opacity" Value="0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding WasMovedTo}" Value="True">
+                                                        <Setter Property="Opacity" Value="0.9" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                    <Border x:Name="RejectFeedbackRing"
+                                            BorderBrush="#D94B4B"
+                                            BorderThickness="3"
+                                            CornerRadius="14"
+                                            Margin="1"
+                                            IsHitTestVisible="False">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Opacity" Value="0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding WasRejectedTarget}" Value="True">
+                                                        <Setter Property="Opacity" Value="0.95" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
                                     <Polygon Points="11,18 18,4 25,20"
                                              Fill="{Binding Piece.EarBrush}"
                                              Stroke="#70452C"
