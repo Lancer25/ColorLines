@@ -34,7 +34,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         isSoundEnabled = true;
         animationIntensity = "Full";
         Cells = new ObservableCollection<CellViewModel>();
-        NextPieces = new ObservableCollection<string>();
+        NextPieces = new ObservableCollection<PieceViewModel>();
         SelectCellCommand = new RelayCommand(SelectCell, parameter => parameter is CellViewModel);
         NewGameCommand = new RelayCommand(_ => NewGame());
         ToggleSoundCommand = new RelayCommand(_ => IsSoundEnabled = !IsSoundEnabled);
@@ -45,7 +45,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     public ObservableCollection<CellViewModel> Cells { get; }
 
-    public ObservableCollection<string> NextPieces { get; }
+    public ObservableCollection<PieceViewModel> NextPieces { get; }
 
     public ICommand SelectCellCommand { get; }
 
@@ -235,7 +235,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         NextPieces.Clear();
         foreach (var piece in state.NextPieces)
         {
-            NextPieces.Add(piece.ToString());
+            NextPieces.Add(PieceViewModel.FromPiece(piece));
         }
     }
 

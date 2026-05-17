@@ -57,6 +57,7 @@ public sealed class GameViewModelTests
         Assert.Equal(81, viewModel.Cells.Count);
         Assert.Equal(0, viewModel.Score);
         Assert.Equal(3, viewModel.NextPieces.Count);
+        Assert.All(viewModel.NextPieces, piece => Assert.Equal("=^.^=", piece.FaceText));
         Assert.Equal("Select a cat to move.", viewModel.StatusText);
     }
 
