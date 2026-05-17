@@ -26,4 +26,25 @@ public sealed class GameViewModelTests
 
         Assert.False(executed);
     }
+
+    [Fact]
+    public void CellViewModelShowsEmptyCell()
+    {
+        var cell = CellViewModel.Empty(4, 5);
+
+        Assert.Equal(4, cell.Row);
+        Assert.Equal(5, cell.Column);
+        Assert.False(cell.IsOccupied);
+        Assert.Equal(string.Empty, cell.PieceLabel);
+    }
+
+    [Fact]
+    public void CellViewModelShowsOccupiedCatPiece()
+    {
+        var cell = CellViewModel.Occupied(1, 2, ColorLines.Core.Game.PieceKind.Calico, false);
+
+        Assert.True(cell.IsOccupied);
+        Assert.Equal("C", cell.PieceLabel);
+        Assert.Equal("Calico", cell.PieceName);
+    }
 }
