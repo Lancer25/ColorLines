@@ -12,26 +12,26 @@
 
 ## Task 1: Score Delta Badge State
 
-- [ ] Write failing tests for `ShowScoreDelta` and `ScoreDeltaBadgeText`.
-- [ ] Run the focused tests and verify they fail.
-- [ ] Add the two properties to `GameViewModel` and raise notifications when `Feedback` changes.
-- [ ] Run the focused tests and verify they pass.
-- [ ] Commit with `feat: expose score delta badge state`.
+- [x] Write failing tests for `ShowScoreDelta` and `ScoreDeltaBadgeText`.
+- [x] Run the focused tests and verify they fail.
+- [x] Add the two properties to `GameViewModel` and raise notifications when `Feedback` changes.
+- [x] Run the focused tests and verify they pass.
+- [x] Commit with `feat: expose score delta badge state`.
 
 ## Task 2: Clear Flash And Score Badge UI
 
-- [ ] Add failing WPF smoke assertions for `ClearPulseGlow` and `ScoreDeltaBadge`.
-- [ ] Run `OccupiedCellsShowPieceBody` and verify it fails.
-- [ ] Add `ClearPulseGlow` to the cell template and wrap score delta text in `ScoreDeltaBadge`.
-- [ ] Run WPF smoke tests and verify they pass.
-- [ ] Commit with `feat: add clear score feedback visuals`.
+- [x] Add failing WPF smoke assertions for `ClearPulseGlow` and `ScoreDeltaBadge`.
+- [x] Run `OccupiedCellsShowPieceBody` and verify it fails.
+- [x] Add `ClearPulseGlow` to the cell template and wrap score delta text in `ScoreDeltaBadge`.
+- [x] Run WPF smoke tests and verify they pass.
+- [x] Commit with `feat: add clear score feedback visuals`.
 
 ## Task 3: Full Verification
 
-- [ ] Run `dotnet test ColorLines.sln`.
-- [ ] Run `dotnet build ColorLines.sln`.
-- [ ] Launch the WPF app for manual verification.
-- [ ] Mark this plan complete and commit with `docs: mark clear score feedback complete`.
+- [x] Run `dotnet test ColorLines.sln`.
+- [x] Run `dotnet build ColorLines.sln`.
+- [x] Launch the WPF app for manual verification.
+- [x] Mark this plan complete and commit with `docs: mark clear score feedback complete`.
 
 ---
 
