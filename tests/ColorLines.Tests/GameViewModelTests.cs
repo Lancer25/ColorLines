@@ -327,6 +327,19 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void GameOverViewModelProvidesSummaryText()
+    {
+        var state = new GameState(GameBoard.CreateEmpty(), Array.Empty<PieceKind>(), 42, GameStatus.GameOver);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state, highScore: 99);
+
+        Assert.True(viewModel.IsGameOver);
+        Assert.Equal("Game Over", viewModel.GameOverTitle);
+        Assert.Equal("The board is full. Start a new run?", viewModel.GameOverSummaryText);
+        Assert.Equal("Final Score: 42", viewModel.FinalScoreText);
+        Assert.Equal("Best Score: 99", viewModel.BestScoreText);
+    }
+
+    [Fact]
     public void ScoringMoveShowsScoreDeltaBadge()
     {
         var board = GameBoard.CreateEmpty();

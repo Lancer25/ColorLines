@@ -88,6 +88,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
                     HighScore = score;
                 }
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(FinalScoreText));
             }
         }
     }
@@ -101,6 +102,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             {
                 highScore = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(BestScoreText));
             }
         }
     }
@@ -136,6 +138,14 @@ public sealed class GameViewModel : INotifyPropertyChanged
     }
 
     public bool IsGameOver => state.Status == GameStatus.GameOver || Feedback.IsGameOver;
+
+    public string GameOverTitle => "Game Over";
+
+    public string GameOverSummaryText => "The board is full. Start a new run?";
+
+    public string FinalScoreText => $"Final Score: {Score}";
+
+    public string BestScoreText => $"Best Score: {HighScore}";
 
     public string ScoreDeltaText => Feedback.HasScore ? $"+{Feedback.ScoreDelta}" : string.Empty;
 
