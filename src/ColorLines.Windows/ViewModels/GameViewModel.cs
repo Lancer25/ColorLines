@@ -127,6 +127,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsGameOver));
                 OnPropertyChanged(nameof(ScoreDeltaText));
+                OnPropertyChanged(nameof(ShowScoreDelta));
+                OnPropertyChanged(nameof(ScoreDeltaBadgeText));
             }
         }
     }
@@ -134,6 +136,10 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public bool IsGameOver => state.Status == GameStatus.GameOver || Feedback.IsGameOver;
 
     public string ScoreDeltaText => Feedback.HasScore ? $"+{Feedback.ScoreDelta}" : string.Empty;
+
+    public bool ShowScoreDelta => Feedback.HasScore;
+
+    public string ScoreDeltaBadgeText => ScoreDeltaText;
 
     public bool IsSoundEnabled
     {

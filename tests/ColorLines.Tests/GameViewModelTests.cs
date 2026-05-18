@@ -267,6 +267,37 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void ScoringMoveShowsScoreDeltaBadge()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 3), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 4), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 5), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 1);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+
+        Assert.True(viewModel.ShowScoreDelta);
+        Assert.Equal(viewModel.ScoreDeltaText, viewModel.ScoreDeltaBadgeText);
+        Assert.StartsWith("+", viewModel.ScoreDeltaBadgeText);
+    }
+
+    [Fact]
+    public void NewGameHidesScoreDeltaBadge()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        Assert.False(viewModel.ShowScoreDelta);
+        Assert.Equal(string.Empty, viewModel.ScoreDeltaBadgeText);
+    }
+
+    [Fact]
     public void CellViewModelProvidesCatFaceSymbol()
     {
         var cell = CellViewModel.Occupied(1, 2, ColorLines.Core.Game.PieceKind.Orange, true);
