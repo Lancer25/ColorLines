@@ -688,8 +688,21 @@
         </Grid>
 
         <Border x:Name="GameOverOverlay"
-                Background="#99000000"
-                Visibility="{Binding IsGameOver, Converter={StaticResource BooleanToVisibilityConverter}}">
+                Background="#99000000">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsPlayingVisible}" Value="True" />
+                                <Condition Binding="{Binding Game.IsGameOver}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Border Width="360"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -697,12 +710,12 @@
                     CornerRadius="14"
                     Padding="24">
                 <StackPanel>
-                    <TextBlock Text="{Binding GameOverTitle}"
+                    <TextBlock Text="{Binding Game.GameOverTitle}"
                                FontSize="30"
                                FontWeight="Bold"
                                Foreground="{StaticResource TextPrimaryBrush}"
                                HorizontalAlignment="Center" />
-                    <TextBlock Text="{Binding GameOverSummaryText}"
+                    <TextBlock Text="{Binding Game.GameOverSummaryText}"
                                Margin="0,8,0,18"
                                FontSize="15"
                                TextWrapping="Wrap"
@@ -716,13 +729,13 @@
                             Margin="0,0,0,18">
                         <StackPanel>
                             <TextBlock x:Name="GameOverFinalScoreText"
-                                       Text="{Binding FinalScoreText}"
+                                       Text="{Binding Game.FinalScoreText}"
                                        FontSize="22"
                                        FontWeight="Bold"
                                        Foreground="{StaticResource TextPrimaryBrush}"
                                        HorizontalAlignment="Center" />
                             <TextBlock x:Name="GameOverBestScoreText"
-                                       Text="{Binding BestScoreText}"
+                                       Text="{Binding Game.BestScoreText}"
                                        Margin="0,5,0,0"
                                        FontSize="14"
                                        FontWeight="SemiBold"

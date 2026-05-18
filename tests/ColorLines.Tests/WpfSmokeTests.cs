@@ -153,6 +153,10 @@ public sealed class WpfSmokeTests
             window.Show();
             window.UpdateLayout();
 
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            shell.ContinueCommand.Execute(null);
+            window.UpdateLayout();
+
             var statusTextRegion = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "StatusTextRegion");
             var mainBoardFrame = FindVisualChildren<Border>(window)
@@ -163,12 +167,8 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "ScorePanel");
             var nextCatsPanel = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "NextCatsPanel");
-            var settingsPanel = FindVisualChildren<Border>(window)
-                .First(border => border.Name == "SettingsPanel");
             var newGameButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "NewGameButton");
-            var toggleAnimationButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "ToggleAnimationButton");
             var finalScoreText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "GameOverFinalScoreText");
             var bestScoreText = FindVisualChildren<TextBlock>(window)
@@ -209,9 +209,7 @@ public sealed class WpfSmokeTests
             Assert.True(rightRail.Margin.Left >= 24);
             Assert.True(scorePanel.Padding.Left >= 16);
             Assert.True(nextCatsPanel.Padding.Left >= 16);
-            Assert.True(settingsPanel.Padding.Left >= 16);
             Assert.NotNull(newGameButton.Command);
-            Assert.NotNull(toggleAnimationButton.Command);
             Assert.Equal("Final Score: 0", finalScoreText.Text);
             Assert.StartsWith("Best Score:", bestScoreText.Text);
             Assert.Equal(0, scoreDeltaBadge.Opacity);
@@ -245,6 +243,10 @@ public sealed class WpfSmokeTests
                 WindowState = WindowState.Minimized
             };
             window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            shell.ContinueCommand.Execute(null);
             window.UpdateLayout();
 
             var occupiedButton = FindVisualChildren<Button>(window)
@@ -305,16 +307,16 @@ public sealed class WpfSmokeTests
         var rootGrid = document.Root?
             .Elements()
             .First(element => element.Name.LocalName == "Grid");
-        var contentGrid = rootGrid?
+        var gameplayView = rootGrid?
             .Elements()
-            .First(element => element.Attribute(x + "Name")?.Value == "ContentGrid");
+            .First(element => element.Attribute(x + "Name")?.Value == "GameplayView");
         var gameOverOverlay = rootGrid?
             .Elements()
             .First(element => element.Attribute(x + "Name")?.Value == "GameOverOverlay");
 
         Assert.NotNull(rootGrid);
         Assert.Null(rootGrid!.Attribute("Margin"));
-        Assert.Equal("28", contentGrid?.Attribute("Margin")?.Value);
+        Assert.Equal("28", gameplayView?.Attribute("Margin")?.Value);
         Assert.NotNull(gameOverOverlay);
     }
 
