@@ -46,6 +46,10 @@ public sealed class WpfSmokeTests
 
             var statusTextRegion = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "StatusTextRegion");
+            var finalScoreText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "GameOverFinalScoreText");
+            var bestScoreText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "GameOverBestScoreText");
             var occupiedButton = FindVisualChildren<Button>(window)
                 .First(button => button.DataContext is CellViewModel { IsOccupied: true });
             occupiedButton.ApplyTemplate();
@@ -76,6 +80,8 @@ public sealed class WpfSmokeTests
             Assert.Equal(44, pieceImage.Width);
             Assert.Equal(44, pieceImage.Height);
             Assert.True(statusTextRegion.MinHeight >= 54);
+            Assert.Equal("Final Score: 0", finalScoreText.Text);
+            Assert.StartsWith("Best Score:", bestScoreText.Text);
             Assert.Equal(0, scoreDeltaBadge.Opacity);
             Assert.Equal(0, clearPulseGlow.Opacity);
             Assert.Equal(1, pieceImage.Opacity);
