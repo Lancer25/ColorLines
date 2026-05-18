@@ -46,6 +46,12 @@ public sealed class WpfSmokeTests
 
             var statusTextRegion = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "StatusTextRegion");
+            var mainBoardFrame = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "MainBoardFrame");
+            var rightRail = FindVisualChildren<StackPanel>(window)
+                .First(panel => panel.Name == "RightRail");
+            var newGameButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "NewGameButton");
             var toggleAnimationButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "ToggleAnimationButton");
             var finalScoreText = FindVisualChildren<TextBlock>(window)
@@ -82,6 +88,9 @@ public sealed class WpfSmokeTests
             Assert.Equal(44, pieceImage.Width);
             Assert.Equal(44, pieceImage.Height);
             Assert.True(statusTextRegion.MinHeight >= 54);
+            Assert.True(mainBoardFrame.Padding.Left >= 18);
+            Assert.True(rightRail.Margin.Left >= 24);
+            Assert.NotNull(newGameButton.Command);
             Assert.NotNull(toggleAnimationButton.Command);
             Assert.Equal("Final Score: 0", finalScoreText.Text);
             Assert.StartsWith("Best Score:", bestScoreText.Text);

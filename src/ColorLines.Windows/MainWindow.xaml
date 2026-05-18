@@ -46,7 +46,8 @@
                 <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0"
+            <Border x:Name="MainBoardFrame"
+                    Grid.Column="0"
                     Background="{StaticResource BoardBackgroundBrush}"
                     BorderBrush="{StaticResource BoardBorderBrush}"
                     BorderThickness="2"
@@ -366,7 +367,7 @@
             </Viewbox>
             </Border>
 
-            <StackPanel Grid.Column="1" Margin="28,0,0,0">
+            <StackPanel x:Name="RightRail" Grid.Column="1" Margin="28,0,0,0">
             <TextBlock Text="Color Lines"
                        FontSize="34"
                        FontWeight="Bold"
@@ -473,7 +474,8 @@
                 </StackPanel>
             </Border>
 
-            <Button Content="New Game"
+            <Button x:Name="NewGameButton"
+                    Content="New Game"
                     Command="{Binding NewGameCommand}"
                     Height="42"
                     Background="{StaticResource AccentBrush}"
