@@ -97,11 +97,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.04" Value="-1.8" />
-                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.09" Value="1.8" />
-                                                                        <EasingDoubleKeyFrame KeyTime="0:0:0.14" Value="0" />
-                                                                    </DoubleAnimationUsingKeyFrames>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                     From="0.25"
+                                                                                     To="1"
+                                                                                     Duration="0:0:0.12" />
                                                                 </Storyboard>
                                                             </BeginStoryboard>
                                                         </DataTrigger.EnterActions>
@@ -181,86 +180,70 @@
                                           RenderTransformOrigin="0.5,0.85"
                                           IsHitTestVisible="False">
                                         <Grid.RenderTransform>
-                                            <TransformGroup>
-                                                <ScaleTransform ScaleX="1" ScaleY="1" />
-                                                <TranslateTransform Y="0" />
-                                            </TransformGroup>
+                                            <TranslateTransform Y="0" />
                                         </Grid.RenderTransform>
                                         <Grid.Style>
                                             <Style TargetType="Grid">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                        <DataTrigger.EnterActions>
-                                                            <BeginStoryboard>
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)"
-                                                                                     To="-3"
-                                                                                     Duration="0:0:0.12" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
-                                                        <DataTrigger.ExitActions>
-                                                            <BeginStoryboard>
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)"
-                                                                                     To="0"
-                                                                                     Duration="0:0:0.10" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.ExitActions>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding WasMovedTo}" Value="True">
-                                                        <DataTrigger.EnterActions>
-                                                            <BeginStoryboard>
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"
-                                                                                     From="0.92"
-                                                                                     To="1"
-                                                                                     Duration="0:0:0.16" />
-                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)"
-                                                                                     From="0.92"
-                                                                                     To="1"
-                                                                                     Duration="0:0:0.16" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding WasSpawned}" Value="True">
-                                                        <DataTrigger.EnterActions>
-                                                            <BeginStoryboard>
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"
-                                                                                     From="0.72"
-                                                                                     To="1"
-                                                                                     Duration="0:0:0.18" />
-                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)"
-                                                                                     From="0.72"
-                                                                                     To="1"
-                                                                                     Duration="0:0:0.18" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
+                                                        <Setter Property="Margin" Value="0,-3,0,3" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Grid.Style>
-                                        <Image x:Name="PieceImage"
-                                               Width="44"
-                                               Height="44"
-                                               Source="{Binding Piece.AssetPath}"
-                                               Stretch="Uniform"
-                                               RenderOptions.BitmapScalingMode="HighQuality">
-                                            <Image.Style>
-                                                <Style TargetType="Image">
-                                                    <Setter Property="Opacity" Value="0" />
+                                        <Grid x:Name="PieceScaleActor"
+                                              RenderTransformOrigin="0.5,0.85">
+                                            <Grid.RenderTransform>
+                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                            </Grid.RenderTransform>
+                                            <Grid.Style>
+                                                <Style TargetType="Grid">
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsOccupied}" Value="True">
-                                                            <Setter Property="Opacity" Value="1" />
+                                                        <DataTrigger Binding="{Binding WasMovedTo}" Value="True">
+                                                            <DataTrigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                         From="0.65"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.16" />
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </DataTrigger.EnterActions>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding WasSpawned}" Value="True">
+                                                            <DataTrigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                         From="0.25"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.18" />
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </DataTrigger.EnterActions>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </Image.Style>
-                                        </Image>
+                                            </Grid.Style>
+                                            <Image x:Name="PieceImage"
+                                                   Width="44"
+                                                   Height="44"
+                                                   Source="{Binding Piece.AssetPath}"
+                                                   Stretch="Uniform"
+                                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Opacity" Value="0" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsOccupied}" Value="True">
+                                                                <Setter Property="Opacity" Value="1" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Button>
