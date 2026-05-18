@@ -12,26 +12,26 @@
 
 ## Task 1: Game Over Presentation State
 
-- [ ] Add failing tests for `GameOverTitle`, `GameOverSummaryText`, `FinalScoreText`, and `BestScoreText`.
-- [ ] Run focused tests and verify they fail.
-- [ ] Implement the presentation properties in `GameViewModel` and raise score-related notifications.
-- [ ] Run focused tests and verify they pass.
-- [ ] Commit with `feat: expose game over summary text`.
+- [x] Add failing tests for `GameOverTitle`, `GameOverSummaryText`, `FinalScoreText`, and `BestScoreText`.
+- [x] Run focused tests and verify they fail.
+- [x] Implement the presentation properties in `GameViewModel` and raise score-related notifications.
+- [x] Run focused tests and verify they pass.
+- [x] Commit with `feat: expose game over summary text`.
 
 ## Task 2: Game Over Overlay UI
 
-- [ ] Add failing WPF smoke assertions for named overlay elements.
-- [ ] Run focused smoke test and verify it fails.
-- [ ] Update `MainWindow.xaml` game-over overlay with bound title, summary, final score, best score, and primary button.
-- [ ] Run WPF smoke tests and verify they pass.
-- [ ] Commit with `feat: upgrade game over panel`.
+- [x] Add failing WPF smoke assertions for named overlay elements.
+- [x] Run focused smoke test and verify it fails.
+- [x] Update `MainWindow.xaml` game-over overlay with bound title, summary, final score, best score, and primary button.
+- [x] Run WPF smoke tests and verify they pass.
+- [x] Commit with `feat: upgrade game over panel`.
 
 ## Task 3: Verification
 
-- [ ] Run `dotnet test ColorLines.sln`.
-- [ ] Run `dotnet build ColorLines.sln`.
-- [ ] Launch the WPF app for manual verification.
-- [ ] Mark this plan complete and commit with `docs: mark game over panel complete`.
+- [x] Run `dotnet test ColorLines.sln`.
+- [x] Run `dotnet build ColorLines.sln`.
+- [x] Launch the WPF app for manual verification.
+- [x] Mark this plan complete and commit with `docs: mark game over panel complete`.
 
 ---
 
