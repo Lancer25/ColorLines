@@ -30,15 +30,15 @@
 - [x] Adjust soft feedback glows to sit behind the smaller image.
 - [x] Adjust next-piece preview image size to match the new proportions.
 - [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
-- [ ] Commit with `feat: polish cat piece fit`.
+- [x] Commit with `feat: polish cat piece fit`.
 
 ## Task 3: Verify And Launch
 
-- [ ] Run `dotnet test ColorLines.sln`.
-- [ ] Run `dotnet build ColorLines.sln`.
-- [ ] Launch the WPF app.
-- [ ] Confirm the process responds.
-- [ ] Inspect `git status --short --branch`.
+- [x] Run `dotnet test ColorLines.sln`.
+- [x] Run `dotnet build ColorLines.sln`.
+- [x] Launch the WPF app.
+- [x] Confirm the process responds.
+- [x] Inspect `git status --short --branch`.
 
 ## Self-Review
 
