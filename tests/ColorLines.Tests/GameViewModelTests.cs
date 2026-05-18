@@ -79,6 +79,37 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SelectingOccupiedCellPlaysSelectSound()
+    {
+        var soundPlayer = new RecordingSoundPlayer();
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state, soundPlayer: soundPlayer);
+        var occupied = viewModel.Cells.Single(cell => cell.IsOccupied);
+
+        viewModel.SelectCellCommand.Execute(occupied);
+
+        Assert.Equal(new[] { SoundCue.Select }, soundPlayer.Cues);
+    }
+
+    [Fact]
+    public void DisabledSoundDoesNotPlaySelectCue()
+    {
+        var soundPlayer = new RecordingSoundPlayer();
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state, soundPlayer: soundPlayer);
+        var occupied = viewModel.Cells.Single(cell => cell.IsOccupied);
+        viewModel.ToggleSoundCommand.Execute(null);
+
+        viewModel.SelectCellCommand.Execute(occupied);
+
+        Assert.Empty(soundPlayer.Cues);
+    }
+
+    [Fact]
     public void SelectingOccupiedCellMarksReachableEmptyTargets()
     {
         var board = GameBoard.CreateEmpty();
@@ -132,6 +163,18 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void ClickingEmptyCellWithoutSelectionPlaysRejectSound()
+    {
+        var soundPlayer = new RecordingSoundPlayer();
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), new GameEngine(new SequenceRandomSource()).NewGame(), soundPlayer: soundPlayer);
+        var empty = viewModel.Cells.First(cell => !cell.IsOccupied);
+
+        viewModel.SelectCellCommand.Execute(empty);
+
+        Assert.Equal(new[] { SoundCue.Reject }, soundPlayer.Cues);
+    }
+
+    [Fact]
     public void SuccessfulMoveMarksTargetCellAsMovedTo()
     {
         var board = GameBoard.CreateEmpty();
@@ -146,6 +189,23 @@ public sealed class GameViewModelTests
 
         Assert.True(viewModel.Feedback.WasMoved);
         Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.WasMovedTo);
+    }
+
+    [Fact]
+    public void SuccessfulMovePlaysMoveSound()
+    {
+        var soundPlayer = new RecordingSoundPlayer();
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state, soundPlayer: soundPlayer);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 1);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+
+        Assert.Equal(new[] { SoundCue.Select, SoundCue.Move }, soundPlayer.Cues);
     }
 
     [Fact]
@@ -415,6 +475,16 @@ public sealed class GameViewModelTests
         public int Next(int exclusiveMax)
         {
             return 0;
+        }
+    }
+
+    private sealed class RecordingSoundPlayer : ISoundPlayer
+    {
+        public List<SoundCue> Cues { get; } = new();
+
+        public void Play(SoundCue cue)
+        {
+            Cues.Add(cue);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace ColorLines.Windows.ViewModels;
 public sealed class GameViewModel : INotifyPropertyChanged
 {
     private readonly GameEngine engine;
+    private readonly ISoundPlayer soundPlayer;
     private GameState state;
     private BoardPosition? selectedPosition;
     private int score;
@@ -29,9 +30,10 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private HashSet<BoardPosition> rejectedPositions;
     private HashSet<BoardPosition> pathPreviewPositions;
 
-    public GameViewModel(GameEngine engine, GameState state, int highScore = 0)
+    public GameViewModel(GameEngine engine, GameState state, int highScore = 0, ISoundPlayer? soundPlayer = null)
     {
         this.engine = engine;
+        this.soundPlayer = soundPlayer ?? NullSoundPlayer.Instance;
         this.state = state;
         score = state.Score;
         this.highScore = Math.Max(highScore, score);
@@ -177,7 +179,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         var engine = new GameEngine(new SystemRandomSource());
         var state = save?.Game is null ? engine.NewGame() : GameSnapshotMapper.ToState(save.Game);
-        var viewModel = new GameViewModel(engine, state, save?.HighScore ?? 0);
+        var viewModel = new GameViewModel(engine, state, save?.HighScore ?? 0, SystemSoundPlayer.Instance);
         if (save is not null)
         {
             viewModel.isSoundEnabled = save.IsSoundEnabled;
@@ -216,6 +218,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             Feedback = TurnFeedback.Neutral;
             selectedPosition = position;
             StatusText = $"Selected {piece}. Choose an empty cell.";
+            PlaySound(SoundCue.Select);
             RefreshFromState();
             return;
         }
@@ -227,6 +230,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             rejectedPositions.Add(position);
             Feedback = new TurnFeedback(false, true, false, false, false, 0);
             StatusText = "Select a cat before choosing a target.";
+            PlaySound(SoundCue.Reject);
             RefreshFromState();
             return;
         }
@@ -240,6 +244,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         StoreCellFeedback(result);
         OnPropertyChanged(nameof(IsGameOver));
         StatusText = BuildStatusText(result);
+        PlayTurnSound(Feedback);
         RefreshFromState();
     }
 
@@ -253,7 +258,42 @@ public sealed class GameViewModel : INotifyPropertyChanged
         Feedback = TurnFeedback.Neutral;
         OnPropertyChanged(nameof(IsGameOver));
         StatusText = "Select a cat to move.";
+        PlaySound(SoundCue.NewGame);
         RefreshFromState();
+    }
+
+    private void PlayTurnSound(TurnFeedback turnFeedback)
+    {
+        if (turnFeedback.IsGameOver)
+        {
+            PlaySound(SoundCue.GameOver);
+            return;
+        }
+
+        if (turnFeedback.HadClear)
+        {
+            PlaySound(SoundCue.Clear);
+            return;
+        }
+
+        if (turnFeedback.WasRejected)
+        {
+            PlaySound(SoundCue.Reject);
+            return;
+        }
+
+        if (turnFeedback.WasMoved)
+        {
+            PlaySound(SoundCue.Move);
+        }
+    }
+
+    private void PlaySound(SoundCue cue)
+    {
+        if (IsSoundEnabled)
+        {
+            soundPlayer.Play(cue);
+        }
     }
 
     private void RefreshFromState()

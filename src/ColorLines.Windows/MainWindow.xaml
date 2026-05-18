@@ -370,11 +370,14 @@
                        FontSize="34"
                        FontWeight="Bold"
                        Foreground="{StaticResource TextPrimaryBrush}" />
-            <TextBlock Text="{Binding StatusText}"
-                       Margin="0,6,0,26"
-                       TextWrapping="Wrap"
-                       FontSize="15"
-                       Foreground="{StaticResource TextMutedBrush}" />
+            <Border x:Name="StatusTextRegion"
+                    MinHeight="58"
+                    Margin="0,6,0,18">
+                <TextBlock Text="{Binding StatusText}"
+                           TextWrapping="Wrap"
+                           FontSize="15"
+                           Foreground="{StaticResource TextMutedBrush}" />
+            </Border>
 
             <Border Background="{StaticResource PanelBackgroundBrush}"
                     BorderBrush="#E8CFB7"
