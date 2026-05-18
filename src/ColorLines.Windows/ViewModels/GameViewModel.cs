@@ -26,6 +26,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private HashSet<BoardPosition> spawnedPositions;
     private HashSet<BoardPosition> clearedPositions;
     private HashSet<BoardPosition> rejectedPositions;
+    private HashSet<BoardPosition> pathPreviewPositions;
 
     public GameViewModel(GameEngine engine, GameState state, int highScore = 0)
     {
@@ -41,11 +42,14 @@ public sealed class GameViewModel : INotifyPropertyChanged
         spawnedPositions = new HashSet<BoardPosition>();
         clearedPositions = new HashSet<BoardPosition>();
         rejectedPositions = new HashSet<BoardPosition>();
+        pathPreviewPositions = new HashSet<BoardPosition>();
         Cells = new ObservableCollection<CellViewModel>();
         NextPieces = new ObservableCollection<PieceViewModel>();
         SelectCellCommand = new RelayCommand(SelectCell, parameter => parameter is CellViewModel);
         NewGameCommand = new RelayCommand(_ => NewGame());
         ToggleSoundCommand = new RelayCommand(_ => IsSoundEnabled = !IsSoundEnabled);
+        PreviewPathCommand = new RelayCommand(PreviewPath, parameter => parameter is CellViewModel);
+        ClearPreviewPathCommand = new RelayCommand(_ => ClearPreviewPath());
         RefreshFromState();
     }
 
@@ -60,6 +64,10 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public ICommand NewGameCommand { get; }
 
     public ICommand ToggleSoundCommand { get; }
+
+    public ICommand PreviewPathCommand { get; }
+
+    public ICommand ClearPreviewPathCommand { get; }
 
     public string SelectedThemeName => ThemeCatalog.DefaultTheme.DisplayName;
 
@@ -196,6 +204,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         if (piece is not null)
         {
             ClearCellFeedback();
+            pathPreviewPositions.Clear();
             selectedPosition = position;
             StatusText = $"Selected {piece}. Choose an empty cell.";
             RefreshFromState();
@@ -205,6 +214,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         if (selectedPosition is null)
         {
             ClearCellFeedback();
+            pathPreviewPositions.Clear();
             rejectedPositions.Add(position);
             Feedback = new TurnFeedback(false, true, false, false, false, 0);
             StatusText = "Select a cat before choosing a target.";
@@ -215,6 +225,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         var result = engine.Move(state, selectedPosition.Value, position);
         state = result.State;
         selectedPosition = null;
+        pathPreviewPositions.Clear();
         Score = state.Score;
         Feedback = BuildFeedback(result);
         StoreCellFeedback(result);
@@ -227,6 +238,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         state = engine.NewGame();
         selectedPosition = null;
+        pathPreviewPositions.Clear();
         ClearCellFeedback();
         Score = state.Score;
         Feedback = TurnFeedback.Neutral;
@@ -246,6 +258,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             var wasCleared = clearedPositions.Contains(cell.Position);
             var wasRejectedTarget = rejectedPositions.Contains(cell.Position);
             var isReachableTarget = IsReachableTarget(cell.Position);
+            var isPathPreview = pathPreviewPositions.Contains(cell.Position);
             Cells.Add(cell.Piece is null
                 ? CellViewModel.Empty(
                     cell.Position.Row,
@@ -254,8 +267,18 @@ public sealed class GameViewModel : INotifyPropertyChanged
                     wasSpawned,
                     wasCleared,
                     wasRejectedTarget,
-                    isReachableTarget)
-                : CellViewModel.Occupied(cell.Position.Row, cell.Position.Column, cell.Piece.Value, isSelected, wasMovedTo, wasSpawned, wasCleared, wasRejectedTarget));
+                    isReachableTarget,
+                    isPathPreview)
+                : CellViewModel.Occupied(
+                    cell.Position.Row,
+                    cell.Position.Column,
+                    cell.Piece.Value,
+                    isSelected,
+                    wasMovedTo,
+                    wasSpawned,
+                    wasCleared,
+                    wasRejectedTarget,
+                    isPathPreview));
         }
 
         NextPieces.Clear();
@@ -263,6 +286,37 @@ public sealed class GameViewModel : INotifyPropertyChanged
         {
             NextPieces.Add(PieceViewModel.FromPiece(piece));
         }
+    }
+
+    private void PreviewPath(object? parameter)
+    {
+        pathPreviewPositions.Clear();
+
+        if (selectedPosition is null || parameter is not CellViewModel cell || cell.IsOccupied)
+        {
+            RefreshFromState();
+            return;
+        }
+
+        var target = new BoardPosition(cell.Row, cell.Column);
+        var path = PathFinder.FindPath(state.Board, selectedPosition.Value, target);
+        if (path.Count > 0)
+        {
+            pathPreviewPositions.UnionWith(path);
+        }
+
+        RefreshFromState();
+    }
+
+    private void ClearPreviewPath()
+    {
+        if (pathPreviewPositions.Count == 0)
+        {
+            return;
+        }
+
+        pathPreviewPositions.Clear();
+        RefreshFromState();
     }
 
     private bool IsReachableTarget(BoardPosition position)

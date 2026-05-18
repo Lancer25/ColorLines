@@ -149,6 +149,42 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void PreviewPathCommandMarksPathCellsForReachableTarget()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        viewModel.SelectCellCommand.Execute(source);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+
+        viewModel.PreviewPathCommand.Execute(target);
+
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 0 && cell.IsPathPreview);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.IsPathPreview);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 2 && cell.IsPathPreview);
+    }
+
+    [Fact]
+    public void ClearPreviewPathCommandRemovesPathWithoutClearingSelection()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        viewModel.SelectCellCommand.Execute(source);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+        viewModel.PreviewPathCommand.Execute(target);
+
+        viewModel.ClearPreviewPathCommand.Execute(null);
+
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreview);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 0 && cell.IsSelected);
+    }
+
+    [Fact]
     public void NewGameIsNotGameOver()
     {
         var viewModel = GameViewModel.CreateForNewGame();
