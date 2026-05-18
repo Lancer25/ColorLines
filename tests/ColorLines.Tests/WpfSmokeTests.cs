@@ -47,8 +47,12 @@ public sealed class WpfSmokeTests
                 .First(button => button.DataContext is CellViewModel { IsOccupied: true });
             occupiedButton.ApplyTemplate();
 
+            var scoreDeltaBadge = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "ScoreDeltaBadge");
             var pieceImage = FindVisualChildren<Image>(occupiedButton)
                 .First(image => image.Name == "PieceImage");
+            var clearPulseGlow = FindVisualChildren<Border>(occupiedButton)
+                .First(border => border.Name == "ClearPulseGlow");
             var pieceActor = FindVisualChildren<Grid>(occupiedButton)
                 .First(grid => grid.Name == "PieceActor");
             var pieceScaleActor = FindVisualChildren<Grid>(occupiedButton)
@@ -68,6 +72,8 @@ public sealed class WpfSmokeTests
 
             Assert.Equal(44, pieceImage.Width);
             Assert.Equal(44, pieceImage.Height);
+            Assert.Equal(0, scoreDeltaBadge.Opacity);
+            Assert.Equal(0, clearPulseGlow.Opacity);
             Assert.Equal(1, pieceImage.Opacity);
             Assert.Equal(1, pieceShadow.Opacity);
             Assert.Equal(0, moveFeedbackGlow.Opacity);
