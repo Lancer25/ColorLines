@@ -27,7 +27,7 @@
 - Modify: `src/ColorLines.Windows/ViewModels/CellViewModel.cs`
 - Modify: `src/ColorLines.Windows/ViewModels/GameViewModel.cs`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Add this test to `tests/ColorLines.Tests/GameViewModelTests.cs`:
 
@@ -50,7 +50,7 @@ public void SelectingOccupiedCellMarksReachableEmptyTargets()
 }
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -60,7 +60,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter SelectingOcc
 
 Expected: FAIL because `CellViewModel` does not expose `IsReachableTarget`.
 
-- [ ] **Step 3: Add preview flags to `CellViewModel`**
+- [x] **Step 3: Add preview flags to `CellViewModel`**
 
 Change the record signature in `src/ColorLines.Windows/ViewModels/CellViewModel.cs` to include:
 
@@ -87,7 +87,7 @@ bool isPathPreview = false
 
 and pass `false` for `IsReachableTarget` plus `isPathPreview` for `IsPathPreview`.
 
-- [ ] **Step 4: Compute reachable targets in `GameViewModel`**
+- [x] **Step 4: Compute reachable targets in `GameViewModel`**
 
 Add this helper in `src/ColorLines.Windows/ViewModels/GameViewModel.cs`:
 
@@ -108,7 +108,7 @@ var isReachableTarget = IsReachableTarget(cell.Position);
 
 Pass `isReachableTarget` into `CellViewModel.Empty(...)`. Occupied cells should always pass no reachable flag.
 
-- [ ] **Step 5: Run test to verify it passes**
+- [x] **Step 5: Run test to verify it passes**
 
 Run:
 
@@ -118,7 +118,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter SelectingOcc
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 Run:
 
@@ -136,7 +136,7 @@ git commit -m "feat: mark reachable move targets"
 - Modify: `src/ColorLines.Windows/ViewModels/GameViewModel.cs`
 - Modify: `src/ColorLines.Windows/ViewModels/CellViewModel.cs`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Add these tests to `tests/ColorLines.Tests/GameViewModelTests.cs`:
 
@@ -178,7 +178,7 @@ public void ClearPreviewPathCommandRemovesPathWithoutClearingSelection()
 }
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run:
 
@@ -188,7 +188,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter "PreviewPath
 
 Expected: FAIL because `PreviewPathCommand` and `ClearPreviewPathCommand` do not exist.
 
-- [ ] **Step 3: Add preview command state**
+- [x] **Step 3: Add preview command state**
 
 In `src/ColorLines.Windows/ViewModels/GameViewModel.cs`, add a field:
 
@@ -217,7 +217,7 @@ PreviewPathCommand = new RelayCommand(PreviewPath, parameter => parameter is Cel
 ClearPreviewPathCommand = new RelayCommand(_ => ClearPreviewPath());
 ```
 
-- [ ] **Step 4: Implement preview methods**
+- [x] **Step 4: Implement preview methods**
 
 Add these methods in `src/ColorLines.Windows/ViewModels/GameViewModel.cs`:
 
@@ -264,7 +264,7 @@ var isPathPreview = pathPreviewPositions.Contains(cell.Position);
 
 Pass `isPathPreview` into both empty and occupied cell constructors.
 
-- [ ] **Step 5: Run tests to verify they pass**
+- [x] **Step 5: Run tests to verify they pass**
 
 Run:
 
@@ -274,7 +274,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter "PreviewPath
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 Run:
 
@@ -292,7 +292,7 @@ git commit -m "feat: preview reachable cat paths"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `src/ColorLines.Windows/MainWindow.xaml.cs`
 
-- [ ] **Step 1: Write the failing WPF smoke test assertions**
+- [x] **Step 1: Write the failing WPF smoke test assertions**
 
 In `tests/ColorLines.Tests/WpfSmokeTests.cs`, inside `OccupiedCellsShowPieceBody`, add assertions that named overlays exist:
 
@@ -306,7 +306,7 @@ Assert.Equal(0, reachableTargetGlow.Opacity);
 Assert.Equal(0, pathPreviewGlow.Opacity);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -316,7 +316,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCell
 
 Expected: FAIL because `ReachableTargetGlow` and `PathPreviewGlow` do not exist.
 
-- [ ] **Step 3: Add board overlays**
+- [x] **Step 3: Add board overlays**
 
 In `src/ColorLines.Windows/MainWindow.xaml`, add hover handlers to the board cell `Button`:
 
@@ -365,7 +365,7 @@ Add these overlays near the existing feedback glows, below `PieceActor`:
 </Border>
 ```
 
-- [ ] **Step 4: Wire hover forwarding without adding dependencies**
+- [x] **Step 4: Wire hover forwarding without adding dependencies**
 
 Add `using System.Windows.Input;` to `src/ColorLines.Windows/MainWindow.xaml.cs`, then add handlers inside `MainWindow`:
 
@@ -387,7 +387,7 @@ private void BoardCellPointerLeft(object sender, MouseEventArgs e)
 }
 ```
 
-- [ ] **Step 5: Run WPF smoke tests**
+- [x] **Step 5: Run WPF smoke tests**
 
 Run:
 
@@ -397,7 +397,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTest
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 Run:
 
@@ -413,7 +413,7 @@ git commit -m "feat: add path preview overlays"
 **Files:**
 - Modify: `docs/superpowers/plans/2026-05-18-color-lines-path-preview.md`
 
-- [ ] **Step 1: Run full tests**
+- [x] **Step 1: Run full tests**
 
 Run:
 
@@ -423,7 +423,7 @@ dotnet test ColorLines.sln
 
 Expected: PASS with all tests green.
 
-- [ ] **Step 2: Run full build**
+- [x] **Step 2: Run full build**
 
 Run:
 
@@ -433,7 +433,7 @@ dotnet build ColorLines.sln
 
 Expected: successful build with 0 errors.
 
-- [ ] **Step 3: Launch the WPF app**
+- [x] **Step 3: Launch the WPF app**
 
 Run:
 
@@ -443,11 +443,11 @@ Start-Process -FilePath (Resolve-Path 'src\ColorLines.Windows\bin\Debug\net8.0-w
 
 Expected: the app window opens and selecting a cat shows reachable cells. Hovering a reachable cell shows a path trail.
 
-- [ ] **Step 4: Mark this plan complete**
+- [x] **Step 4: Mark this plan complete**
 
 Update this plan's checkboxes to completed after verification.
 
-- [ ] **Step 5: Commit completion marker**
+- [x] **Step 5: Commit completion marker**
 
 Run:
 
