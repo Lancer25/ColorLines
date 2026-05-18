@@ -23,6 +23,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private bool isSoundEnabled;
     private string animationIntensity;
     private HashSet<BoardPosition> movedPositions;
+    private HashSet<BoardPosition> movePathPositions;
     private HashSet<BoardPosition> spawnedPositions;
     private HashSet<BoardPosition> clearedPositions;
     private HashSet<BoardPosition> rejectedPositions;
@@ -39,6 +40,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         isSoundEnabled = true;
         animationIntensity = "Full";
         movedPositions = new HashSet<BoardPosition>();
+        movePathPositions = new HashSet<BoardPosition>();
         spawnedPositions = new HashSet<BoardPosition>();
         clearedPositions = new HashSet<BoardPosition>();
         rejectedPositions = new HashSet<BoardPosition>();
@@ -254,6 +256,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         {
             var isSelected = selectedPosition == cell.Position;
             var wasMovedTo = movedPositions.Contains(cell.Position);
+            var wasMovePath = movePathPositions.Contains(cell.Position);
             var wasSpawned = spawnedPositions.Contains(cell.Position);
             var wasCleared = clearedPositions.Contains(cell.Position);
             var wasRejectedTarget = rejectedPositions.Contains(cell.Position);
@@ -264,6 +267,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
                     cell.Position.Row,
                     cell.Position.Column,
                     wasMovedTo,
+                    wasMovePath,
                     wasSpawned,
                     wasCleared,
                     wasRejectedTarget,
@@ -275,6 +279,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
                     cell.Piece.Value,
                     isSelected,
                     wasMovedTo,
+                    wasMovePath,
                     wasSpawned,
                     wasCleared,
                     wasRejectedTarget,
@@ -383,6 +388,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
                 case GameEventKind.PieceMoved:
                     if (gameEvent.Positions.Count > 0)
                     {
+                        movePathPositions.UnionWith(gameEvent.Positions);
                         movedPositions.Add(gameEvent.Positions[^1]);
                     }
 
@@ -407,6 +413,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private void ClearCellFeedback()
     {
         movedPositions.Clear();
+        movePathPositions.Clear();
         spawnedPositions.Clear();
         clearedPositions.Clear();
         rejectedPositions.Clear();

@@ -149,6 +149,44 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SuccessfulMoveMarksPathCells()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 0 && cell.WasMovePath);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.WasMovePath);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 2 && cell.WasMovePath);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 2 && cell.WasMovedTo);
+    }
+
+    [Fact]
+    public void SelectingOccupiedCellClearsMovePathFeedback()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(8, 8), PieceKind.Gray);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+        var nextSource = viewModel.Cells.Single(cell => cell.Row == 8 && cell.Column == 8);
+        viewModel.SelectCellCommand.Execute(nextSource);
+
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.WasMovePath);
+    }
+
+    [Fact]
     public void PreviewPathCommandMarksPathCellsForReachableTarget()
     {
         var board = GameBoard.CreateEmpty();

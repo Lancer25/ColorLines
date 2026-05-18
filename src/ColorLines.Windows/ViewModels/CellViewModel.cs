@@ -17,6 +17,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         string pieceName,
         PieceViewModel? piece,
         bool wasMovedTo,
+        bool wasMovePath,
         bool wasSpawned,
         bool wasCleared,
         bool wasRejectedTarget,
@@ -31,6 +32,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         PieceName = pieceName;
         Piece = piece;
         WasMovedTo = wasMovedTo;
+        WasMovePath = wasMovePath;
         WasSpawned = wasSpawned;
         WasCleared = wasCleared;
         WasRejectedTarget = wasRejectedTarget;
@@ -55,6 +57,8 @@ public sealed class CellViewModel : INotifyPropertyChanged
     public PieceViewModel? Piece { get; }
 
     public bool WasMovedTo { get; }
+
+    public bool WasMovePath { get; }
 
     public bool WasSpawned { get; }
 
@@ -81,6 +85,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         int row,
         int column,
         bool wasMovedTo = false,
+        bool wasMovePath = false,
         bool wasSpawned = false,
         bool wasCleared = false,
         bool wasRejectedTarget = false,
@@ -96,6 +101,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
             string.Empty,
             null,
             wasMovedTo,
+            wasMovePath,
             wasSpawned,
             wasCleared,
             wasRejectedTarget,
@@ -109,6 +115,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         PieceKind piece,
         bool isSelected,
         bool wasMovedTo = false,
+        bool wasMovePath = false,
         bool wasSpawned = false,
         bool wasCleared = false,
         bool wasRejectedTarget = false,
@@ -124,6 +131,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
             viewModel.Name,
             viewModel,
             wasMovedTo,
+            wasMovePath,
             wasSpawned,
             wasCleared,
             wasRejectedTarget,
