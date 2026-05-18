@@ -213,6 +213,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         {
             ClearCellFeedback();
             pathPreviewPositions.Clear();
+            Feedback = TurnFeedback.Neutral;
             selectedPosition = position;
             StatusText = $"Selected {piece}. Choose an empty cell.";
             RefreshFromState();

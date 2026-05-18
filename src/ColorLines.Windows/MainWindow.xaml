@@ -188,14 +188,13 @@
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding WasRejectedTarget}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                     From="0.25"
-                                                                                     To="1"
-                                                                                     Duration="0:0:0.12" />
+                                                                                     From="0.45"
+                                                                                     To="0"
+                                                                                     Duration="0:0:0.28" />
                                                                 </Storyboard>
                                                             </BeginStoryboard>
                                                         </DataTrigger.EnterActions>
@@ -215,7 +214,16 @@
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding WasSpawned}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
+                                                        <DataTrigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                     From="0.55"
+                                                                                     To="0"
+                                                                                     Duration="0:0:0.34" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.EnterActions>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -398,14 +406,13 @@
                                 <Setter Property="Opacity" Value="0" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ShowScoreDelta}" Value="True">
-                                        <Setter Property="Opacity" Value="1" />
                                         <DataTrigger.EnterActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                     From="0.45"
-                                                                     To="1"
-                                                                     Duration="0:0:0.16" />
+                                                                     From="1"
+                                                                     To="0"
+                                                                     Duration="0:0:0.85" />
                                                 </Storyboard>
                                             </BeginStoryboard>
                                         </DataTrigger.EnterActions>

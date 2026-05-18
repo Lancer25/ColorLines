@@ -125,6 +125,24 @@ public sealed class WpfSmokeTests
         AssertGlowDoesNotHoldPersistentOpacity("MoveFeedbackGlow");
     }
 
+    [Fact]
+    public void SpawnFeedbackGlowDoesNotHoldPersistentOpacity()
+    {
+        AssertGlowDoesNotHoldPersistentOpacity("SpawnFeedbackGlow");
+    }
+
+    [Fact]
+    public void RejectFeedbackGlowDoesNotHoldPersistentOpacity()
+    {
+        AssertGlowDoesNotHoldPersistentOpacity("RejectFeedbackGlow");
+    }
+
+    [Fact]
+    public void ScoreDeltaBadgeDoesNotHoldPersistentOpacity()
+    {
+        AssertGlowDoesNotHoldPersistentOpacity("ScoreDeltaBadge");
+    }
+
     private static void AssertGlowDoesNotHoldPersistentOpacity(string glowName)
     {
         var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(

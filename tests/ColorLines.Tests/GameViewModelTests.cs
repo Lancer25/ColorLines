@@ -289,6 +289,30 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SelectingOccupiedCellClearsScoreDeltaBadge()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 3), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 4), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 5), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(8, 8), PieceKind.Gray);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 1);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+        var nextSource = viewModel.Cells.Single(cell => cell.Row == 8 && cell.Column == 8);
+        viewModel.SelectCellCommand.Execute(nextSource);
+
+        Assert.False(viewModel.ShowScoreDelta);
+        Assert.Equal(string.Empty, viewModel.ScoreDeltaBadgeText);
+    }
+
+    [Fact]
     public void NewGameHidesScoreDeltaBadge()
     {
         var viewModel = GameViewModel.CreateForNewGame();
