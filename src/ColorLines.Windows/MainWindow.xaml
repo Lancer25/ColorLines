@@ -39,18 +39,19 @@
         </Style>
     </Window.Resources>
 
-    <Grid Margin="28">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="300" />
-        </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid x:Name="ContentGrid" Margin="28">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+            </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0"
-                Background="{StaticResource BoardBackgroundBrush}"
-                BorderBrush="{StaticResource BoardBorderBrush}"
-                BorderThickness="2"
-                CornerRadius="16"
-                Padding="20">
+            <Border Grid.Column="0"
+                    Background="{StaticResource BoardBackgroundBrush}"
+                    BorderBrush="{StaticResource BoardBorderBrush}"
+                    BorderThickness="2"
+                    CornerRadius="16"
+                    Padding="20">
             <Viewbox Stretch="Uniform">
                 <ItemsControl ItemsSource="{Binding Cells}" Width="560" Height="560">
                     <ItemsControl.ItemsPanel>
@@ -363,9 +364,9 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </Viewbox>
-        </Border>
+            </Border>
 
-        <StackPanel Grid.Column="1" Margin="28,0,0,0">
+            <StackPanel Grid.Column="1" Margin="28,0,0,0">
             <TextBlock Text="Color Lines"
                        FontSize="34"
                        FontWeight="Bold"
@@ -513,9 +514,10 @@
                                FontSize="12" />
                 </StackPanel>
             </Border>
-        </StackPanel>
+            </StackPanel>
+        </Grid>
 
-        <Border Grid.ColumnSpan="2"
+        <Border x:Name="GameOverOverlay"
                 Background="#99000000"
                 Visibility="{Binding IsGameOver, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Border Width="360"

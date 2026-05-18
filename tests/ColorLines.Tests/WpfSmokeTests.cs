@@ -153,6 +153,37 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void GameOverOverlayIsOutsideContentMargin()
+    {
+        var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "ColorLines.Windows",
+            "MainWindow.xaml"));
+        var document = XDocument.Load(mainWindowPath);
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var rootGrid = document.Root?
+            .Elements()
+            .First(element => element.Name.LocalName == "Grid");
+        var contentGrid = rootGrid?
+            .Elements()
+            .First(element => element.Attribute(x + "Name")?.Value == "ContentGrid");
+        var gameOverOverlay = rootGrid?
+            .Elements()
+            .First(element => element.Attribute(x + "Name")?.Value == "GameOverOverlay");
+
+        Assert.NotNull(rootGrid);
+        Assert.Null(rootGrid!.Attribute("Margin"));
+        Assert.Equal("28", contentGrid?.Attribute("Margin")?.Value);
+        Assert.NotNull(gameOverOverlay);
+    }
+
+    [Fact]
     public void SoundPlayerDoesNotUseWindowsSystemSounds()
     {
         var soundPlayerPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
