@@ -146,6 +146,25 @@ public sealed class WpfSmokeTests
         AssertGlowDoesNotHoldPersistentOpacity("ScoreDeltaBadge");
     }
 
+    [Fact]
+    public void SoundPlayerDoesNotUseWindowsSystemSounds()
+    {
+        var soundPlayerPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "ColorLines.Windows",
+            "Services",
+            "SystemSoundPlayer.cs"));
+        var source = System.IO.File.ReadAllText(soundPlayerPath);
+
+        Assert.DoesNotContain("SystemSounds.", source);
+    }
+
     private static void AssertGlowDoesNotHoldPersistentOpacity(string glowName)
     {
         var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
