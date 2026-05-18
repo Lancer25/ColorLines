@@ -15,9 +15,9 @@
 **Files:**
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] Add assertions for a named `PieceShadow` and polished `PieceImage` dimensions.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCellsShowPieceBody`; expect failure because `PieceShadow` is not named yet or dimensions still use the old value.
-- [ ] Commit only after Task 2 passes.
+- [x] Add assertions for a named `PieceShadow` and polished `PieceImage` dimensions.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCellsShowPieceBody`; expect failure because `PieceShadow` is not named yet or dimensions still use the old value.
+- [x] Commit only after Task 2 passes.
 
 ## Task 2: Polish Board And Preview Piece Fit
 
@@ -25,11 +25,11 @@
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] Name the occupied-piece shadow `PieceShadow`.
-- [ ] Reduce board `PieceImage` from 48x48 to 44x44 and center it in a 52x52 cell content area.
-- [ ] Adjust soft feedback glows to sit behind the smaller image.
-- [ ] Adjust next-piece preview image size to match the new proportions.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
+- [x] Name the occupied-piece shadow `PieceShadow`.
+- [x] Reduce board `PieceImage` from 48x48 to 44x44 and center it in a 52x52 cell content area.
+- [x] Adjust soft feedback glows to sit behind the smaller image.
+- [x] Adjust next-piece preview image size to match the new proportions.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
 - [ ] Commit with `feat: polish cat piece fit`.
 
 ## Task 3: Verify And Launch

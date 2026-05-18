@@ -63,10 +63,15 @@ public sealed class WpfSmokeTests
 
                 var pieceImage = FindVisualChildren<Image>(occupiedButton)
                     .First(image => image.Name == "PieceImage");
+                var pieceShadow = FindVisualChildren<Ellipse>(occupiedButton)
+                    .First(ellipse => ellipse.Name == "PieceShadow");
                 var moveFeedbackGlow = FindVisualChildren<Ellipse>(occupiedButton)
                     .First(ellipse => ellipse.Name == "MoveFeedbackGlow");
 
+                Assert.Equal(44, pieceImage.Width);
+                Assert.Equal(44, pieceImage.Height);
                 Assert.Equal(1, pieceImage.Opacity);
+                Assert.Equal(1, pieceShadow.Opacity);
                 Assert.Equal(0, moveFeedbackGlow.Opacity);
                 window.Close();
             }
