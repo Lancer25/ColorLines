@@ -27,11 +27,11 @@
 - Modify: `src/ColorLines.Windows/ViewModels/CellViewModel.cs`
 - Modify: `src/ColorLines.Windows/ViewModels/GameViewModel.cs`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Add tests proving a successful move marks the whole path and that selecting another cat clears old path feedback.
 
-- [ ] **Step 2: Verify tests fail**
+- [x] **Step 2: Verify tests fail**
 
 Run:
 
@@ -41,11 +41,11 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter "SuccessfulM
 
 Expected: FAIL because `WasMovePath` does not exist.
 
-- [ ] **Step 3: Implement `WasMovePath`**
+- [x] **Step 3: Implement `WasMovePath`**
 
 Add the property to `CellViewModel`, track `movePathPositions` in `GameViewModel`, fill it from `GameEventKind.PieceMoved`, clear it via `ClearCellFeedback`, and pass the flag through `RefreshFromState`.
 
-- [ ] **Step 4: Verify tests pass**
+- [x] **Step 4: Verify tests pass**
 
 Run:
 
@@ -55,7 +55,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter "SuccessfulM
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 Run:
 
@@ -72,11 +72,11 @@ git commit -m "feat: mark completed move paths"
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 
-- [ ] **Step 1: Write failing smoke assertion**
+- [x] **Step 1: Write failing smoke assertion**
 
 Assert that `MovePathPulseGlow` exists and is hidden by default.
 
-- [ ] **Step 2: Verify test fails**
+- [x] **Step 2: Verify test fails**
 
 Run:
 
@@ -86,11 +86,11 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCell
 
 Expected: FAIL because `MovePathPulseGlow` does not exist.
 
-- [ ] **Step 3: Add WPF overlay**
+- [x] **Step 3: Add WPF overlay**
 
 Add a non-hit-testable overlay named `MovePathPulseGlow`, below the cat image layer, with opacity animation bound to `WasMovePath`.
 
-- [ ] **Step 4: Verify WPF smoke tests pass**
+- [x] **Step 4: Verify WPF smoke tests pass**
 
 Run:
 
@@ -100,7 +100,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTest
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 Run:
 
@@ -116,7 +116,7 @@ git commit -m "feat: pulse completed move paths"
 **Files:**
 - Modify: `docs/superpowers/plans/2026-05-18-color-lines-move-path-pulse.md`
 
-- [ ] **Step 1: Run full tests**
+- [x] **Step 1: Run full tests**
 
 Run:
 
@@ -126,7 +126,7 @@ dotnet test ColorLines.sln
 
 Expected: PASS.
 
-- [ ] **Step 2: Run full build**
+- [x] **Step 2: Run full build**
 
 Run:
 
@@ -136,7 +136,7 @@ dotnet build ColorLines.sln
 
 Expected: PASS with 0 errors.
 
-- [ ] **Step 3: Launch app**
+- [x] **Step 3: Launch app**
 
 Run:
 
@@ -146,7 +146,7 @@ Start-Process -FilePath (Resolve-Path 'src\ColorLines.Windows\bin\Debug\net8.0-w
 
 Expected: app starts, selecting a cat and moving it shows a brief path pulse.
 
-- [ ] **Step 4: Mark plan complete and commit**
+- [x] **Step 4: Mark plan complete and commit**
 
 Check all boxes in this file and commit with:
 
