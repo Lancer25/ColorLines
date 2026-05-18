@@ -232,7 +232,16 @@
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding WasMovedTo}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
+                                                        <DataTrigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                     From="0.55"
+                                                                                     To="0"
+                                                                                     Duration="0:0:0.32" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.EnterActions>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>

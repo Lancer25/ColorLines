@@ -116,6 +116,17 @@ public sealed class WpfSmokeTests
     [Fact]
     public void ClearFeedbackGlowDoesNotHoldPersistentOpacity()
     {
+        AssertGlowDoesNotHoldPersistentOpacity("ClearFeedbackGlow");
+    }
+
+    [Fact]
+    public void MoveFeedbackGlowDoesNotHoldPersistentOpacity()
+    {
+        AssertGlowDoesNotHoldPersistentOpacity("MoveFeedbackGlow");
+    }
+
+    private static void AssertGlowDoesNotHoldPersistentOpacity(string glowName)
+    {
         var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
             AppContext.BaseDirectory,
             "..",
@@ -128,11 +139,11 @@ public sealed class WpfSmokeTests
             "MainWindow.xaml"));
         var document = XDocument.Load(mainWindowPath);
         XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
-        var clearFeedbackGlow = document
+        var glow = document
             .Descendants()
-            .Single(element => element.Attribute(x + "Name")?.Value == "ClearFeedbackGlow");
+            .Single(element => element.Attribute(x + "Name")?.Value == glowName);
 
-        Assert.DoesNotContain(clearFeedbackGlow.Descendants(), element =>
+        Assert.DoesNotContain(glow.Descendants(), element =>
             element.Name.LocalName == "Setter"
             && element.Attribute("Property")?.Value == "Opacity"
             && element.Attribute("Value")?.Value == "1");
