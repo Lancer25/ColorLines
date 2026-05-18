@@ -445,6 +445,8 @@ public sealed class GameViewModelTests
         Assert.Equal("Cozy Board", viewModel.SelectedThemeName);
         Assert.True(viewModel.IsSoundEnabled);
         Assert.Equal("Full", viewModel.AnimationIntensity);
+        Assert.True(viewModel.IsFullAnimation);
+        Assert.Equal("Use Reduced Animation", viewModel.AnimationToggleText);
     }
 
     [Fact]
@@ -458,6 +460,24 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void ToggleAnimationSwitchesAnimationIntensity()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        viewModel.ToggleAnimationCommand.Execute(null);
+
+        Assert.Equal("Reduced", viewModel.AnimationIntensity);
+        Assert.False(viewModel.IsFullAnimation);
+        Assert.Equal("Use Full Animation", viewModel.AnimationToggleText);
+
+        viewModel.ToggleAnimationCommand.Execute(null);
+
+        Assert.Equal("Full", viewModel.AnimationIntensity);
+        Assert.True(viewModel.IsFullAnimation);
+        Assert.Equal("Use Reduced Animation", viewModel.AnimationToggleText);
+    }
+
+    [Fact]
     public void CreateFromSaveRestoresHighScoreAndSettings()
     {
         var save = new LocalSaveData(1, 99, false, "Reduced", "CozyBoard", null, new WindowPlacementData(800, 600));
@@ -467,6 +487,7 @@ public sealed class GameViewModelTests
         Assert.Equal(99, viewModel.HighScore);
         Assert.False(viewModel.IsSoundEnabled);
         Assert.Equal("Reduced", viewModel.AnimationIntensity);
+        Assert.False(viewModel.IsFullAnimation);
     }
 
     [Fact]
@@ -481,6 +502,17 @@ public sealed class GameViewModelTests
         Assert.Equal("Full", save.AnimationIntensity);
         Assert.Equal("CozyBoard", save.ThemeId);
         Assert.NotNull(save.Game);
+    }
+
+    [Fact]
+    public void CreateSaveDataExportsAnimationIntensity()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+        viewModel.ToggleAnimationCommand.Execute(null);
+
+        var save = viewModel.CreateSaveData(new WindowPlacementData(1000, 720));
+
+        Assert.Equal("Reduced", save.AnimationIntensity);
     }
 
     private sealed class SequenceRandomSource : IRandomSource

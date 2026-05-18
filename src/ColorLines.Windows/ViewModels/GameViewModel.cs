@@ -52,6 +52,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         SelectCellCommand = new RelayCommand(SelectCell, parameter => parameter is CellViewModel);
         NewGameCommand = new RelayCommand(_ => NewGame());
         ToggleSoundCommand = new RelayCommand(_ => IsSoundEnabled = !IsSoundEnabled);
+        ToggleAnimationCommand = new RelayCommand(_ => ToggleAnimation());
         PreviewPathCommand = new RelayCommand(PreviewPath, parameter => parameter is CellViewModel);
         ClearPreviewPathCommand = new RelayCommand(_ => ClearPreviewPath());
         RefreshFromState();
@@ -68,6 +69,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public ICommand NewGameCommand { get; }
 
     public ICommand ToggleSoundCommand { get; }
+
+    public ICommand ToggleAnimationCommand { get; }
 
     public ICommand PreviewPathCommand { get; }
 
@@ -175,9 +178,15 @@ public sealed class GameViewModel : INotifyPropertyChanged
             {
                 animationIntensity = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsFullAnimation));
+                OnPropertyChanged(nameof(AnimationToggleText));
             }
         }
     }
+
+    public bool IsFullAnimation => AnimationIntensity == "Full";
+
+    public string AnimationToggleText => IsFullAnimation ? "Use Reduced Animation" : "Use Full Animation";
 
     public static GameViewModel CreateForNewGame()
     {
@@ -269,6 +278,12 @@ public sealed class GameViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(IsGameOver));
         StatusText = "Select a cat to move.";
         PlaySound(SoundCue.NewGame);
+        RefreshFromState();
+    }
+
+    private void ToggleAnimation()
+    {
+        AnimationIntensity = IsFullAnimation ? "Reduced" : "Full";
         RefreshFromState();
     }
 
