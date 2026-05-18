@@ -12,6 +12,34 @@ namespace ColorLines.Tests;
 public sealed class WpfSmokeTests
 {
     [Fact]
+    public void CatPieceAssetIsPackagedAsWpfResource()
+    {
+        Exception? thrown = null;
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                var streamInfo = Application.GetResourceStream(new Uri(
+                    "/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/orange.png",
+                    UriKind.Relative));
+
+                Assert.NotNull(streamInfo);
+                Assert.True(streamInfo.Stream.Length > 0);
+            }
+            catch (Exception exception)
+            {
+                thrown = exception;
+            }
+        });
+
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        thread.Join();
+
+        Assert.Null(thrown);
+    }
+
+    [Fact]
     public void OccupiedCellsShowPieceBody()
     {
         Exception? thrown = null;
