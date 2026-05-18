@@ -40,7 +40,118 @@
     </Window.Resources>
 
     <Grid>
-        <Grid x:Name="ContentGrid" Margin="28">
+        <Grid x:Name="MainMenuView"
+              Margin="28"
+              Visibility="{Binding IsMainMenuVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="340" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Margin="36,0,48,0">
+                <TextBlock Text="Color Lines"
+                           FontSize="54"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource TextPrimaryBrush}" />
+                <TextBlock Text="Cute cats. Classic lines. One cozy board."
+                           Margin="0,10,0,0"
+                           FontSize="18"
+                           Foreground="{StaticResource TextMutedBrush}" />
+                <Border Margin="0,32,0,0"
+                        Background="{StaticResource BoardShadowBrush}"
+                        BorderBrush="{StaticResource BoardBorderBrush}"
+                        BorderThickness="2"
+                        CornerRadius="16"
+                        Padding="18"
+                        MaxWidth="360"
+                        HorizontalAlignment="Left">
+                    <UniformGrid Rows="3" Columns="3">
+                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
+                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
+                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68">
+                            <Image Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/orange.png"
+                                   Width="46"
+                                   Height="46"
+                                   Stretch="Uniform"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                        </Border>
+                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68">
+                            <Image Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/bluegray.png"
+                                   Width="46"
+                                   Height="46"
+                                   Stretch="Uniform"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                        </Border>
+                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
+                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
+                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
+                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68">
+                            <Image Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/calico.png"
+                                   Width="46"
+                                   Height="46"
+                                   Stretch="Uniform"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                        </Border>
+                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
+                    </UniformGrid>
+                </Border>
+            </StackPanel>
+
+            <Border Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Background="{StaticResource PanelBackgroundBrush}"
+                    BorderBrush="{StaticResource PanelBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="24">
+                <StackPanel>
+                    <TextBlock Text="{Binding Game.HighScore, StringFormat=Best Score: {0}}"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}" />
+                    <Button x:Name="ContinueButton"
+                            Content="Continue"
+                            Command="{Binding ContinueCommand}"
+                            Height="44"
+                            Margin="0,22,0,0"
+                            Background="{StaticResource AccentBrush}"
+                            Foreground="#FFFFFB"
+                            BorderThickness="0"
+                            FontSize="15"
+                            FontWeight="SemiBold" />
+                    <Button x:Name="MenuNewGameButton"
+                            Content="New Game"
+                            Command="{Binding NewGameCommand}"
+                            Height="40"
+                            Margin="0,10,0,0"
+                            Background="{StaticResource CellHoverBrush}"
+                            Foreground="{StaticResource TextPrimaryBrush}"
+                            BorderBrush="{StaticResource CellBorderBrush}" />
+                    <Button x:Name="MenuSettingsButton"
+                            Content="Settings"
+                            Command="{Binding OpenSettingsCommand}"
+                            Height="40"
+                            Margin="0,10,0,0"
+                            Background="{StaticResource CellHoverBrush}"
+                            Foreground="{StaticResource TextPrimaryBrush}"
+                            BorderBrush="{StaticResource CellBorderBrush}" />
+                    <Button x:Name="ExitButton"
+                            Content="Exit"
+                            Command="{Binding ExitCommand}"
+                            Height="40"
+                            Margin="0,10,0,0"
+                            Background="{StaticResource CellHoverBrush}"
+                            Foreground="{StaticResource TextPrimaryBrush}"
+                            BorderBrush="{StaticResource CellBorderBrush}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="GameplayView"
+              Margin="28"
+              Visibility="{Binding IsPlayingVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="300" />
@@ -57,7 +168,7 @@
                         CornerRadius="12"
                         Padding="8">
                     <Viewbox Stretch="Uniform">
-                        <ItemsControl ItemsSource="{Binding Cells}" Width="560" Height="560">
+                        <ItemsControl ItemsSource="{Binding Game.Cells}" Width="560" Height="560">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Rows="9" Columns="9" />
@@ -66,7 +177,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button Style="{StaticResource BoardCellButton}"
-                                    Command="{Binding DataContext.SelectCellCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    Command="{Binding DataContext.Game.SelectCellCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                     CommandParameter="{Binding}"
                                     MouseEnter="BoardCellPointerEntered"
                                     MouseLeave="BoardCellPointerLeft">
@@ -396,7 +507,7 @@
             <Border x:Name="StatusTextRegion"
                     MinHeight="58"
                     Margin="0,6,0,18">
-                <TextBlock Text="{Binding StatusText}"
+                <TextBlock Text="{Binding Game.StatusText}"
                            TextWrapping="Wrap"
                            FontSize="15"
                            Foreground="{StaticResource TextMutedBrush}" />
@@ -414,11 +525,11 @@
                                Foreground="{StaticResource TextMutedBrush}"
                                FontSize="13"
                                FontWeight="SemiBold" />
-                    <TextBlock Text="{Binding Score}"
+                    <TextBlock Text="{Binding Game.Score}"
                                Foreground="{StaticResource TextPrimaryBrush}"
                                FontSize="34"
                                FontWeight="Bold" />
-                    <TextBlock Text="{Binding HighScore, StringFormat=Best: {0}}"
+                    <TextBlock Text="{Binding Game.HighScore, StringFormat=Best: {0}}"
                                Foreground="{StaticResource TextMutedBrush}"
                                FontSize="14"
                                FontWeight="SemiBold" />
@@ -432,7 +543,7 @@
                             <Style TargetType="Border">
                                 <Setter Property="Opacity" Value="0" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ShowScoreDelta}" Value="True">
+                                    <DataTrigger Binding="{Binding Game.ShowScoreDelta}" Value="True">
                                         <DataTrigger.EnterActions>
                                             <BeginStoryboard>
                                                 <Storyboard>
@@ -447,7 +558,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                        <TextBlock Text="{Binding ScoreDeltaBadgeText}"
+                        <TextBlock Text="{Binding Game.ScoreDeltaBadgeText}"
                                    Foreground="{StaticResource ScoreAccentBrush}"
                                    FontSize="18"
                                    FontWeight="Bold" />
@@ -467,7 +578,7 @@
                                Foreground="{StaticResource TextMutedBrush}"
                                FontSize="13"
                                FontWeight="SemiBold" />
-                    <ItemsControl ItemsSource="{Binding NextPieces}" Margin="0,10,0,0">
+                    <ItemsControl ItemsSource="{Binding Game.NextPieces}" Margin="0,10,0,0">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" />
@@ -519,30 +630,30 @@
                                Foreground="{StaticResource TextMutedBrush}"
                                FontSize="13"
                                FontWeight="SemiBold" />
-                    <TextBlock Text="{Binding SelectedThemeName}"
+                    <TextBlock Text="{Binding Game.SelectedThemeName}"
                                Margin="0,8,0,0"
                                Foreground="{StaticResource TextPrimaryBrush}"
                                FontSize="15" />
-                    <TextBlock Text="{Binding AnimationIntensity, StringFormat=Animation: {0}}"
+                    <TextBlock Text="{Binding Game.AnimationIntensity, StringFormat=Animation: {0}}"
                                Margin="0,4,0,0"
                                Foreground="{StaticResource TextMutedBrush}"
                                FontSize="13" />
                     <Button x:Name="ToggleAnimationButton"
-                            Content="{Binding AnimationToggleText}"
-                            Command="{Binding ToggleAnimationCommand}"
+                            Content="{Binding Game.AnimationToggleText}"
+                            Command="{Binding Game.ToggleAnimationCommand}"
                             Height="34"
                             Margin="0,12,0,0"
                             Background="{StaticResource CellHoverBrush}"
                             Foreground="{StaticResource TextPrimaryBrush}"
                             BorderBrush="{StaticResource CellBorderBrush}" />
                     <Button Content="Toggle Sound"
-                            Command="{Binding ToggleSoundCommand}"
+                            Command="{Binding Game.ToggleSoundCommand}"
                             Height="34"
                             Margin="0,8,0,0"
                             Background="{StaticResource CellHoverBrush}"
                             Foreground="{StaticResource TextPrimaryBrush}"
                             BorderBrush="{StaticResource CellBorderBrush}" />
-                    <TextBlock Text="{Binding IsSoundEnabled, StringFormat=Sound enabled: {0}}"
+                    <TextBlock Text="{Binding Game.IsSoundEnabled, StringFormat=Sound enabled: {0}}"
                                Margin="0,6,0,0"
                                Foreground="{StaticResource TextMutedBrush}"
                                FontSize="12" />

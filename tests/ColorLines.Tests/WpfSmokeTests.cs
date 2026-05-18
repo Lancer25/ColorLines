@@ -68,6 +68,38 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void MainMenuShowsActionsBeforeGameplay()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-window-{Guid.NewGuid():N}.json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+            window.Show();
+            window.UpdateLayout();
+
+            var mainMenuView = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "MainMenuView");
+            var gameplayView = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "GameplayView");
+            var continueButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "ContinueButton");
+            var menuSettingsButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "MenuSettingsButton");
+
+            Assert.Equal(Visibility.Visible, mainMenuView.Visibility);
+            Assert.Equal(Visibility.Collapsed, gameplayView.Visibility);
+            Assert.NotNull(continueButton.Command);
+            Assert.NotNull(menuSettingsButton.Command);
+            window.Close();
+        });
+    }
+
+    [Fact]
     public void OccupiedCellsShowPieceBody()
     {
         RunOnWpfThread(() =>
