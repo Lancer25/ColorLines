@@ -29,7 +29,7 @@
 - Create: `src/ColorLines.Windows/ViewModels/ShellViewModel.cs`
 - Modify: `tests/ColorLines.Tests/GameViewModelTests.cs`
 
-- [ ] **Step 1: Write failing shell navigation tests**
+- [x] **Step 1: Write failing shell navigation tests**
 
 Add these tests to `tests/ColorLines.Tests/GameViewModelTests.cs` before `SequenceRandomSource`:
 
@@ -91,7 +91,7 @@ public void NewGameCommandResetsGameAndOpensPlayingScreen()
 }
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run:
 
@@ -101,7 +101,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter "ShellViewMo
 
 Expected: FAIL because `ShellViewModel` and `ShellScreen` do not exist.
 
-- [ ] **Step 3: Add `ShellScreen`**
+- [x] **Step 3: Add `ShellScreen`**
 
 Create `src/ColorLines.Windows/ViewModels/ShellScreen.cs`:
 
@@ -116,7 +116,7 @@ public enum ShellScreen
 }
 ```
 
-- [ ] **Step 4: Add `ShellViewModel`**
+- [x] **Step 4: Add `ShellViewModel`**
 
 Create `src/ColorLines.Windows/ViewModels/ShellViewModel.cs`:
 
@@ -208,7 +208,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 }
 ```
 
-- [ ] **Step 5: Run shell tests**
+- [x] **Step 5: Run shell tests**
 
 Run:
 
@@ -218,7 +218,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter "ShellViewMo
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\ViewModels\ShellScreen.cs src\ColorLines.Windows\ViewModels\ShellViewModel.cs tests\ColorLines.Tests\GameViewModelTests.cs
@@ -233,7 +233,7 @@ git commit -m "feat: add main menu shell navigation"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml.cs`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add failing WPF DataContext smoke test**
+- [x] **Step 1: Add failing WPF DataContext smoke test**
 
 Add this test to `tests/ColorLines.Tests/WpfSmokeTests.cs` after `CozyBoardThemeExposesVisualUpgradeBrushes`:
 
@@ -263,7 +263,7 @@ public void MainWindowStartsWithShellViewModelOnMainMenu()
 }
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -273,7 +273,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainWindowSt
 
 Expected: FAIL because `MainWindow.DataContext` is still `GameViewModel`.
 
-- [ ] **Step 3: Update `MainWindow.xaml.cs` to use shell**
+- [x] **Step 3: Update `MainWindow.xaml.cs` to use shell**
 
 Replace the `viewModel` field with:
 
@@ -326,7 +326,7 @@ if (DataContext is ShellViewModel shell)
 }
 ```
 
-- [ ] **Step 4: Run focused smoke test**
+- [x] **Step 4: Run focused smoke test**
 
 Run:
 
@@ -336,7 +336,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainWindowSt
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml.cs tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -351,7 +351,7 @@ git commit -m "feat: bind main window to shell view model"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add failing smoke test for menu and hidden game screen**
+- [x] **Step 1: Add failing smoke test for menu and hidden game screen**
 
 Add this test to `tests/ColorLines.Tests/WpfSmokeTests.cs` after `MainWindowStartsWithShellViewModelOnMainMenu`:
 
@@ -389,7 +389,7 @@ public void MainMenuShowsActionsBeforeGameplay()
 }
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -399,7 +399,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: FAIL because `MainMenuView` does not exist.
 
-- [ ] **Step 3: Wrap existing gameplay grid**
+- [x] **Step 3: Wrap existing gameplay grid**
 
 In `src/ColorLines.Windows/MainWindow.xaml`, rename the existing `ContentGrid` to `GameplayView` and bind visibility:
 
@@ -438,7 +438,7 @@ Keep `NewGameButton` bound to the shell command:
 Command="{Binding NewGameCommand}"
 ```
 
-- [ ] **Step 4: Add `MainMenuView` before `GameplayView`**
+- [x] **Step 4: Add `MainMenuView` before `GameplayView`**
 
 Add this grid as the first child of the root `Grid`, before `GameplayView`:
 
@@ -553,7 +553,7 @@ Add this grid as the first child of the root `Grid`, before `GameplayView`:
 </Grid>
 ```
 
-- [ ] **Step 5: Run menu smoke test**
+- [x] **Step 5: Run menu smoke test**
 
 Run:
 
@@ -563,7 +563,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -578,7 +578,7 @@ git commit -m "feat: add main menu screen"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add failing settings screen smoke test**
+- [x] **Step 1: Add failing settings screen smoke test**
 
 Add this test to `tests/ColorLines.Tests/WpfSmokeTests.cs` after `MainMenuShowsActionsBeforeGameplay`:
 
@@ -623,7 +623,7 @@ public void SettingsScreenUsesExistingGameSettingsCommands()
 }
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -633,7 +633,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter SettingsScre
 
 Expected: FAIL because `SettingsView` does not exist and the old inline settings panel still exists.
 
-- [ ] **Step 3: Remove inline `SettingsPanel` from gameplay**
+- [x] **Step 3: Remove inline `SettingsPanel` from gameplay**
 
 Delete the gameplay `Border x:Name="SettingsPanel"` block from `MainWindow.xaml`.
 
@@ -650,7 +650,7 @@ Add a compact gameplay settings button below `NewGameButton`:
         BorderBrush="{StaticResource CellBorderBrush}" />
 ```
 
-- [ ] **Step 4: Add `SettingsView` after `GameplayView`**
+- [x] **Step 4: Add `SettingsView` after `GameplayView`**
 
 Add this grid after the gameplay grid and before `GameOverOverlay`:
 
@@ -714,7 +714,7 @@ Add this grid after the gameplay grid and before `GameOverOverlay`:
 </Grid>
 ```
 
-- [ ] **Step 5: Run settings smoke test**
+- [x] **Step 5: Run settings smoke test**
 
 Run:
 
@@ -724,7 +724,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter SettingsScre
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -739,7 +739,7 @@ git commit -m "feat: move settings to separate screen"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Update `OccupiedCellsShowPieceBody` for shell flow**
+- [x] **Step 1: Update `OccupiedCellsShowPieceBody` for shell flow**
 
 In `OccupiedCellsShowPieceBody`, after `window.UpdateLayout();`, add:
 
@@ -756,7 +756,7 @@ Update bindings expected by lookups:
 - `ToggleAnimationButton` is no longer in gameplay, so remove its lookup and assertion.
 - Keep `NewGameButton`, `ScorePanel`, `NextCatsPanel`, board, piece, and overlay text checks.
 
-- [ ] **Step 2: Update `SelectingOccupiedCellDoesNotCrashAnimationTemplate`**
+- [x] **Step 2: Update `SelectingOccupiedCellDoesNotCrashAnimationTemplate`**
 
 After `window.UpdateLayout();`, add:
 
@@ -766,7 +766,7 @@ shell.ContinueCommand.Execute(null);
 window.UpdateLayout();
 ```
 
-- [ ] **Step 3: Update overlay XML test**
+- [x] **Step 3: Update overlay XML test**
 
 In `GameOverOverlayIsOutsideContentMargin`, change the `contentGrid` lookup to `gameplayView`:
 
@@ -782,7 +782,7 @@ Change the assertion:
 Assert.Equal("28", gameplayView?.Attribute("Margin")?.Value);
 ```
 
-- [ ] **Step 4: Gate game-over overlay to gameplay visibility**
+- [x] **Step 4: Gate game-over overlay to gameplay visibility**
 
 In `MainWindow.xaml`, update `GameOverOverlay` visibility so it only appears on the playing screen. Add this style to the overlay and remove the direct `Visibility="{Binding Game.IsGameOver, ...}"` attribute:
 
@@ -814,7 +814,7 @@ Update game-over bindings with the `Game.` prefix:
 
 Keep the dialog New Game button bound to shell `NewGameCommand`.
 
-- [ ] **Step 5: Run WPF smoke tests**
+- [x] **Step 5: Run WPF smoke tests**
 
 Run:
 
@@ -824,7 +824,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter "OccupiedCel
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -838,7 +838,7 @@ git commit -m "fix: adapt gameplay smoke tests for shell"
 **Files:**
 - Modify: `docs/superpowers/plans/2026-05-19-color-lines-main-menu-shell.md`
 
-- [ ] **Step 1: Run full tests**
+- [x] **Step 1: Run full tests**
 
 Run:
 
@@ -848,7 +848,7 @@ dotnet test ColorLines.sln
 
 Expected: PASS.
 
-- [ ] **Step 2: Run full build**
+- [x] **Step 2: Run full build**
 
 Run:
 
@@ -858,7 +858,7 @@ dotnet build ColorLines.sln
 
 Expected: PASS with 0 errors.
 
-- [ ] **Step 3: Launch Windows app**
+- [x] **Step 3: Launch Windows app**
 
 Run:
 
@@ -868,11 +868,11 @@ Start-Process -FilePath (Resolve-Path 'src\ColorLines.Windows\bin\Debug\net8.0-w
 
 Expected: the app launches to the main menu. Continue enters the board. Settings opens separately. The game screen no longer has the old large settings panel.
 
-- [ ] **Step 4: Mark plan complete**
+- [x] **Step 4: Mark plan complete**
 
 Replace every unchecked checkbox in this file with a checked checkbox.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add docs\superpowers\plans\2026-05-19-color-lines-main-menu-shell.md
