@@ -311,7 +311,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
 
         pathPreviewPositions = nextPreview;
-        RefreshFromState();
+        ApplyPathPreview();
     }
 
     private void ClearPreviewPath()
@@ -322,7 +322,15 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
 
         pathPreviewPositions.Clear();
-        RefreshFromState();
+        ApplyPathPreview();
+    }
+
+    private void ApplyPathPreview()
+    {
+        foreach (var cell in Cells)
+        {
+            cell.SetPathPreview(pathPreviewPositions.Contains(new BoardPosition(cell.Row, cell.Column)));
+        }
     }
 
     private bool IsReachableTarget(BoardPosition position)
