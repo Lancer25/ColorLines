@@ -88,6 +88,8 @@ public sealed class WpfSmokeTests
                 .First(grid => grid.Name == "PieceScaleActor");
             var pieceShadow = FindVisualChildren<Ellipse>(occupiedButton)
                 .First(ellipse => ellipse.Name == "PieceShadow");
+            var pieceBase = FindVisualChildren<Ellipse>(occupiedButton)
+                .First(ellipse => ellipse.Name == "PieceBase");
             var moveFeedbackGlow = FindVisualChildren<Ellipse>(occupiedButton)
                 .First(ellipse => ellipse.Name == "MoveFeedbackGlow");
             var movePathPulseGlow = FindVisualChildren<Border>(occupiedButton)
@@ -111,6 +113,9 @@ public sealed class WpfSmokeTests
             Assert.Equal(0, scoreDeltaBadge.Opacity);
             Assert.Equal(0, clearPulseGlow.Opacity);
             Assert.Equal(1, pieceImage.Opacity);
+            Assert.True(pieceBase.Width >= 42);
+            Assert.True(pieceBase.Opacity > 0);
+            Assert.True(pieceShadow.Width >= 38);
             Assert.Equal(1, pieceShadow.Opacity);
             Assert.Equal(0, moveFeedbackGlow.Opacity);
             Assert.Equal(0, movePathPulseGlow.Opacity);

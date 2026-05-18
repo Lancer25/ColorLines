@@ -10,10 +10,10 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <Style x:Key="BoardCellButton" TargetType="Button">
-            <Setter Property="Margin" Value="4" />
+            <Setter Property="Margin" Value="5" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Background" Value="{StaticResource CellBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource CellBorderBrush}" />
+            <Setter Property="BorderBrush" Value="#D9D0A269" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -48,13 +48,16 @@
 
             <Border x:Name="MainBoardFrame"
                     Grid.Column="0"
-                    Background="{StaticResource BoardBackgroundBrush}"
+                    Background="{StaticResource BoardShadowBrush}"
                     BorderBrush="{StaticResource BoardBorderBrush}"
                     BorderThickness="2"
                     CornerRadius="16"
                     Padding="20">
-            <Viewbox Stretch="Uniform">
-                <ItemsControl ItemsSource="{Binding Cells}" Width="560" Height="560">
+                <Border Background="{StaticResource BoardInnerBrush}"
+                        CornerRadius="12"
+                        Padding="8">
+                    <Viewbox Stretch="Uniform">
+                        <ItemsControl ItemsSource="{Binding Cells}" Width="560" Height="560">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Rows="9" Columns="9" />
@@ -257,11 +260,28 @@
                                             </Style>
                                         </Ellipse.Style>
                                     </Ellipse>
-                                    <Ellipse x:Name="PieceShadow"
-                                             Width="36"
-                                             Height="17"
+                                    <Ellipse x:Name="PieceBase"
+                                             Width="44"
+                                             Height="23"
                                              VerticalAlignment="Bottom"
-                                             Fill="#332C1B14"
+                                             Fill="#55FFF4DC"
+                                             IsHitTestVisible="False">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="Opacity" Value="0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsOccupied}" Value="True">
+                                                        <Setter Property="Opacity" Value="1" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                    <Ellipse x:Name="PieceShadow"
+                                             Width="40"
+                                             Height="16"
+                                             VerticalAlignment="Bottom"
+                                             Fill="#3A24170F"
                                              IsHitTestVisible="False">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
@@ -363,8 +383,9 @@
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Viewbox>
+                        </ItemsControl>
+                    </Viewbox>
+                </Border>
             </Border>
 
             <StackPanel x:Name="RightRail" Grid.Column="1" Margin="28,0,0,0">
