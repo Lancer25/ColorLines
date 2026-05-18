@@ -8,7 +8,7 @@ namespace ColorLines.Windows;
 public partial class MainWindow : Window
 {
     private readonly LocalSaveService saveService;
-    private readonly GameViewModel viewModel;
+    private readonly ShellViewModel shellViewModel;
 
     public MainWindow()
         : this(LocalSaveService.CreateDefault())
@@ -21,8 +21,9 @@ public partial class MainWindow : Window
 
         this.saveService = saveService;
         var save = this.saveService.Load();
-        viewModel = GameViewModel.CreateFromSave(save);
-        DataContext = viewModel;
+        shellViewModel = new ShellViewModel(GameViewModel.CreateFromSave(save));
+        shellViewModel.ExitRequested += (_, _) => Close();
+        DataContext = shellViewModel;
 
         if (save?.Window is not null)
         {
@@ -33,23 +34,23 @@ public partial class MainWindow : Window
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
-        saveService.Save(viewModel.CreateSaveData(new WindowPlacementData(Width, Height)));
+        saveService.Save(shellViewModel.Game.CreateSaveData(new WindowPlacementData(Width, Height)));
         base.OnClosing(e);
     }
 
     private void BoardCellPointerEntered(object sender, MouseEventArgs e)
     {
-        if (DataContext is GameViewModel gameViewModel && sender is FrameworkElement element)
+        if (DataContext is ShellViewModel shell && sender is FrameworkElement element)
         {
-            gameViewModel.PreviewPathCommand.Execute(element.DataContext);
+            shell.Game.PreviewPathCommand.Execute(element.DataContext);
         }
     }
 
     private void BoardCellPointerLeft(object sender, MouseEventArgs e)
     {
-        if (DataContext is GameViewModel gameViewModel)
+        if (DataContext is ShellViewModel shell)
         {
-            gameViewModel.ClearPreviewPathCommand.Execute(null);
+            shell.Game.ClearPreviewPathCommand.Execute(null);
         }
     }
 }

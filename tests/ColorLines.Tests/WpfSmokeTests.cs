@@ -44,6 +44,30 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void MainWindowStartsWithShellViewModelOnMainMenu()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-window-{Guid.NewGuid():N}.json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+            window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+
+            Assert.True(shell.IsMainMenuVisible);
+            Assert.False(shell.IsPlayingVisible);
+            Assert.NotNull(shell.Game);
+            window.Close();
+        });
+    }
+
+    [Fact]
     public void OccupiedCellsShowPieceBody()
     {
         RunOnWpfThread(() =>
