@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 using ColorLines.Windows.Services;
 using ColorLines.Windows.ViewModels;
 
@@ -34,5 +35,21 @@ public partial class MainWindow : Window
     {
         saveService.Save(viewModel.CreateSaveData(new WindowPlacementData(Width, Height)));
         base.OnClosing(e);
+    }
+
+    private void BoardCellPointerEntered(object sender, MouseEventArgs e)
+    {
+        if (DataContext is GameViewModel gameViewModel && sender is FrameworkElement element)
+        {
+            gameViewModel.PreviewPathCommand.Execute(element.DataContext);
+        }
+    }
+
+    private void BoardCellPointerLeft(object sender, MouseEventArgs e)
+    {
+        if (DataContext is GameViewModel gameViewModel)
+        {
+            gameViewModel.ClearPreviewPathCommand.Execute(null);
+        }
     }
 }
