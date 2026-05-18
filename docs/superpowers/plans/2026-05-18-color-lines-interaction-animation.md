@@ -31,15 +31,15 @@
 - [x] Add pop animations for `WasMovedTo` and `WasSpawned`.
 - [x] Add subtle rejected target feedback animation on `RejectFeedbackGlow`.
 - [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
-- [ ] Commit with `feat: add board interaction animations`.
+- [x] Commit with `feat: add board interaction animations`.
 
 ## Task 3: Verify And Launch
 
-- [ ] Run `dotnet test ColorLines.sln`.
-- [ ] Run `dotnet build ColorLines.sln`.
-- [ ] Launch the WPF app.
-- [ ] Confirm the process responds.
-- [ ] Inspect `git status --short --branch`.
+- [x] Run `dotnet test ColorLines.sln`.
+- [x] Run `dotnet build ColorLines.sln`.
+- [x] Launch the WPF app.
+- [x] Confirm the process responds.
+- [x] Inspect `git status --short --branch`.
 
 ## Self-Review
 
