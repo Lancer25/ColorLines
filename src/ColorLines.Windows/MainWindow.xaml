@@ -133,7 +133,16 @@
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding WasCleared}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
+                                                        <DataTrigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                     From="0.42"
+                                                                                     To="0"
+                                                                                     Duration="0:0:0.28" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.EnterActions>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>

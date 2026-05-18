@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 using ColorLines.Windows;
 using ColorLines.Windows.Services;
 using ColorLines.Windows.ViewModels;
@@ -110,6 +111,31 @@ public sealed class WpfSmokeTests
 
             window.Close();
         });
+    }
+
+    [Fact]
+    public void ClearFeedbackGlowDoesNotHoldPersistentOpacity()
+    {
+        var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "ColorLines.Windows",
+            "MainWindow.xaml"));
+        var document = XDocument.Load(mainWindowPath);
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var clearFeedbackGlow = document
+            .Descendants()
+            .Single(element => element.Attribute(x + "Name")?.Value == "ClearFeedbackGlow");
+
+        Assert.DoesNotContain(clearFeedbackGlow.Descendants(), element =>
+            element.Name.LocalName == "Setter"
+            && element.Attribute("Property")?.Value == "Opacity"
+            && element.Attribute("Value")?.Value == "1");
     }
 
     private static void EnsureThemeResources()
