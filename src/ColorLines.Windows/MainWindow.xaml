@@ -402,10 +402,11 @@
                            Foreground="{StaticResource TextMutedBrush}" />
             </Border>
 
-            <Border Background="{StaticResource PanelBackgroundBrush}"
-                    BorderBrush="#E8CFB7"
+            <Border x:Name="ScorePanel"
+                    Background="{StaticResource PanelBackgroundBrush}"
+                    BorderBrush="{StaticResource PanelBorderBrush}"
                     BorderThickness="1"
-                    CornerRadius="10"
+                    CornerRadius="8"
                     Padding="18"
                     Margin="0,0,0,14">
                 <StackPanel>
@@ -454,10 +455,11 @@
                 </StackPanel>
             </Border>
 
-            <Border Background="{StaticResource PanelBackgroundBrush}"
-                    BorderBrush="#E8CFB7"
+            <Border x:Name="NextCatsPanel"
+                    Background="{StaticResource PanelBackgroundBrush}"
+                    BorderBrush="{StaticResource PanelBorderBrush}"
                     BorderThickness="1"
-                    CornerRadius="10"
+                    CornerRadius="8"
                     Padding="18"
                     Margin="0,0,0,14">
                 <StackPanel>
@@ -498,17 +500,18 @@
             <Button x:Name="NewGameButton"
                     Content="New Game"
                     Command="{Binding NewGameCommand}"
-                    Height="42"
+                    Height="44"
                     Background="{StaticResource AccentBrush}"
                     Foreground="#FFFFFB"
                     BorderThickness="0"
                     FontSize="15"
                     FontWeight="SemiBold" />
 
-            <Border Background="{StaticResource PanelBackgroundBrush}"
-                    BorderBrush="#E8CFB7"
+            <Border x:Name="SettingsPanel"
+                    Background="{StaticResource PanelBackgroundBrush}"
+                    BorderBrush="{StaticResource PanelBorderBrush}"
                     BorderThickness="1"
-                    CornerRadius="10"
+                    CornerRadius="8"
                     Padding="18"
                     Margin="0,14,0,0">
                 <StackPanel>
