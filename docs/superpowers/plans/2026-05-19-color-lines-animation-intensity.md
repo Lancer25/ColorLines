@@ -12,34 +12,34 @@
 
 ## Task 1: ViewModel Toggle And Persistence
 
-- [ ] Add failing tests for toggle command, label, save export, and save restore.
-- [ ] Run focused tests and verify they fail.
-- [ ] Add `ToggleAnimationCommand`, `IsFullAnimation`, and `AnimationToggleText`.
-- [ ] Run focused tests and verify they pass.
-- [ ] Commit with `feat: add animation intensity toggle`.
+- [x] Add failing tests for toggle command, label, save export, and save restore.
+- [x] Run focused tests and verify they fail.
+- [x] Add `ToggleAnimationCommand`, `IsFullAnimation`, and `AnimationToggleText`.
+- [x] Run focused tests and verify they pass.
+- [x] Commit with `feat: add animation intensity toggle`.
 
 ## Task 2: Reduced Mode Feedback Suppression
 
-- [ ] Add failing tests showing Reduced suppresses transient feedback but keeps planning feedback.
-- [ ] Run focused tests and verify they fail.
-- [ ] Gate transient flags in `RefreshFromState` behind `IsFullAnimation`.
-- [ ] Run focused tests and verify they pass.
-- [ ] Commit with `feat: reduce transient animation feedback`.
+- [x] Add failing tests showing Reduced suppresses transient feedback but keeps planning feedback.
+- [x] Run focused tests and verify they fail.
+- [x] Gate transient flags in `RefreshFromState` behind `IsFullAnimation`.
+- [x] Run focused tests and verify they pass.
+- [x] Commit with `feat: reduce transient animation feedback`.
 
 ## Task 3: WPF Settings Control
 
-- [ ] Add failing WPF smoke assertion for `ToggleAnimationButton`.
-- [ ] Run focused smoke test and verify it fails.
-- [ ] Add the animation toggle button to Settings.
-- [ ] Run WPF smoke tests and verify they pass.
-- [ ] Commit with `feat: add animation settings control`.
+- [x] Add failing WPF smoke assertion for `ToggleAnimationButton`.
+- [x] Run focused smoke test and verify it fails.
+- [x] Add the animation toggle button to Settings.
+- [x] Run WPF smoke tests and verify they pass.
+- [x] Commit with `feat: add animation settings control`.
 
 ## Task 4: Verification
 
-- [ ] Run `dotnet test ColorLines.sln`.
-- [ ] Run `dotnet build ColorLines.sln`.
-- [ ] Launch the WPF app for manual verification.
-- [ ] Mark this plan complete and commit with `docs: mark animation intensity complete`.
+- [x] Run `dotnet test ColorLines.sln`.
+- [x] Run `dotnet build ColorLines.sln`.
+- [x] Launch the WPF app for manual verification.
+- [x] Mark this plan complete and commit with `docs: mark animation intensity complete`.
 
 ---
 
