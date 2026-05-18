@@ -57,6 +57,8 @@ public sealed class WpfSmokeTests
                 .First(ellipse => ellipse.Name == "PieceShadow");
             var moveFeedbackGlow = FindVisualChildren<Ellipse>(occupiedButton)
                 .First(ellipse => ellipse.Name == "MoveFeedbackGlow");
+            var movePathPulseGlow = FindVisualChildren<Border>(occupiedButton)
+                .First(border => border.Name == "MovePathPulseGlow");
             var reachableTargetGlow = FindVisualChildren<Border>(occupiedButton)
                 .First(border => border.Name == "ReachableTargetGlow");
             var pathPreviewGlow = FindVisualChildren<Border>(occupiedButton)
@@ -69,6 +71,7 @@ public sealed class WpfSmokeTests
             Assert.Equal(1, pieceImage.Opacity);
             Assert.Equal(1, pieceShadow.Opacity);
             Assert.Equal(0, moveFeedbackGlow.Opacity);
+            Assert.Equal(0, movePathPulseGlow.Opacity);
             Assert.Equal(0, reachableTargetGlow.Opacity);
             Assert.Equal(0, pathPreviewGlow.Opacity);
             Assert.Equal(0, actorTransform.Y);
