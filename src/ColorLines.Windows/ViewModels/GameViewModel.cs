@@ -290,21 +290,27 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private void PreviewPath(object? parameter)
     {
-        pathPreviewPositions.Clear();
-
         if (selectedPosition is null || parameter is not CellViewModel cell || cell.IsOccupied)
         {
-            RefreshFromState();
+            ClearPreviewPath();
             return;
         }
 
         var target = new BoardPosition(cell.Row, cell.Column);
         var path = PathFinder.FindPath(state.Board, selectedPosition.Value, target);
-        if (path.Count > 0)
+        if (path.Count == 0)
         {
-            pathPreviewPositions.UnionWith(path);
+            ClearPreviewPath();
+            return;
         }
 
+        var nextPreview = path.ToHashSet();
+        if (pathPreviewPositions.SetEquals(nextPreview))
+        {
+            return;
+        }
+
+        pathPreviewPositions = nextPreview;
         RefreshFromState();
     }
 

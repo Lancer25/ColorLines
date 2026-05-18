@@ -167,6 +167,22 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void PreviewPathCommandDoesNotRefreshBoardWhenNoPathCanBeShown()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var occupied = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var collectionChanges = 0;
+        viewModel.Cells.CollectionChanged += (_, _) => collectionChanges++;
+
+        viewModel.PreviewPathCommand.Execute(occupied);
+
+        Assert.Equal(0, collectionChanges);
+    }
+
+    [Fact]
     public void ClearPreviewPathCommandRemovesPathWithoutClearingSelection()
     {
         var board = GameBoard.CreateEmpty();
