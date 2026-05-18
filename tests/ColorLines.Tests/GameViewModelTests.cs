@@ -163,6 +163,19 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void ReducedAnimationSuppressesRejectFeedback()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+        viewModel.ToggleAnimationCommand.Execute(null);
+        var empty = viewModel.Cells.First(cell => !cell.IsOccupied);
+
+        viewModel.SelectCellCommand.Execute(empty);
+
+        Assert.True(viewModel.Feedback.WasRejected);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.WasRejectedTarget);
+    }
+
+    [Fact]
     public void ClickingEmptyCellWithoutSelectionPlaysRejectSound()
     {
         var soundPlayer = new RecordingSoundPlayer();
@@ -228,6 +241,25 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void ReducedAnimationSuppressesMoveFeedback()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+
+        viewModel.ToggleAnimationCommand.Execute(null);
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+
+        Assert.True(viewModel.Feedback.WasMoved);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.WasMovedTo);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.WasMovePath);
+    }
+
+    [Fact]
     public void SelectingOccupiedCellClearsMovePathFeedback()
     {
         var board = GameBoard.CreateEmpty();
@@ -262,6 +294,24 @@ public sealed class GameViewModelTests
         Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 0 && cell.IsPathPreview);
         Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.IsPathPreview);
         Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 2 && cell.IsPathPreview);
+    }
+
+    [Fact]
+    public void ReducedAnimationKeepsPlanningFeedback()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        viewModel.ToggleAnimationCommand.Execute(null);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+
+        viewModel.SelectCellCommand.Execute(source);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+        viewModel.PreviewPathCommand.Execute(target);
+
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.IsReachableTarget);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.IsPathPreview);
     }
 
     [Fact]

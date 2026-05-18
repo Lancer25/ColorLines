@@ -327,11 +327,11 @@ public sealed class GameViewModel : INotifyPropertyChanged
         foreach (var cell in state.Board.Cells())
         {
             var isSelected = selectedPosition == cell.Position;
-            var wasMovedTo = movedPositions.Contains(cell.Position);
-            var wasMovePath = movePathPositions.Contains(cell.Position);
-            var wasSpawned = spawnedPositions.Contains(cell.Position);
-            var wasCleared = clearedPositions.Contains(cell.Position);
-            var wasRejectedTarget = rejectedPositions.Contains(cell.Position);
+            var wasMovedTo = IsFullAnimation && movedPositions.Contains(cell.Position);
+            var wasMovePath = IsFullAnimation && movePathPositions.Contains(cell.Position);
+            var wasSpawned = IsFullAnimation && spawnedPositions.Contains(cell.Position);
+            var wasCleared = IsFullAnimation && clearedPositions.Contains(cell.Position);
+            var wasRejectedTarget = IsFullAnimation && rejectedPositions.Contains(cell.Position);
             var isReachableTarget = IsReachableTarget(cell.Position);
             var isPathPreview = pathPreviewPositions.Contains(cell.Position);
             Cells.Add(cell.Piece is null
