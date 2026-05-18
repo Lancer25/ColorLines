@@ -565,6 +565,62 @@ public sealed class GameViewModelTests
         Assert.Equal("Reduced", save.AnimationIntensity);
     }
 
+    [Fact]
+    public void ShellViewModelStartsAtMainMenu()
+    {
+        var game = GameViewModel.CreateForNewGame();
+        var shell = new ShellViewModel(game);
+
+        Assert.Equal(ShellScreen.MainMenu, shell.CurrentScreen);
+        Assert.True(shell.IsMainMenuVisible);
+        Assert.False(shell.IsPlayingVisible);
+        Assert.False(shell.IsSettingsVisible);
+        Assert.Same(game, shell.Game);
+    }
+
+    [Fact]
+    public void ContinueCommandOpensPlayingScreen()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.ContinueCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
+        Assert.False(shell.IsMainMenuVisible);
+        Assert.True(shell.IsPlayingVisible);
+    }
+
+    [Fact]
+    public void SettingsCommandOpensSettingsScreenAndBackReturnsToMenu()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.OpenSettingsCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.Settings, shell.CurrentScreen);
+        Assert.True(shell.IsSettingsVisible);
+
+        shell.BackToMenuCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.MainMenu, shell.CurrentScreen);
+    }
+
+    [Fact]
+    public void NewGameCommandResetsGameAndOpensPlayingScreen()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+        var originalGame = shell.Game;
+        var occupied = originalGame.Cells.First(cell => cell.IsOccupied);
+        originalGame.SelectCellCommand.Execute(occupied);
+
+        shell.NewGameCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
+        Assert.Same(originalGame, shell.Game);
+        Assert.Equal(0, shell.Game.Score);
+        Assert.DoesNotContain(shell.Game.Cells, cell => cell.IsSelected);
+    }
+
     private sealed class SequenceRandomSource : IRandomSource
     {
         public int Next(int exclusiveMax)
