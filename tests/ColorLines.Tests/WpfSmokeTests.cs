@@ -100,6 +100,45 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void SettingsScreenUsesExistingGameSettingsCommands()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-window-{Guid.NewGuid():N}.json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+            window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            shell.OpenSettingsCommand.Execute(null);
+            window.UpdateLayout();
+
+            var settingsView = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "SettingsView");
+            var gameplaySettingsPanel = FindVisualChildren<Border>(window)
+                .FirstOrDefault(border => border.Name == "SettingsPanel");
+            var settingsToggleAnimationButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsToggleAnimationButton");
+            var settingsToggleSoundButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsToggleSoundButton");
+            var backToMenuButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsBackToMenuButton");
+
+            Assert.Equal(Visibility.Visible, settingsView.Visibility);
+            Assert.Null(gameplaySettingsPanel);
+            Assert.Same(shell.Game.ToggleAnimationCommand, settingsToggleAnimationButton.Command);
+            Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
+            Assert.Same(shell.BackToMenuCommand, backToMenuButton.Command);
+            window.Close();
+        });
+    }
+
+    [Fact]
     public void OccupiedCellsShowPieceBody()
     {
         RunOnWpfThread(() =>
