@@ -63,16 +63,21 @@ public sealed class WpfSmokeTests
 
                 var pieceImage = FindVisualChildren<Image>(occupiedButton)
                     .First(image => image.Name == "PieceImage");
+                var pieceActor = FindVisualChildren<Grid>(occupiedButton)
+                    .First(grid => grid.Name == "PieceActor");
                 var pieceShadow = FindVisualChildren<Ellipse>(occupiedButton)
                     .First(ellipse => ellipse.Name == "PieceShadow");
                 var moveFeedbackGlow = FindVisualChildren<Ellipse>(occupiedButton)
                     .First(ellipse => ellipse.Name == "MoveFeedbackGlow");
+                var actorTransform = Assert.IsType<TransformGroup>(pieceActor.RenderTransform);
 
                 Assert.Equal(44, pieceImage.Width);
                 Assert.Equal(44, pieceImage.Height);
                 Assert.Equal(1, pieceImage.Opacity);
                 Assert.Equal(1, pieceShadow.Opacity);
                 Assert.Equal(0, moveFeedbackGlow.Opacity);
+                Assert.Contains(actorTransform.Children, transform => transform is ScaleTransform);
+                Assert.Contains(actorTransform.Children, transform => transform is TranslateTransform);
                 window.Close();
             }
             catch (Exception exception)

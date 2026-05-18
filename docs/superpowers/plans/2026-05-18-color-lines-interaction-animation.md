@@ -15,9 +15,9 @@
 **Files:**
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] Add WPF smoke assertions for named `PieceActor` and a `TransformGroup` with scale and translate transforms.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCellsShowPieceBody`; expect failure because `PieceActor` does not exist yet.
-- [ ] Commit only after Task 2 passes.
+- [x] Add WPF smoke assertions for named `PieceActor` and a `TransformGroup` with scale and translate transforms.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCellsShowPieceBody`; expect failure because `PieceActor` does not exist yet.
+- [x] Commit only after Task 2 passes.
 
 ## Task 2: Add Piece Actor And Local Animations
 
@@ -25,12 +25,12 @@
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] Wrap `PieceImage` in `Grid x:Name="PieceActor"`.
-- [ ] Add `TransformGroup` with `ScaleTransform` and `TranslateTransform` to `PieceActor`.
-- [ ] Add selected lift animation using `IsSelected`.
-- [ ] Add pop animations for `WasMovedTo` and `WasSpawned`.
-- [ ] Add subtle rejected target feedback animation on `RejectFeedbackGlow`.
-- [ ] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
+- [x] Wrap `PieceImage` in `Grid x:Name="PieceActor"`.
+- [x] Add `TransformGroup` with `ScaleTransform` and `TranslateTransform` to `PieceActor`.
+- [x] Add selected lift animation using `IsSelected`.
+- [x] Add pop animations for `WasMovedTo` and `WasSpawned`.
+- [x] Add subtle rejected target feedback animation on `RejectFeedbackGlow`.
+- [x] Run `dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter WpfSmokeTests`; expect pass.
 - [ ] Commit with `feat: add board interaction animations`.
 
 ## Task 3: Verify And Launch
