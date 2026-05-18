@@ -11,6 +11,11 @@
     <Color x:Key="TextMutedColor">#8A6655</Color>
     <Color x:Key="AccentColor">#7C4D2E</Color>
     <Color x:Key="ScoreAccentColor">#D96B2B</Color>
+    <Color x:Key="BoardInnerColor">#FFF4D09C</Color>
+    <Color x:Key="BoardShadowColor">#4438150A</Color>
+    <Color x:Key="PanelBorderColor">#E7C8AC</Color>
+    <Color x:Key="CellInsetColor">#FFF2DDB8</Color>
+    <Color x:Key="PrimaryButtonHoverColor">#8F5834</Color>
 
     <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
     <SolidColorBrush x:Key="PanelBackgroundBrush" Color="{StaticResource PanelBackgroundColor}" />
@@ -23,4 +28,13 @@
     <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMutedColor}" />
     <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
     <SolidColorBrush x:Key="ScoreAccentBrush" Color="{StaticResource ScoreAccentColor}" />
+    <LinearGradientBrush x:Key="BoardInnerBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FFFFDFB2" Offset="0" />
+        <GradientStop Color="{StaticResource BoardInnerColor}" Offset="0.52" />
+        <GradientStop Color="#FFE7B06F" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="BoardShadowBrush" Color="{StaticResource BoardShadowColor}" />
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="{StaticResource PanelBorderColor}" />
+    <SolidColorBrush x:Key="CellInsetBrush" Color="{StaticResource CellInsetColor}" />
+    <SolidColorBrush x:Key="PrimaryButtonHoverBrush" Color="{StaticResource PrimaryButtonHoverColor}" />
 </ResourceDictionary>

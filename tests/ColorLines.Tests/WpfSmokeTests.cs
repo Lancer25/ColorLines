@@ -30,6 +30,20 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void CozyBoardThemeExposesVisualUpgradeBrushes()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+
+            Assert.True(Application.Current!.Resources.Contains("BoardInnerBrush"));
+            Assert.True(Application.Current.Resources.Contains("BoardShadowBrush"));
+            Assert.True(Application.Current.Resources.Contains("PanelBorderBrush"));
+            Assert.True(Application.Current.Resources.Contains("PrimaryButtonHoverBrush"));
+        });
+    }
+
+    [Fact]
     public void OccupiedCellsShowPieceBody()
     {
         RunOnWpfThread(() =>
