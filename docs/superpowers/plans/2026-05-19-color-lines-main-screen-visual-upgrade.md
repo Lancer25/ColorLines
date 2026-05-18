@@ -25,7 +25,7 @@
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 
-- [ ] **Step 1: Add failing smoke assertions for named regions**
+- [x] **Step 1: Add failing smoke assertions for named regions**
 
 Update `OccupiedCellsShowPieceBody` in `tests/ColorLines.Tests/WpfSmokeTests.cs` by adding these lookups after `statusTextRegion`:
 
@@ -46,7 +46,7 @@ Assert.True(rightRail.Margin.Left >= 24);
 Assert.NotNull(newGameButton.Command);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -56,7 +56,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCell
 
 Expected: FAIL because `MainBoardFrame`, `RightRail`, or `NewGameButton` does not exist yet.
 
-- [ ] **Step 3: Add stable XAML names**
+- [x] **Step 3: Add stable XAML names**
 
 In `src/ColorLines.Windows/MainWindow.xaml`, change the board container opening tag to include a name:
 
@@ -90,7 +90,7 @@ Change the main New Game button:
         FontWeight="SemiBold" />
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run:
 
@@ -100,7 +100,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCell
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add tests\ColorLines.Tests\WpfSmokeTests.cs src\ColorLines.Windows\MainWindow.xaml
@@ -114,7 +114,7 @@ git commit -m "test: protect main screen visual regions"
 **Files:**
 - Modify: `src/ColorLines.Windows/Themes/CozyBoard.xaml`
 
-- [ ] **Step 1: Add failing resource smoke test**
+- [x] **Step 1: Add failing resource smoke test**
 
 Add this test to `tests/ColorLines.Tests/WpfSmokeTests.cs`:
 
@@ -134,7 +134,7 @@ public void CozyBoardThemeExposesVisualUpgradeBrushes()
 }
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -144,7 +144,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter CozyBoardThe
 
 Expected: FAIL because the new brush keys do not exist.
 
-- [ ] **Step 3: Add refreshed resources**
+- [x] **Step 3: Add refreshed resources**
 
 In `src/ColorLines.Windows/Themes/CozyBoard.xaml`, add these colors after the existing color keys:
 
@@ -170,7 +170,7 @@ Add these brushes after the existing brush keys:
 <SolidColorBrush x:Key="PrimaryButtonHoverBrush" Color="{StaticResource PrimaryButtonHoverColor}" />
 ```
 
-- [ ] **Step 4: Run resource test**
+- [x] **Step 4: Run resource test**
 
 Run:
 
@@ -180,7 +180,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter CozyBoardThe
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add tests\ColorLines.Tests\WpfSmokeTests.cs src\ColorLines.Windows\Themes\CozyBoard.xaml
@@ -195,7 +195,7 @@ git commit -m "feat: refresh cozy board theme resources"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add smoke assertions for piece base and calmer cell sizing**
+- [x] **Step 1: Add smoke assertions for piece base and calmer cell sizing**
 
 In `OccupiedCellsShowPieceBody`, after the `pieceShadow` lookup, add:
 
@@ -212,7 +212,7 @@ Assert.True(pieceBase.Opacity > 0);
 Assert.True(pieceShadow.Width >= 38);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -222,7 +222,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCell
 
 Expected: FAIL because `PieceBase` does not exist yet.
 
-- [ ] **Step 3: Update board and piece XAML**
+- [x] **Step 3: Update board and piece XAML**
 
 In `MainWindow.xaml`, change `MainBoardFrame` to use a layered background:
 
@@ -286,7 +286,7 @@ Update `PieceShadow` size:
          IsHitTestVisible="False">
 ```
 
-- [ ] **Step 4: Run focused smoke test**
+- [x] **Step 4: Run focused smoke test**
 
 Run:
 
@@ -296,7 +296,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCell
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add tests\ColorLines.Tests\WpfSmokeTests.cs src\ColorLines.Windows\MainWindow.xaml
@@ -311,7 +311,7 @@ git commit -m "feat: polish board and piece presentation"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add smoke assertions for HUD names**
+- [x] **Step 1: Add smoke assertions for HUD names**
 
 In `OccupiedCellsShowPieceBody`, add lookups:
 
@@ -332,7 +332,7 @@ Assert.True(nextCatsPanel.Padding.Left >= 16);
 Assert.True(settingsPanel.Padding.Left >= 16);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -342,7 +342,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCell
 
 Expected: FAIL because the panel names do not exist yet.
 
-- [ ] **Step 3: Name and restyle HUD panels**
+- [x] **Step 3: Name and restyle HUD panels**
 
 In `MainWindow.xaml`, name the score, next cats, and settings borders:
 
@@ -383,7 +383,7 @@ Height="44"
 Background="{StaticResource AccentBrush}"
 ```
 
-- [ ] **Step 4: Run focused smoke test**
+- [x] **Step 4: Run focused smoke test**
 
 Run:
 
@@ -393,7 +393,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter OccupiedCell
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add tests\ColorLines.Tests\WpfSmokeTests.cs src\ColorLines.Windows\MainWindow.xaml
@@ -407,7 +407,7 @@ git commit -m "feat: polish right rail hud"
 **Files:**
 - Modify: `docs/superpowers/plans/2026-05-19-color-lines-main-screen-visual-upgrade.md`
 
-- [ ] **Step 1: Run full tests**
+- [x] **Step 1: Run full tests**
 
 Run:
 
@@ -417,7 +417,7 @@ dotnet test ColorLines.sln
 
 Expected: PASS.
 
-- [ ] **Step 2: Run full build**
+- [x] **Step 2: Run full build**
 
 Run:
 
@@ -427,7 +427,7 @@ dotnet build ColorLines.sln
 
 Expected: PASS with 0 errors.
 
-- [ ] **Step 3: Launch Windows app**
+- [x] **Step 3: Launch Windows app**
 
 Run:
 
@@ -437,11 +437,11 @@ Start-Process -FilePath (Resolve-Path 'src\ColorLines.Windows\bin\Debug\net8.0-w
 
 Expected: the app launches and the default screen shows the upgraded board, right rail, cat pieces, and game-over overlay still covers the full window when triggered.
 
-- [ ] **Step 4: Mark plan complete**
+- [x] **Step 4: Mark plan complete**
 
 Replace every unchecked checkbox in this file with a checked checkbox.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add docs\superpowers\plans\2026-05-19-color-lines-main-screen-visual-upgrade.md
