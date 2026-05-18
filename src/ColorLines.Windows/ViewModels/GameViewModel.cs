@@ -245,8 +245,16 @@ public sealed class GameViewModel : INotifyPropertyChanged
             var wasSpawned = spawnedPositions.Contains(cell.Position);
             var wasCleared = clearedPositions.Contains(cell.Position);
             var wasRejectedTarget = rejectedPositions.Contains(cell.Position);
+            var isReachableTarget = IsReachableTarget(cell.Position);
             Cells.Add(cell.Piece is null
-                ? CellViewModel.Empty(cell.Position.Row, cell.Position.Column, wasMovedTo, wasSpawned, wasCleared, wasRejectedTarget)
+                ? CellViewModel.Empty(
+                    cell.Position.Row,
+                    cell.Position.Column,
+                    wasMovedTo,
+                    wasSpawned,
+                    wasCleared,
+                    wasRejectedTarget,
+                    isReachableTarget)
                 : CellViewModel.Occupied(cell.Position.Row, cell.Position.Column, cell.Piece.Value, isSelected, wasMovedTo, wasSpawned, wasCleared, wasRejectedTarget));
         }
 
@@ -255,6 +263,13 @@ public sealed class GameViewModel : INotifyPropertyChanged
         {
             NextPieces.Add(PieceViewModel.FromPiece(piece));
         }
+    }
+
+    private bool IsReachableTarget(BoardPosition position)
+    {
+        return selectedPosition is not null
+            && state.Board.GetPiece(position) is null
+            && PathFinder.FindPath(state.Board, selectedPosition.Value, position).Count > 0;
     }
 
     private static string BuildStatusText(GameTurnResult result)

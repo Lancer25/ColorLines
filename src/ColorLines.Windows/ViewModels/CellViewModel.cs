@@ -13,7 +13,9 @@ public sealed record CellViewModel(
     bool WasMovedTo,
     bool WasSpawned,
     bool WasCleared,
-    bool WasRejectedTarget)
+    bool WasRejectedTarget,
+    bool IsReachableTarget,
+    bool IsPathPreview)
 {
     public static CellViewModel Empty(
         int row,
@@ -21,7 +23,9 @@ public sealed record CellViewModel(
         bool wasMovedTo = false,
         bool wasSpawned = false,
         bool wasCleared = false,
-        bool wasRejectedTarget = false)
+        bool wasRejectedTarget = false,
+        bool isReachableTarget = false,
+        bool isPathPreview = false)
     {
         return new CellViewModel(
             row,
@@ -34,7 +38,9 @@ public sealed record CellViewModel(
             wasMovedTo,
             wasSpawned,
             wasCleared,
-            wasRejectedTarget);
+            wasRejectedTarget,
+            isReachableTarget,
+            isPathPreview);
     }
 
     public static CellViewModel Occupied(
@@ -45,7 +51,8 @@ public sealed record CellViewModel(
         bool wasMovedTo = false,
         bool wasSpawned = false,
         bool wasCleared = false,
-        bool wasRejectedTarget = false)
+        bool wasRejectedTarget = false,
+        bool isPathPreview = false)
     {
         var viewModel = PieceViewModel.FromPiece(piece);
         return new CellViewModel(
@@ -59,6 +66,8 @@ public sealed record CellViewModel(
             wasMovedTo,
             wasSpawned,
             wasCleared,
-            wasRejectedTarget);
+            wasRejectedTarget,
+            false,
+            isPathPreview);
     }
 }

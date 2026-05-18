@@ -79,6 +79,22 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SelectingOccupiedCellMarksReachableEmptyTargets()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(8, 8), PieceKind.Gray);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+
+        viewModel.SelectCellCommand.Execute(source);
+
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.IsReachableTarget);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsOccupied && cell.IsReachableTarget);
+    }
+
+    [Fact]
     public void NewGameCommandResetsScoreAndSelection()
     {
         var viewModel = GameViewModel.CreateForNewGame();
