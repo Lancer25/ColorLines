@@ -186,6 +186,8 @@ public sealed class WpfSmokeTests
             shell.ContinueCommand.Execute(null);
             window.UpdateLayout();
 
+            var gameplayView = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "GameplayView");
             var gameplayShell = FindVisualChildren<Grid>(window)
                 .First(grid => grid.Name == "GameplayShell");
             var gameplayBoardArea = FindVisualChildren<Grid>(window)
@@ -243,6 +245,7 @@ public sealed class WpfSmokeTests
 
             Assert.Equal(44, pieceImage.Width);
             Assert.Equal(44, pieceImage.Height);
+            Assert.Equal(Visibility.Visible, gameplayView.Visibility);
             Assert.Equal(Visibility.Visible, gameplayShell.Visibility);
             Assert.True(gameplayBoardArea.ColumnDefinitions.Count >= 1);
             Assert.True(gameplayHudPanel.Padding.Left >= 18);
@@ -252,9 +255,9 @@ public sealed class WpfSmokeTests
             Assert.True(gameplayNextCatsBlock.Padding.Left >= 16);
             Assert.True(gameplayActionBar.Children.Count >= 3);
             Assert.True(mainBoardFrame.Padding.Left >= 18);
-            Assert.NotNull(menuButton.Command);
-            Assert.NotNull(newGameButton.Command);
-            Assert.NotNull(settingsButton.Command);
+            Assert.Same(shell.BackToMenuCommand, menuButton.Command);
+            Assert.Same(shell.NewGameCommand, newGameButton.Command);
+            Assert.Same(shell.OpenSettingsCommand, settingsButton.Command);
             Assert.Equal("MenuSecondaryButton", menuButton.Tag);
             Assert.Equal("MenuPrimaryButton", newGameButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsButton.Tag);
