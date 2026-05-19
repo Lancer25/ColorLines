@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml.Linq;
@@ -89,6 +90,8 @@ public sealed class WpfSmokeTests
             window.UpdateLayout();
 
             var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            var escapeBinding = window.InputBindings.OfType<KeyBinding>()
+                .Single(binding => binding.Key == Key.Escape);
             var mainMenuView = FindVisualChildren<Grid>(window)
                 .First(grid => grid.Name == "MainMenuView");
             var gameplayView = FindVisualChildren<Grid>(window)
@@ -120,6 +123,7 @@ public sealed class WpfSmokeTests
                 .First(grid => grid.Name == "MenuHeroArea");
 
             Assert.Equal(Visibility.Visible, mainMenuView.Visibility);
+            Assert.Same(shell.EscapeCommand, escapeBinding.Command);
             Assert.Equal(Visibility.Hidden, gameplayView.Visibility);
             Assert.Equal(Visibility.Hidden, settingsView.Visibility);
             Assert.Equal(Visibility.Hidden, pauseMenuView.Visibility);
@@ -357,12 +361,14 @@ public sealed class WpfSmokeTests
             Assert.Same(shell.OpenSettingsCommand, pauseSettingsButton.Command);
             Assert.Same(shell.EndGameCommand, pauseEndGameButton.Command);
             Assert.Equal(Visibility.Collapsed, endGameConfirmPanel.Visibility);
+            Assert.Same(endGameCancelButton, FocusManager.GetFocusedElement(endGameConfirmPanel));
             Assert.Same(shell.CancelEndGameCommand, endGameCancelButton.Command);
             Assert.Same(shell.ConfirmEndGameCommand, endGameConfirmButton.Command);
             Assert.Same(shell.RequestBackToMenuCommand, pauseBackToMenuButton.Command);
             Assert.Same(pauseBackToMenuButton, pauseMenuActionList.Children[^2]);
             Assert.Same(returnToMenuConfirmPanel, pauseMenuActionList.Children[^1]);
             Assert.Equal(Visibility.Collapsed, returnToMenuConfirmPanel.Visibility);
+            Assert.Same(returnToMenuCancelButton, FocusManager.GetFocusedElement(returnToMenuConfirmPanel));
             Assert.Same(shell.CancelBackToMenuCommand, returnToMenuCancelButton.Command);
             Assert.Same(shell.ConfirmBackToMenuCommand, returnToMenuConfirmButton.Command);
             Assert.Equal("MenuSecondaryButton", menuButton.Tag);
