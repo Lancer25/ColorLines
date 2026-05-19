@@ -95,6 +95,8 @@ public sealed class WpfSmokeTests
                 .First(grid => grid.Name == "GameplayView");
             var continueButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "ContinueButton");
+            var menuNewGameButton = FindVisualChildren<Button>(window)
+                .FirstOrDefault(button => button.Name == "MenuNewGameButton");
             var menuSettingsButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "MenuSettingsButton");
             var menuHeroBoard = FindVisualChildren<Border>(window)
@@ -118,6 +120,7 @@ public sealed class WpfSmokeTests
             Assert.Equal(Visibility.Visible, menuBackdrop.Visibility);
             Assert.True(menuHeroArea.Margin.Left >= 24);
             Assert.NotNull(continueButton.Command);
+            Assert.Null(menuNewGameButton);
             Assert.NotNull(menuSettingsButton.Command);
             Assert.True(continueButton.Height >= 52);
             Assert.True(menuSettingsButton.Height >= 44);
@@ -252,6 +255,12 @@ public sealed class WpfSmokeTests
                 .First(button => button.Name == "PauseEndGameButton");
             var pauseBackToMenuButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "PauseBackToMenuButton");
+            var returnToMenuConfirmPanel = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "ReturnToMenuConfirmPanel");
+            var returnToMenuCancelButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "ReturnToMenuCancelButton");
+            var returnToMenuConfirmButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "ReturnToMenuConfirmButton");
             var pauseSaveStatusText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "PauseSaveStatusText");
             var mainBoardFrame = FindVisualChildren<Border>(window)
@@ -326,7 +335,10 @@ public sealed class WpfSmokeTests
             Assert.Same(shell.SaveGameCommand, pauseSaveButton.Command);
             Assert.Same(shell.OpenSettingsCommand, pauseSettingsButton.Command);
             Assert.Same(shell.NewGameCommand, pauseEndGameButton.Command);
-            Assert.Same(shell.BackToMenuCommand, pauseBackToMenuButton.Command);
+            Assert.Same(shell.RequestBackToMenuCommand, pauseBackToMenuButton.Command);
+            Assert.Equal(Visibility.Collapsed, returnToMenuConfirmPanel.Visibility);
+            Assert.Same(shell.CancelBackToMenuCommand, returnToMenuCancelButton.Command);
+            Assert.Same(shell.ConfirmBackToMenuCommand, returnToMenuConfirmButton.Command);
             Assert.Equal("MenuSecondaryButton", menuButton.Tag);
             Assert.Equal(string.Empty, pauseSaveStatusText.Text);
             Assert.Equal("Final Score: 0", finalScoreText.Text);
