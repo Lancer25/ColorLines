@@ -324,6 +324,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private void RefreshFromState()
     {
         EnsureCellsInitialized();
+        var reachableTargets = GetReachableTargets();
         foreach (var cell in state.Board.Cells())
         {
             var isSelected = selectedPosition == cell.Position;
@@ -332,7 +333,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             var wasSpawned = IsFullAnimation && spawnedPositions.Contains(cell.Position);
             var wasCleared = IsFullAnimation && clearedPositions.Contains(cell.Position);
             var wasRejectedTarget = IsFullAnimation && rejectedPositions.Contains(cell.Position);
-            var isReachableTarget = IsReachableTarget(cell.Position);
+            var isReachableTarget = reachableTargets.Contains(cell.Position);
             var isPathPreview = pathPreviewPositions.Contains(cell.Position);
             var cellViewModel = Cells[(cell.Position.Row * BoardPosition.BoardSize) + cell.Position.Column];
             cellViewModel.Update(
@@ -415,11 +416,36 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
     }
 
-    private bool IsReachableTarget(BoardPosition position)
+    private HashSet<BoardPosition> GetReachableTargets()
     {
-        return selectedPosition is not null
-            && state.Board.GetPiece(position) is null
-            && PathFinder.FindPath(state.Board, selectedPosition.Value, position).Count > 0;
+        if (selectedPosition is null)
+        {
+            return new HashSet<BoardPosition>();
+        }
+
+        var source = selectedPosition.Value;
+        var reachable = new HashSet<BoardPosition>();
+        var visited = new HashSet<BoardPosition> { source };
+        var queue = new Queue<BoardPosition>();
+        queue.Enqueue(source);
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            foreach (var next in current.OrthogonalNeighbors())
+            {
+                if (visited.Contains(next) || !state.Board.IsEmpty(next))
+                {
+                    continue;
+                }
+
+                visited.Add(next);
+                reachable.Add(next);
+                queue.Enqueue(next);
+            }
+        }
+
+        return reachable;
     }
 
     private static string BuildStatusText(GameTurnResult result)
