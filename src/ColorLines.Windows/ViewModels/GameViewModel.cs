@@ -29,6 +29,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private HashSet<BoardPosition> clearedPositions;
     private HashSet<BoardPosition> rejectedPositions;
     private HashSet<BoardPosition> pathPreviewPositions;
+    private BoardPosition? pathPreviewTargetPosition;
 
     public GameViewModel(GameEngine engine, GameState state, int highScore = 0, ISoundPlayer? soundPlayer = null)
     {
@@ -237,6 +238,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         {
             ClearCellFeedback();
             pathPreviewPositions.Clear();
+            pathPreviewTargetPosition = null;
             Feedback = TurnFeedback.Neutral;
             selectedPosition = position;
             StatusText = $"Selected {piece}. Choose an empty cell.";
@@ -249,6 +251,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         {
             ClearCellFeedback();
             pathPreviewPositions.Clear();
+            pathPreviewTargetPosition = null;
             rejectedPositions.Add(position);
             Feedback = new TurnFeedback(false, true, false, false, false, 0);
             StatusText = "Select a cat before choosing a target.";
@@ -261,6 +264,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         state = result.State;
         selectedPosition = null;
         pathPreviewPositions.Clear();
+        pathPreviewTargetPosition = null;
         Score = state.Score;
         Feedback = BuildFeedback(result);
         StoreCellFeedback(result);
@@ -275,6 +279,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         state = engine.NewGame();
         selectedPosition = null;
         pathPreviewPositions.Clear();
+        pathPreviewTargetPosition = null;
         ClearCellFeedback();
         Score = state.Score;
         Feedback = TurnFeedback.Neutral;
@@ -288,6 +293,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         selectedPosition = null;
         pathPreviewPositions.Clear();
+        pathPreviewTargetPosition = null;
         ClearCellFeedback();
         Feedback = new TurnFeedback(false, false, false, false, true, 0);
         OnPropertyChanged(nameof(IsGameOver));
@@ -350,6 +356,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             var wasRejectedTarget = IsFullAnimation && rejectedPositions.Contains(cell.Position);
             var isReachableTarget = reachableTargets.Contains(cell.Position);
             var isPathPreview = pathPreviewPositions.Contains(cell.Position);
+            var isPathPreviewTarget = pathPreviewTargetPosition == cell.Position;
             var cellViewModel = Cells[(cell.Position.Row * BoardPosition.BoardSize) + cell.Position.Column];
             cellViewModel.Update(
                 cell.Piece,
@@ -360,7 +367,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
                 wasCleared,
                 wasRejectedTarget,
                 isReachableTarget,
-                isPathPreview);
+                isPathPreview,
+                isPathPreviewTarget);
         }
 
         NextPieces.Clear();
@@ -403,12 +411,13 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
 
         var nextPreview = path.ToHashSet();
-        if (pathPreviewPositions.SetEquals(nextPreview))
+        if (pathPreviewPositions.SetEquals(nextPreview) && pathPreviewTargetPosition == target)
         {
             return;
         }
 
         pathPreviewPositions = nextPreview;
+        pathPreviewTargetPosition = target;
         ApplyPathPreview();
     }
 
@@ -420,6 +429,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
 
         pathPreviewPositions.Clear();
+        pathPreviewTargetPosition = null;
         ApplyPathPreview();
     }
 
@@ -427,7 +437,10 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         foreach (var cell in Cells)
         {
-            cell.SetPathPreview(pathPreviewPositions.Contains(new BoardPosition(cell.Row, cell.Column)));
+            var position = new BoardPosition(cell.Row, cell.Column);
+            cell.SetPathPreview(
+                pathPreviewPositions.Contains(position),
+                pathPreviewTargetPosition == position);
         }
     }
 

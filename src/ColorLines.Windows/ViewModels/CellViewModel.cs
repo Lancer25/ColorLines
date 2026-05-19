@@ -18,6 +18,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
     private bool wasRejectedTarget;
     private bool isReachableTarget;
     private bool isPathPreview;
+    private bool isPathPreviewTarget;
 
     private CellViewModel(
         int row,
@@ -33,7 +34,8 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool wasCleared,
         bool wasRejectedTarget,
         bool isReachableTarget,
-        bool isPathPreview)
+        bool isPathPreview,
+        bool isPathPreviewTarget)
     {
         Row = row;
         Column = column;
@@ -49,6 +51,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         this.wasRejectedTarget = wasRejectedTarget;
         this.isReachableTarget = isReachableTarget;
         this.isPathPreview = isPathPreview;
+        this.isPathPreviewTarget = isPathPreviewTarget;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -136,6 +139,12 @@ public sealed class CellViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool IsPathPreviewTarget
+    {
+        get => isPathPreviewTarget;
+        private set => SetProperty(ref isPathPreviewTarget, value);
+    }
+
     public static CellViewModel Empty(
         int row,
         int column,
@@ -145,7 +154,8 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool wasCleared = false,
         bool wasRejectedTarget = false,
         bool isReachableTarget = false,
-        bool isPathPreview = false)
+        bool isPathPreview = false,
+        bool isPathPreviewTarget = false)
     {
         return new CellViewModel(
             row,
@@ -161,7 +171,8 @@ public sealed class CellViewModel : INotifyPropertyChanged
             wasCleared,
             wasRejectedTarget,
             isReachableTarget,
-            isPathPreview);
+            isPathPreview,
+            isPathPreviewTarget);
     }
 
     public static CellViewModel Occupied(
@@ -174,7 +185,8 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool wasSpawned = false,
         bool wasCleared = false,
         bool wasRejectedTarget = false,
-        bool isPathPreview = false)
+        bool isPathPreview = false,
+        bool isPathPreviewTarget = false)
     {
         var viewModel = PieceViewModel.FromPiece(piece);
         return new CellViewModel(
@@ -191,12 +203,14 @@ public sealed class CellViewModel : INotifyPropertyChanged
             wasCleared,
             wasRejectedTarget,
             false,
-            isPathPreview);
+            isPathPreview,
+            isPathPreviewTarget);
     }
 
-    public void SetPathPreview(bool value)
+    public void SetPathPreview(bool value, bool isTarget)
     {
         IsPathPreview = value;
+        IsPathPreviewTarget = isTarget;
     }
 
     public void Update(
@@ -208,7 +222,8 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool wasCleared,
         bool wasRejectedTarget,
         bool isReachableTarget,
-        bool isPathPreview)
+        bool isPathPreview,
+        bool isPathPreviewTarget)
     {
         var nextPiece = pieceKind is null ? null : PieceViewModel.FromPiece(pieceKind.Value);
         IsOccupied = pieceKind is not null;
@@ -223,6 +238,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         WasRejectedTarget = wasRejectedTarget;
         IsReachableTarget = pieceKind is null && isReachableTarget;
         IsPathPreview = isPathPreview;
+        IsPathPreviewTarget = pieceKind is null && isPathPreviewTarget;
     }
 
     private bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
