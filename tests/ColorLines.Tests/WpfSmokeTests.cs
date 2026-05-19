@@ -186,18 +186,28 @@ public sealed class WpfSmokeTests
             shell.ContinueCommand.Execute(null);
             window.UpdateLayout();
 
-            var statusTextRegion = FindVisualChildren<Border>(window)
-                .First(border => border.Name == "StatusTextRegion");
+            var gameplayShell = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "GameplayShell");
+            var gameplayBoardArea = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "GameplayBoardArea");
+            var gameplayHudPanel = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "GameplayHudPanel");
+            var gameplayStatusBanner = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "GameplayStatusBanner");
+            var gameplayScoreBlock = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "GameplayScoreBlock");
+            var gameplayNextCatsBlock = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "GameplayNextCatsBlock");
+            var gameplayActionBar = FindVisualChildren<StackPanel>(window)
+                .First(panel => panel.Name == "GameplayActionBar");
             var mainBoardFrame = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "MainBoardFrame");
-            var rightRail = FindVisualChildren<StackPanel>(window)
-                .First(panel => panel.Name == "RightRail");
-            var scorePanel = FindVisualChildren<Border>(window)
-                .First(border => border.Name == "ScorePanel");
-            var nextCatsPanel = FindVisualChildren<Border>(window)
-                .First(border => border.Name == "NextCatsPanel");
+            var menuButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "GameplayMenuButton");
             var newGameButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "NewGameButton");
+            var settingsButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "GameplaySettingsButton");
             var finalScoreText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "GameOverFinalScoreText");
             var bestScoreText = FindVisualChildren<TextBlock>(window)
@@ -233,12 +243,21 @@ public sealed class WpfSmokeTests
 
             Assert.Equal(44, pieceImage.Width);
             Assert.Equal(44, pieceImage.Height);
-            Assert.True(statusTextRegion.MinHeight >= 54);
+            Assert.Equal(Visibility.Visible, gameplayShell.Visibility);
+            Assert.True(gameplayBoardArea.ColumnDefinitions.Count >= 1);
+            Assert.True(gameplayHudPanel.Padding.Left >= 18);
+            Assert.True(gameplayHudPanel.MaxWidth <= 340);
+            Assert.True(gameplayStatusBanner.MinHeight >= 58);
+            Assert.True(gameplayScoreBlock.Padding.Left >= 16);
+            Assert.True(gameplayNextCatsBlock.Padding.Left >= 16);
+            Assert.True(gameplayActionBar.Children.Count >= 3);
             Assert.True(mainBoardFrame.Padding.Left >= 18);
-            Assert.True(rightRail.Margin.Left >= 24);
-            Assert.True(scorePanel.Padding.Left >= 16);
-            Assert.True(nextCatsPanel.Padding.Left >= 16);
+            Assert.NotNull(menuButton.Command);
             Assert.NotNull(newGameButton.Command);
+            Assert.NotNull(settingsButton.Command);
+            Assert.Equal("MenuSecondaryButton", menuButton.Tag);
+            Assert.Equal("MenuPrimaryButton", newGameButton.Tag);
+            Assert.Equal("MenuSecondaryButton", settingsButton.Tag);
             Assert.Equal("Final Score: 0", finalScoreText.Text);
             Assert.StartsWith("Best Score:", bestScoreText.Text);
             Assert.Equal(0, scoreDeltaBadge.Opacity);
