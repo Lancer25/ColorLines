@@ -25,6 +25,8 @@
     <Color x:Key="GameplayHudColor">#FFFFFCF4</Color>
     <Color x:Key="GameplayHudAccentColor">#FFFFE4B8</Color>
     <Color x:Key="GameplayHudMutedColor">#FFF5DDB7</Color>
+    <Color x:Key="SettingsSurfaceColor">#FFFFFBF2</Color>
+    <Color x:Key="SettingsRowColor">#FFFFF4DC</Color>
 
     <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
     <SolidColorBrush x:Key="PanelBackgroundBrush" Color="{StaticResource PanelBackgroundColor}" />
@@ -60,4 +62,6 @@
     <SolidColorBrush x:Key="GameplayHudBrush" Color="{StaticResource GameplayHudColor}" />
     <SolidColorBrush x:Key="GameplayHudAccentBrush" Color="{StaticResource GameplayHudAccentColor}" />
     <SolidColorBrush x:Key="GameplayHudMutedBrush" Color="{StaticResource GameplayHudMutedColor}" />
+    <SolidColorBrush x:Key="SettingsSurfaceBrush" Color="{StaticResource SettingsSurfaceColor}" />
+    <SolidColorBrush x:Key="SettingsRowBrush" Color="{StaticResource SettingsRowColor}" />
 </ResourceDictionary>
