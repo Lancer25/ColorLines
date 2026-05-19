@@ -116,7 +116,7 @@ public sealed class WpfSmokeTests
                 .First(grid => grid.Name == "MenuHeroArea");
 
             Assert.Equal(Visibility.Visible, mainMenuView.Visibility);
-            Assert.Equal(Visibility.Collapsed, gameplayView.Visibility);
+            Assert.Equal(Visibility.Hidden, gameplayView.Visibility);
             Assert.Equal(Visibility.Visible, menuBackdrop.Visibility);
             Assert.True(menuHeroArea.Margin.Left >= 24);
             Assert.NotNull(continueButton.Command);
@@ -324,7 +324,7 @@ public sealed class WpfSmokeTests
             Assert.True(gameplayNextCatsBlock.Padding.Left >= 16);
             Assert.Single(gameplayActionBar.Children);
             Assert.NotNull(pauseMenuView);
-            Assert.Equal(Visibility.Collapsed, pauseMenuView.Visibility);
+            Assert.Equal(Visibility.Hidden, pauseMenuView.Visibility);
             Assert.True(pauseMenuPanel.Padding.Left >= 24);
             Assert.True(pauseMenuActionList.Children.Count >= 5);
             Assert.True(mainBoardFrame.Padding.Left >= 18);
