@@ -4,5 +4,6 @@ public enum ShellScreen
 {
     MainMenu,
     Playing,
+    PauseMenu,
     Settings
 }

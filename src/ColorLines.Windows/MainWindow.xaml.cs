@@ -23,6 +23,7 @@ public partial class MainWindow : Window
         var save = this.saveService.Load();
         shellViewModel = new ShellViewModel(GameViewModel.CreateFromSave(save));
         shellViewModel.ExitRequested += (_, _) => Close();
+        shellViewModel.SaveRequested += (_, _) => SaveCurrentGame();
         DataContext = shellViewModel;
 
         if (save?.Window is not null)
@@ -34,8 +35,13 @@ public partial class MainWindow : Window
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
-        saveService.Save(shellViewModel.Game.CreateSaveData(new WindowPlacementData(Width, Height)));
+        SaveCurrentGame();
         base.OnClosing(e);
+    }
+
+    private void SaveCurrentGame()
+    {
+        saveService.Save(shellViewModel.Game.CreateSaveData(new WindowPlacementData(Width, Height)));
     }
 
     private void BoardCellPointerEntered(object sender, MouseEventArgs e)
