@@ -697,7 +697,9 @@ public sealed class GameViewModelTests
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
 
-        Assert.Equal("Saved run: Score 0 | Best 0", shell.SaveSummaryText);
+        Assert.True(shell.CanContinueGame);
+        Assert.True(shell.ContinueCommand.CanExecute(null));
+        Assert.Equal("Continue available: Score 0 | Best 0", shell.SaveSummaryText);
     }
 
     [Fact]
@@ -718,7 +720,42 @@ public sealed class GameViewModelTests
         shell.Game.SelectCellCommand.Execute(source);
         shell.Game.SelectCellCommand.Execute(target);
 
-        Assert.Equal("Saved run: Score 10 | Best 10", shell.SaveSummaryText);
+        Assert.Equal("Continue available: Score 10 | Best 10", shell.SaveSummaryText);
+    }
+
+    [Fact]
+    public void ContinueCommandIsDisabledAfterGameOver()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.ContinueCommand.Execute(null);
+        shell.OpenPauseMenuCommand.Execute(null);
+        shell.EndGameCommand.Execute(null);
+        shell.ConfirmEndGameCommand.Execute(null);
+        shell.BackToMenuCommand.Execute(null);
+
+        Assert.False(shell.CanContinueGame);
+        Assert.False(shell.ContinueCommand.CanExecute(null));
+        Assert.Equal("Start a new game: Score 0 | Best 0", shell.SaveSummaryText);
+    }
+
+    [Fact]
+    public void NewGameCommandRestoresContinueAvailability()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.ContinueCommand.Execute(null);
+        shell.OpenPauseMenuCommand.Execute(null);
+        shell.EndGameCommand.Execute(null);
+        shell.ConfirmEndGameCommand.Execute(null);
+
+        Assert.False(shell.CanContinueGame);
+
+        shell.NewGameCommand.Execute(null);
+
+        Assert.True(shell.CanContinueGame);
+        Assert.True(shell.ContinueCommand.CanExecute(null));
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
     }
 
     [Fact]
