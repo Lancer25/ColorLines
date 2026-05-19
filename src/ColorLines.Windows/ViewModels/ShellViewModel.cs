@@ -10,6 +10,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private ShellScreen currentScreen;
     private ShellScreen settingsReturnScreen;
     private string pauseSaveStatusText;
+    private bool isReturnToMenuConfirmVisible;
 
     public ShellViewModel(GameViewModel game)
     {
@@ -18,13 +19,16 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         currentScreen = ShellScreen.MainMenu;
         settingsReturnScreen = ShellScreen.MainMenu;
         pauseSaveStatusText = string.Empty;
-        ContinueCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.Playing);
+        ContinueCommand = new RelayCommand(_ => ReturnToGame());
         NewGameCommand = new RelayCommand(_ => StartNewGame());
         OpenPauseMenuCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.PauseMenu);
         OpenSettingsCommand = new RelayCommand(_ => OpenSettings());
         CloseSettingsCommand = new RelayCommand(_ => CurrentScreen = settingsReturnScreen);
-        BackToMenuCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.MainMenu);
-        BackToGameCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.Playing);
+        BackToMenuCommand = new RelayCommand(_ => ReturnToMainMenu());
+        RequestBackToMenuCommand = new RelayCommand(_ => IsReturnToMenuConfirmVisible = true);
+        ConfirmBackToMenuCommand = new RelayCommand(_ => ReturnToMainMenu());
+        CancelBackToMenuCommand = new RelayCommand(_ => IsReturnToMenuConfirmVisible = false);
+        BackToGameCommand = new RelayCommand(_ => ReturnToGame());
         SaveGameCommand = new RelayCommand(_ => SaveGame());
         ExitCommand = new RelayCommand(_ => ExitRequested?.Invoke(this, EventArgs.Empty));
     }
@@ -91,6 +95,19 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public string SaveSummaryText => $"Saved run: Score {Game.Score} | Best {Game.HighScore}";
 
+    public bool IsReturnToMenuConfirmVisible
+    {
+        get => isReturnToMenuConfirmVisible;
+        private set
+        {
+            if (isReturnToMenuConfirmVisible != value)
+            {
+                isReturnToMenuConfirmVisible = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public ICommand ContinueCommand { get; }
 
     public ICommand NewGameCommand { get; }
@@ -103,6 +120,12 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public ICommand BackToMenuCommand { get; }
 
+    public ICommand RequestBackToMenuCommand { get; }
+
+    public ICommand ConfirmBackToMenuCommand { get; }
+
+    public ICommand CancelBackToMenuCommand { get; }
+
     public ICommand BackToGameCommand { get; }
 
     public ICommand SaveGameCommand { get; }
@@ -111,6 +134,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     private void OpenSettings()
     {
+        IsReturnToMenuConfirmVisible = false;
         settingsReturnScreen = CurrentScreen == ShellScreen.PauseMenu
             ? ShellScreen.PauseMenu
             : ShellScreen.MainMenu;
@@ -119,6 +143,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     private void StartNewGame()
     {
+        IsReturnToMenuConfirmVisible = false;
         Game.NewGameCommand.Execute(null);
         OnPropertyChanged(nameof(SaveSummaryText));
         CurrentScreen = ShellScreen.Playing;
@@ -126,8 +151,21 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     private void SaveGame()
     {
+        IsReturnToMenuConfirmVisible = false;
         SaveRequested?.Invoke(this, EventArgs.Empty);
         PauseSaveStatusText = "Game saved.";
+    }
+
+    private void ReturnToMainMenu()
+    {
+        IsReturnToMenuConfirmVisible = false;
+        CurrentScreen = ShellScreen.MainMenu;
+    }
+
+    private void ReturnToGame()
+    {
+        IsReturnToMenuConfirmVisible = false;
+        CurrentScreen = ShellScreen.Playing;
     }
 
     private void GamePropertyChanged(object? sender, PropertyChangedEventArgs e)
