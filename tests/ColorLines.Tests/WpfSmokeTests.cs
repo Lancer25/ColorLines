@@ -370,6 +370,8 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "ReachableTargetGlow");
             var pathPreviewGlow = FindVisualChildren<Border>(occupiedButton)
                 .First(border => border.Name == "PathPreviewGlow");
+            var pathPreviewTargetGlow = FindVisualChildren<Border>(occupiedButton)
+                .First(border => border.Name == "PathPreviewTargetGlow");
             var actorTransform = Assert.IsType<TranslateTransform>(pieceActor.RenderTransform);
             var scaleTransform = Assert.IsType<ScaleTransform>(pieceScaleActor.RenderTransform);
 
@@ -430,6 +432,7 @@ public sealed class WpfSmokeTests
             Assert.Equal(0, movePathPulseGlow.Opacity);
             Assert.Equal(0, reachableTargetGlow.Opacity);
             Assert.Equal(0, pathPreviewGlow.Opacity);
+            Assert.Equal(0, pathPreviewTargetGlow.Opacity);
             Assert.Equal(0, actorTransform.Y);
             Assert.Equal(1, scaleTransform.ScaleX);
             Assert.Equal(1, scaleTransform.ScaleY);
