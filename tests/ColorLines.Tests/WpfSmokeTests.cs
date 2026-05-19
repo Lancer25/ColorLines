@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -423,6 +424,54 @@ public sealed class WpfSmokeTests
             .Single(element => element.Attribute(x + "Name")?.Value == "PieceScaleActor");
 
         Assert.Contains("Game.IsFullAnimation", pieceScaleActor.ToString(SaveOptions.DisableFormatting));
+    }
+
+    [Fact]
+    public void ReducedAnimationKeepsTransientFeedbackSubtle()
+    {
+        var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "ColorLines.Windows",
+            "MainWindow.xaml"));
+        var document = XDocument.Load(mainWindowPath);
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var feedbackLayerNames = new[]
+        {
+            "MovePathPulseGlow",
+            "ClearFeedbackGlow",
+            "ClearPulseGlow",
+            "RejectFeedbackGlow",
+            "SpawnFeedbackGlow",
+            "MoveFeedbackGlow",
+            "ScoreDeltaBadge"
+        };
+
+        foreach (var feedbackLayerName in feedbackLayerNames)
+        {
+            var layer = document
+                .Descendants()
+                .Single(element => element.Attribute(x + "Name")?.Value == feedbackLayerName);
+            var reducedTrigger = layer
+                .Descendants()
+                .Single(element =>
+                    element.Name.LocalName == "MultiDataTrigger"
+                    && element.ToString(SaveOptions.DisableFormatting).Contains("Game.IsFullAnimation")
+                    && element.ToString(SaveOptions.DisableFormatting).Contains("Value=\"False\""));
+            var opacitySetter = reducedTrigger
+                .Descendants()
+                .Single(element =>
+                    element.Name.LocalName == "Setter"
+                    && element.Attribute("Property")?.Value == "Opacity");
+
+            var opacity = double.Parse(opacitySetter.Attribute("Value")!.Value, CultureInfo.InvariantCulture);
+            Assert.True(opacity <= 0.08, $"{feedbackLayerName} reduced opacity should stay subtle.");
+        }
     }
 
     [Fact]
