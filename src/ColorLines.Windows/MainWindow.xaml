@@ -975,6 +975,45 @@
                                 Command="{Binding EndGameCommand}"
                                 Style="{StaticResource GameplayCompactButton}"
                                 Margin="0,10,0,0" />
+                        <Border x:Name="EndGameConfirmPanel"
+                                Margin="0,12,0,0"
+                                Padding="14"
+                                Background="{StaticResource MenuSecondaryButtonBrush}"
+                                BorderBrush="{StaticResource PanelBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Visibility="{Binding IsEndGameConfirmVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="End current game?"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="This run will end and the final score screen will open."
+                                           Margin="0,6,0,12"
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource TextMutedBrush}"
+                                           TextAlignment="Center" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button x:Name="EndGameCancelButton"
+                                            Grid.Column="0"
+                                            Content="Keep Playing"
+                                            Command="{Binding CancelEndGameCommand}"
+                                            Style="{StaticResource GameplayCompactButton}" />
+                                    <Button x:Name="EndGameConfirmButton"
+                                            Grid.Column="2"
+                                            Content="End Game"
+                                            Command="{Binding ConfirmEndGameCommand}"
+                                            Style="{StaticResource GameplayCompactButton}" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
                         <Button x:Name="PauseBackToMenuButton"
                                 Content="Return to Main Menu"
                                 Command="{Binding RequestBackToMenuCommand}"
