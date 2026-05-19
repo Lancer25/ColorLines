@@ -60,53 +60,87 @@
                            FontSize="18"
                            Foreground="{StaticResource TextMutedBrush}" />
                 <Border x:Name="MenuHeroBoard"
-                        Margin="0,32,0,0"
-                        Width="440"
+                        Margin="0,30,0,0"
+                        Width="460"
+                        Height="460"
                         Background="{StaticResource BoardShadowBrush}"
                         BorderBrush="{StaticResource BoardBorderBrush}"
                         BorderThickness="2"
-                        CornerRadius="16"
-                        Padding="18"
+                        CornerRadius="20"
+                        Padding="16"
                         HorizontalAlignment="Left">
-                    <UniformGrid Rows="3" Columns="3">
-                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
-                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
-                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68">
-                            <Image x:Name="MenuPreviewCatOrange"
-                                   Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/orange.png"
-                                   Width="46"
-                                   Height="46"
-                                   Stretch="Uniform"
-                                   RenderOptions.BitmapScalingMode="HighQuality" />
-                        </Border>
-                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68">
-                            <Image x:Name="MenuPreviewCatBlueGray"
-                                   Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/bluegray.png"
-                                   Width="46"
-                                   Height="46"
-                                   Stretch="Uniform"
-                                   RenderOptions.BitmapScalingMode="HighQuality" />
-                        </Border>
-                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
-                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
-                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68">
-                            <Image x:Name="MenuPreviewCatTuxedo"
-                                   Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/tuxedo.png"
-                                   Width="46"
-                                   Height="46"
-                                   Stretch="Uniform"
-                                   RenderOptions.BitmapScalingMode="HighQuality" />
-                        </Border>
-                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68">
-                            <Image x:Name="MenuPreviewCatCalico"
-                                   Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/calico.png"
-                                   Width="46"
-                                   Height="46"
-                                   Stretch="Uniform"
-                                   RenderOptions.BitmapScalingMode="HighQuality" />
-                        </Border>
-                        <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="8" Margin="4" Height="68" />
-                    </UniformGrid>
+                    <Border Background="{StaticResource BoardInnerBrush}"
+                            CornerRadius="15"
+                            Padding="14">
+                        <UniformGrid Rows="5" Columns="5">
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                                <Image x:Name="MenuPreviewCatOrange"
+                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/orange.png"
+                                       Width="56"
+                                       Height="56"
+                                       Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                            </Border>
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                                <Image x:Name="MenuPreviewCatBlueGray"
+                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/bluegray.png"
+                                       Width="56"
+                                       Height="56"
+                                       Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                            </Border>
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                                <Image x:Name="MenuPreviewCatTuxedo"
+                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/tuxedo.png"
+                                       Width="56"
+                                       Height="56"
+                                       Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                            </Border>
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                                <Image x:Name="MenuPreviewCatCalico"
+                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/calico.png"
+                                       Width="56"
+                                       Height="56"
+                                       Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                            </Border>
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                                <Image x:Name="MenuPreviewCatWhite"
+                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/white.png"
+                                       Width="56"
+                                       Height="56"
+                                       Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                            </Border>
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                                <Image x:Name="MenuPreviewCatGray"
+                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/gray.png"
+                                       Width="56"
+                                       Height="56"
+                                       Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                            </Border>
+                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                        </UniformGrid>
+                    </Border>
                 </Border>
             </StackPanel>
 

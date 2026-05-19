@@ -105,6 +105,7 @@ public sealed class WpfSmokeTests
             Assert.NotNull(continueButton.Command);
             Assert.NotNull(menuSettingsButton.Command);
             Assert.True(menuHeroBoard.Width >= 430);
+            Assert.True(menuHeroBoard.Height >= 430);
             Assert.True(menuCommandPanel.Padding.Left >= 24);
             Assert.True(menuStatusStrip.Children.Count >= 3);
             Assert.True(previewImages.Length >= 4);
