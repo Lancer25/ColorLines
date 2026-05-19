@@ -155,11 +155,19 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public string SoundText => IsChinese ? "声音" : "Sound";
 
-    public string ToggleSoundText => IsChinese ? "切换声音" : "Toggle Sound";
+    public string ToggleSoundText => Game.IsSoundEnabled
+        ? (IsChinese ? "关闭声音" : "Turn Sound Off")
+        : (IsChinese ? "开启声音" : "Turn Sound On");
 
     public string LanguageText => IsChinese ? "语言" : "Language";
 
     public string DifficultyText => IsChinese ? "难度" : "Difficulty";
+
+    public string ThemeText => IsChinese ? "主题" : "Theme";
+
+    public string ThemeCurrentText => IsChinese ? "当前：温馨棋盘" : $"Current: {Game.SelectedThemeName}";
+
+    public string ThemeOptionText => IsChinese ? "温馨棋盘" : Game.SelectedThemeName;
 
     public string ReadyToPlayText => IsChinese ? "准备开始" : "Ready to play";
 
@@ -441,6 +449,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         {
             OnPropertyChanged(nameof(SoundSummaryText));
             OnPropertyChanged(nameof(SoundEnabledText));
+            OnPropertyChanged(nameof(ToggleSoundText));
         }
 
         if (e.PropertyName is nameof(GameViewModel.Difficulty))
@@ -493,6 +502,9 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(ToggleSoundText));
         OnPropertyChanged(nameof(LanguageText));
         OnPropertyChanged(nameof(DifficultyText));
+        OnPropertyChanged(nameof(ThemeText));
+        OnPropertyChanged(nameof(ThemeCurrentText));
+        OnPropertyChanged(nameof(ThemeOptionText));
         OnPropertyChanged(nameof(ReadyToPlayText));
         OnPropertyChanged(nameof(MenuTaglineText));
         OnPropertyChanged(nameof(ScoreText));

@@ -266,6 +266,10 @@ public sealed class WpfSmokeTests
                 .First(button => button.Name == "SettingsToggleAnimationButton");
             var settingsToggleSoundButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsToggleSoundButton");
+            var themeSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "ThemeSettingRow");
+            var settingsThemeButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsThemeButton");
             var settingsChineseButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsChineseButton");
             var settingsHardButton = FindVisualChildren<Button>(window)
@@ -283,11 +287,13 @@ public sealed class WpfSmokeTests
             Assert.True(settingsOptionList.Children.Count >= 2);
             Assert.True(animationSettingRow.MinHeight >= 82);
             Assert.True(soundSettingRow.MinHeight >= 82);
+            Assert.True(themeSettingRow.MinHeight >= 82);
             Assert.True(languageSettingRow.MinHeight >= 82);
             Assert.True(difficultySettingRow.MinHeight >= 82);
             Assert.True(settingsActionBar.Children.Count >= 2);
             Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
+            Assert.Equal("MenuSecondaryButton", settingsThemeButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsHardButton.Tag);
             Assert.Equal("MenuPrimaryButton", settingsNewGameButton.Tag);
@@ -295,6 +301,7 @@ public sealed class WpfSmokeTests
             Assert.Null(gameplaySettingsPanel);
             Assert.Same(shell.Game.ToggleAnimationCommand, settingsToggleAnimationButton.Command);
             Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
+            Assert.Null(settingsThemeButton.Command);
             Assert.Same(shell.SetLanguageCommand, settingsChineseButton.Command);
             Assert.Same(shell.Game.SetDifficultyCommand, settingsHardButton.Command);
             Assert.Same(shell.NewGameCommand, settingsNewGameButton.Command);
@@ -331,12 +338,18 @@ public sealed class WpfSmokeTests
                 .First(textBlock => textBlock.Name == "NextCatsLabelText");
             var settingsChineseButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsChineseButton");
+            var settingsToggleSoundButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsToggleSoundButton");
+            var settingsThemeButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsThemeButton");
             var difficultySummary = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "DifficultySummaryText");
 
             Assert.Equal("准备开始", readyText.Text);
             Assert.Equal("分数", scoreLabel.Text);
             Assert.Equal("下批猫咪", nextCatsLabel.Text);
+            Assert.Equal("关闭声音", settingsToggleSoundButton.Content);
+            Assert.Equal("温馨棋盘", settingsThemeButton.Content);
             Assert.Equal("中文", settingsChineseButton.Content);
             Assert.Equal(shell.DifficultySummaryText, difficultySummary.Text);
             window.Close();

@@ -657,8 +657,11 @@ public sealed class GameViewModelTests
         Assert.Equal("主题：温馨棋盘", shell.ThemeSummaryText);
         Assert.Equal("动效：完整", shell.AnimationSummaryText);
         Assert.Equal("声音：开", shell.SoundSummaryText);
+        Assert.Equal("关闭声音", shell.ToggleSoundText);
+        shell.Game.ToggleSoundCommand.Execute(null);
+        Assert.Equal("开启声音", shell.ToggleSoundText);
         Assert.Equal("当前：完整", shell.CurrentAnimationText);
-        Assert.Equal("启用：是", shell.SoundEnabledText);
+        Assert.Equal("启用：否", shell.SoundEnabledText);
         Assert.Equal("当前：中文", shell.LanguageSummaryText);
         Assert.Equal("下一局棋盘：普通", shell.DifficultySummaryText);
         Assert.Equal("结束当前游戏？", shell.EndGameConfirmTitle);
@@ -666,6 +669,22 @@ public sealed class GameViewModelTests
         Assert.Equal("返回主菜单？", shell.ReturnToMenuConfirmTitle);
         Assert.Equal("仍然返回", shell.ReturnAnywayText);
         Assert.Equal("返回菜单", shell.BackToMenuText);
+    }
+
+    [Fact]
+    public void ThemeSettingsExposeCurrentSingleThemeOption()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        Assert.Equal("Theme", shell.ThemeText);
+        Assert.Equal("Current: Cozy Board", shell.ThemeCurrentText);
+        Assert.Equal("Cozy Board", shell.ThemeOptionText);
+
+        shell.SetLanguageCommand.Execute("zh");
+
+        Assert.Equal("主题", shell.ThemeText);
+        Assert.Equal("当前：温馨棋盘", shell.ThemeCurrentText);
+        Assert.Equal("温馨棋盘", shell.ThemeOptionText);
     }
 
     [Fact]

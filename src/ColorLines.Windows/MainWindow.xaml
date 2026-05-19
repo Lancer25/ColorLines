@@ -1247,6 +1247,38 @@
                                 </Grid>
                             </Border>
 
+                            <Border x:Name="ThemeSettingRow"
+                                    MinHeight="84"
+                                    Margin="0,12,0,0"
+                                    Background="{StaticResource SettingsRowBrush}"
+                                    BorderBrush="{StaticResource PanelBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="10"
+                                    Padding="18,14">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="160" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding ThemeText}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                                        <TextBlock Text="{Binding ThemeCurrentText}"
+                                                   Margin="0,5,0,0"
+                                                   FontSize="14"
+                                                   Foreground="{StaticResource TextMutedBrush}" />
+                                    </StackPanel>
+                                    <Button x:Name="SettingsThemeButton"
+                                            Grid.Column="1"
+                                            Content="{Binding ThemeOptionText}"
+                                            IsEnabled="False"
+                                            Style="{StaticResource GameplayCompactButton}"
+                                            VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+
                             <Border x:Name="LanguageSettingRow"
                                     MinHeight="84"
                                     Margin="0,12,0,0"
