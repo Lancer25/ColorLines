@@ -93,6 +93,10 @@ public sealed class WpfSmokeTests
                 .First(grid => grid.Name == "MainMenuView");
             var gameplayView = FindVisualChildren<Grid>(window)
                 .First(grid => grid.Name == "GameplayView");
+            var settingsView = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "SettingsView");
+            var pauseMenuView = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "PauseMenuView");
             var continueButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "ContinueButton");
             var menuNewGameButton = FindVisualChildren<Button>(window)
@@ -117,6 +121,12 @@ public sealed class WpfSmokeTests
 
             Assert.Equal(Visibility.Visible, mainMenuView.Visibility);
             Assert.Equal(Visibility.Hidden, gameplayView.Visibility);
+            Assert.Equal(Visibility.Hidden, settingsView.Visibility);
+            Assert.Equal(Visibility.Hidden, pauseMenuView.Visibility);
+            AssertShellTransitionStyle(window, mainMenuView);
+            AssertShellTransitionStyle(window, gameplayView);
+            AssertShellTransitionStyle(window, settingsView);
+            AssertShellTransitionStyle(window, pauseMenuView);
             Assert.Equal(Visibility.Visible, menuBackdrop.Visibility);
             Assert.True(menuHeroArea.Margin.Left >= 24);
             Assert.NotNull(continueButton.Command);
@@ -315,6 +325,8 @@ public sealed class WpfSmokeTests
             Assert.Equal(44, pieceImage.Width);
             Assert.Equal(44, pieceImage.Height);
             Assert.Equal(Visibility.Visible, gameplayView.Visibility);
+            AssertShellTransitionStyle(window, gameplayView);
+            AssertShellTransitionStyle(window, pauseMenuView);
             Assert.Equal(Visibility.Visible, gameplayShell.Visibility);
             Assert.True(gameplayBoardArea.ColumnDefinitions.Count >= 1);
             Assert.True(gameplayHudPanel.Padding.Left >= 18);
@@ -691,5 +703,11 @@ public sealed class WpfSmokeTests
                 yield return descendant;
             }
         }
+    }
+
+    private static void AssertShellTransitionStyle(Window window, Grid view)
+    {
+        Assert.Same(window.FindResource("ShellViewTransitionStyle"), view.Style);
+        Assert.IsType<TranslateTransform>(view.RenderTransform);
     }
 }
