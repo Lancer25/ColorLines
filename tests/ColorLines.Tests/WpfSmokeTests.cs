@@ -88,6 +88,7 @@ public sealed class WpfSmokeTests
             window.Show();
             window.UpdateLayout();
 
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
             var mainMenuView = FindVisualChildren<Grid>(window)
                 .First(grid => grid.Name == "MainMenuView");
             var gameplayView = FindVisualChildren<Grid>(window)
@@ -102,6 +103,8 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "MenuCommandPanel");
             var menuStatusStrip = FindVisualChildren<StackPanel>(window)
                 .First(panel => panel.Name == "MenuStatusStrip");
+            var menuSaveSummary = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "MenuSaveSummary");
             var previewImages = FindVisualChildren<Image>(menuHeroBoard)
                 .Where(image => image.Name.StartsWith("MenuPreviewCat", StringComparison.Ordinal))
                 .ToArray();
@@ -123,7 +126,8 @@ public sealed class WpfSmokeTests
             Assert.True(menuHeroBoard.Width >= 430);
             Assert.True(menuHeroBoard.Height >= 430);
             Assert.True(menuCommandPanel.Padding.Left >= 24);
-            Assert.True(menuStatusStrip.Children.Count >= 4);
+            Assert.True(menuStatusStrip.Children.Count >= 5);
+            Assert.Equal(shell.SaveSummaryText, menuSaveSummary.Text);
             Assert.True(previewImages.Length >= 4);
             window.Close();
         });
