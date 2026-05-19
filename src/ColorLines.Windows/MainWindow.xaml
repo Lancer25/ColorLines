@@ -384,7 +384,7 @@
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                     From="0.58"
+                                                                                     From="0.78"
                                                                                      To="0"
                                                                                      Duration="0:0:0.36" />
                                                                     </Storyboard>
@@ -396,7 +396,7 @@
                                                             <Condition Binding="{Binding WasMovePath}" Value="True" />
                                                             <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
                                                         </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Opacity" Value="0.24" />
+                                                        <Setter Property="Opacity" Value="0" />
                                                     </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -420,7 +420,7 @@
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                     From="0.42"
+                                                                                     From="0.62"
                                                                                      To="0"
                                                                                      Duration="0:0:0.28" />
                                                                     </Storyboard>
@@ -432,7 +432,7 @@
                                                             <Condition Binding="{Binding WasCleared}" Value="True" />
                                                             <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
                                                         </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Opacity" Value="0.22" />
+                                                        <Setter Property="Opacity" Value="0" />
                                                     </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -458,7 +458,7 @@
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                     From="0.88"
+                                                                                     From="0.98"
                                                                                      To="0"
                                                                                      Duration="0:0:0.42" />
                                                                     </Storyboard>
@@ -470,7 +470,7 @@
                                                             <Condition Binding="{Binding WasCleared}" Value="True" />
                                                             <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
                                                         </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Opacity" Value="0.28" />
+                                                        <Setter Property="Opacity" Value="0" />
                                                     </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -497,7 +497,7 @@
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                     From="0.45"
+                                                                                     From="0.68"
                                                                                      To="0"
                                                                                      Duration="0:0:0.28" />
                                                                     </Storyboard>
@@ -509,7 +509,7 @@
                                                             <Condition Binding="{Binding WasRejectedTarget}" Value="True" />
                                                             <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
                                                         </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Opacity" Value="0.24" />
+                                                        <Setter Property="Opacity" Value="0" />
                                                     </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -534,7 +534,7 @@
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                     From="0.55"
+                                                                                     From="0.74"
                                                                                      To="0"
                                                                                      Duration="0:0:0.34" />
                                                                     </Storyboard>
@@ -546,7 +546,7 @@
                                                             <Condition Binding="{Binding WasSpawned}" Value="True" />
                                                             <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
                                                         </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Opacity" Value="0.24" />
+                                                        <Setter Property="Opacity" Value="0" />
                                                     </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -571,7 +571,7 @@
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                     From="0.55"
+                                                                                     From="0.74"
                                                                                      To="0"
                                                                                      Duration="0:0:0.32" />
                                                                     </Storyboard>
@@ -583,7 +583,7 @@
                                                             <Condition Binding="{Binding WasMovedTo}" Value="True" />
                                                             <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
                                                         </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Opacity" Value="0.24" />
+                                                        <Setter Property="Opacity" Value="0" />
                                                     </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -671,7 +671,7 @@
                                                                 <BeginStoryboard>
                                                                     <Storyboard>
                                                                         <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                         From="0.65"
+                                                                                         From="0.35"
                                                                                          To="1"
                                                                                          Duration="0:0:0.16" />
                                                                     </Storyboard>
@@ -687,7 +687,7 @@
                                                                 <BeginStoryboard>
                                                                     <Storyboard>
                                                                         <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                         From="0.25"
+                                                                                         From="0.05"
                                                                                          To="1"
                                                                                          Duration="0:0:0.18" />
                                                                     </Storyboard>
@@ -817,7 +817,7 @@
                                                         <Condition Binding="{Binding Game.ShowScoreDelta}" Value="True" />
                                                         <Condition Binding="{Binding Game.IsFullAnimation}" Value="False" />
                                                     </MultiDataTrigger.Conditions>
-                                                    <Setter Property="Opacity" Value="0.28" />
+                                                    <Setter Property="Opacity" Value="0" />
                                                 </MultiDataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -1105,3 +1105,4 @@
         </Border>
     </Grid>
 </Window>
+
