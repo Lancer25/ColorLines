@@ -749,6 +749,22 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void EndGameCommandEndsCurrentRunAndShowsGameOver()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.ContinueCommand.Execute(null);
+        shell.OpenPauseMenuCommand.Execute(null);
+        shell.EndGameCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
+        Assert.True(shell.IsPlayingVisible);
+        Assert.True(shell.Game.IsGameOver);
+        Assert.Equal("Game over. Start a new game?", shell.Game.StatusText);
+        Assert.False(shell.IsReturnToMenuConfirmVisible);
+    }
+
+    [Fact]
     public void NewGameCommandResetsGameAndOpensPlayingScreen()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
