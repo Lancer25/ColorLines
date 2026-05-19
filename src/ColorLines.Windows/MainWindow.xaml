@@ -278,12 +278,6 @@
                             Style="{StaticResource MenuPrimaryButton}"
                             Margin="0,26,0,0"
                             />
-                    <Button x:Name="MenuNewGameButton"
-                            Content="New Game"
-                            Command="{Binding NewGameCommand}"
-                            Style="{StaticResource MenuSecondaryButton}"
-                            Margin="0,10,0,0"
-                            />
                     <Button x:Name="MenuSettingsButton"
                             Content="Settings"
                             Command="{Binding OpenSettingsCommand}"
@@ -939,9 +933,48 @@
                                 Margin="0,10,0,0" />
                         <Button x:Name="PauseBackToMenuButton"
                                 Content="Return to Main Menu"
-                                Command="{Binding BackToMenuCommand}"
+                                Command="{Binding RequestBackToMenuCommand}"
                                 Style="{StaticResource GameplayCompactButton}"
                                 Margin="0,10,0,0" />
+                        <Border x:Name="ReturnToMenuConfirmPanel"
+                                Margin="0,12,0,0"
+                                Padding="14"
+                                Background="{StaticResource MenuSecondaryButtonBrush}"
+                                BorderBrush="{StaticResource PanelBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Visibility="{Binding IsReturnToMenuConfirmVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="Return to main menu?"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="Unsaved progress in the current run will be lost."
+                                           Margin="0,6,0,12"
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource TextMutedBrush}"
+                                           TextAlignment="Center" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button x:Name="ReturnToMenuCancelButton"
+                                            Grid.Column="0"
+                                            Content="Stay in Game"
+                                            Command="{Binding CancelBackToMenuCommand}"
+                                            Style="{StaticResource GameplayCompactButton}" />
+                                    <Button x:Name="ReturnToMenuConfirmButton"
+                                            Grid.Column="2"
+                                            Content="Return Anyway"
+                                            Command="{Binding ConfirmBackToMenuCommand}"
+                                            Style="{StaticResource GameplayCompactButton}" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </StackPanel>
             </Border>
