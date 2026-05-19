@@ -961,12 +961,15 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
-            <Border Width="360"
+            <Border x:Name="GameOverDialog"
+                    Width="390"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Background="{StaticResource PanelBackgroundBrush}"
+                    Background="{StaticResource SettingsSurfaceBrush}"
+                    BorderBrush="{StaticResource PanelBorderBrush}"
+                    BorderThickness="1"
                     CornerRadius="14"
-                    Padding="24">
+                    Padding="28">
                 <StackPanel>
                     <TextBlock Text="{Binding Game.GameOverTitle}"
                                FontSize="30"
@@ -979,8 +982,8 @@
                                TextWrapping="Wrap"
                                Foreground="{StaticResource TextMutedBrush}"
                                HorizontalAlignment="Center" />
-                    <Border Background="#FFFFF2CF"
-                            BorderBrush="#E8CFB7"
+                    <Border Background="{StaticResource GameplayHudAccentBrush}"
+                            BorderBrush="{StaticResource PanelBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="10"
                             Padding="14"
@@ -1001,14 +1004,17 @@
                                        HorizontalAlignment="Center" />
                         </StackPanel>
                     </Border>
-                    <Button Content="New Game"
-                            Command="{Binding NewGameCommand}"
-                            Height="42"
-                            Background="{StaticResource AccentBrush}"
-                            Foreground="#FFFFFB"
-                            BorderThickness="0"
-                            FontSize="15"
-                            FontWeight="SemiBold" />
+                    <StackPanel x:Name="GameOverActionBar">
+                        <Button x:Name="GameOverNewGameButton"
+                                Content="New Game"
+                                Command="{Binding NewGameCommand}"
+                                Style="{StaticResource MenuPrimaryButton}" />
+                        <Button x:Name="GameOverMenuButton"
+                                Content="Back to Menu"
+                                Command="{Binding BackToMenuCommand}"
+                                Style="{StaticResource GameplayCompactButton}"
+                                Margin="0,10,0,0" />
+                    </StackPanel>
                 </StackPanel>
             </Border>
         </Border>
