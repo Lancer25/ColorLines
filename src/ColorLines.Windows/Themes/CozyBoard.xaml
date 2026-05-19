@@ -16,6 +16,12 @@
     <Color x:Key="PanelBorderColor">#E7C8AC</Color>
     <Color x:Key="CellInsetColor">#FFF2DDB8</Color>
     <Color x:Key="PrimaryButtonHoverColor">#8F5834</Color>
+    <Color x:Key="MenuPrimaryButtonColor">#8F5834</Color>
+    <Color x:Key="MenuPrimaryButtonHoverColor">#A8653B</Color>
+    <Color x:Key="MenuPrimaryButtonPressedColor">#6B3F25</Color>
+    <Color x:Key="MenuSecondaryButtonColor">#FFFFF2D6</Color>
+    <Color x:Key="MenuSecondaryButtonHoverColor">#FFFFE4B8</Color>
+    <Color x:Key="MenuSecondaryButtonPressedColor">#FFE9C88F</Color>
 
     <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
     <SolidColorBrush x:Key="PanelBackgroundBrush" Color="{StaticResource PanelBackgroundColor}" />
@@ -37,4 +43,15 @@
     <SolidColorBrush x:Key="PanelBorderBrush" Color="{StaticResource PanelBorderColor}" />
     <SolidColorBrush x:Key="CellInsetBrush" Color="{StaticResource CellInsetColor}" />
     <SolidColorBrush x:Key="PrimaryButtonHoverBrush" Color="{StaticResource PrimaryButtonHoverColor}" />
+    <LinearGradientBrush x:Key="MenuBackdropBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FFF7E5C9" Offset="0" />
+        <GradientStop Color="#FFEBC190" Offset="0.55" />
+        <GradientStop Color="#FFD19A64" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="MenuPrimaryButtonBrush" Color="{StaticResource MenuPrimaryButtonColor}" />
+    <SolidColorBrush x:Key="MenuPrimaryButtonHoverBrush" Color="{StaticResource MenuPrimaryButtonHoverColor}" />
+    <SolidColorBrush x:Key="MenuPrimaryButtonPressedBrush" Color="{StaticResource MenuPrimaryButtonPressedColor}" />
+    <SolidColorBrush x:Key="MenuSecondaryButtonBrush" Color="{StaticResource MenuSecondaryButtonColor}" />
+    <SolidColorBrush x:Key="MenuSecondaryButtonHoverBrush" Color="{StaticResource MenuSecondaryButtonHoverColor}" />
+    <SolidColorBrush x:Key="MenuSecondaryButtonPressedBrush" Color="{StaticResource MenuSecondaryButtonPressedColor}" />
 </ResourceDictionary>

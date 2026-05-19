@@ -40,6 +40,11 @@ public sealed class WpfSmokeTests
             Assert.True(Application.Current.Resources.Contains("BoardShadowBrush"));
             Assert.True(Application.Current.Resources.Contains("PanelBorderBrush"));
             Assert.True(Application.Current.Resources.Contains("PrimaryButtonHoverBrush"));
+            Assert.True(Application.Current.Resources.Contains("MenuBackdropBrush"));
+            Assert.True(Application.Current.Resources.Contains("MenuPrimaryButtonBrush"));
+            Assert.True(Application.Current.Resources.Contains("MenuPrimaryButtonHoverBrush"));
+            Assert.True(Application.Current.Resources.Contains("MenuSecondaryButtonBrush"));
+            Assert.True(Application.Current.Resources.Contains("MenuSecondaryButtonHoverBrush"));
         });
     }
 
