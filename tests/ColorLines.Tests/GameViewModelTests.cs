@@ -591,7 +591,7 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
-    public void SettingsCommandOpensSettingsScreenAndBackReturnsToMenu()
+    public void SettingsCommandOpensSettingsScreenAndCloseReturnsToMenu()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
 
@@ -600,9 +600,56 @@ public sealed class GameViewModelTests
         Assert.Equal(ShellScreen.Settings, shell.CurrentScreen);
         Assert.True(shell.IsSettingsVisible);
 
-        shell.BackToMenuCommand.Execute(null);
+        shell.CloseSettingsCommand.Execute(null);
 
         Assert.Equal(ShellScreen.MainMenu, shell.CurrentScreen);
+    }
+
+    [Fact]
+    public void PauseMenuCommandOpensPauseMenuAndContinueReturnsToGame()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.ContinueCommand.Execute(null);
+        shell.OpenPauseMenuCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
+        Assert.True(shell.IsPauseMenuVisible);
+
+        shell.BackToGameCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
+        Assert.True(shell.IsPlayingVisible);
+    }
+
+    [Fact]
+    public void SettingsOpenedFromPauseMenuReturnsToPauseMenu()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.ContinueCommand.Execute(null);
+        shell.OpenPauseMenuCommand.Execute(null);
+        shell.OpenSettingsCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.Settings, shell.CurrentScreen);
+
+        shell.CloseSettingsCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
+        Assert.True(shell.IsPauseMenuVisible);
+    }
+
+    [Fact]
+    public void SaveGameCommandRaisesSaveRequestedAndUpdatesStatus()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+        var raised = false;
+        shell.SaveRequested += (_, _) => raised = true;
+
+        shell.SaveGameCommand.Execute(null);
+
+        Assert.True(raised);
+        Assert.Equal("Game saved.", shell.PauseSaveStatusText);
     }
 
     [Fact]
