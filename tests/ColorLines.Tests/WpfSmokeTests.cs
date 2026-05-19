@@ -104,6 +104,8 @@ public sealed class WpfSmokeTests
             Assert.Equal(Visibility.Collapsed, gameplayView.Visibility);
             Assert.NotNull(continueButton.Command);
             Assert.NotNull(menuSettingsButton.Command);
+            Assert.True(continueButton.Height >= 52);
+            Assert.True(menuSettingsButton.Height >= 44);
             Assert.True(menuHeroBoard.Width >= 430);
             Assert.True(menuHeroBoard.Height >= 430);
             Assert.True(menuCommandPanel.Padding.Left >= 24);
