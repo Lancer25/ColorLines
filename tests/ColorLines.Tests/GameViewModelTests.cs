@@ -334,6 +334,8 @@ public sealed class GameViewModelTests
         Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 0 && cell.IsPathPreview);
         Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.IsPathPreview);
         Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 2 && cell.IsPathPreview);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 2 && cell.IsPathPreviewTarget);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.IsPathPreviewTarget);
     }
 
     [Fact]
@@ -404,6 +406,7 @@ public sealed class GameViewModelTests
         viewModel.ClearPreviewPathCommand.Execute(null);
 
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreview);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreviewTarget);
         Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 0 && cell.IsSelected);
     }
 
