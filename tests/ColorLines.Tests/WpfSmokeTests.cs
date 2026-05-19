@@ -192,7 +192,7 @@ public sealed class WpfSmokeTests
             Assert.Same(shell.Game.ToggleAnimationCommand, settingsToggleAnimationButton.Command);
             Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
             Assert.Same(shell.NewGameCommand, settingsNewGameButton.Command);
-            Assert.Same(shell.BackToMenuCommand, backToMenuButton.Command);
+            Assert.Same(shell.CloseSettingsCommand, backToMenuButton.Command);
             window.Close();
         });
     }
@@ -232,14 +232,32 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "GameplayNextCatsBlock");
             var gameplayActionBar = FindVisualChildren<StackPanel>(window)
                 .First(panel => panel.Name == "GameplayActionBar");
+            var pauseMenuView = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "PauseMenuView");
+            var pauseMenuPanel = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "PauseMenuPanel");
+            var pauseMenuActionList = FindVisualChildren<StackPanel>(window)
+                .First(panel => panel.Name == "PauseMenuActionList");
+            var pauseContinueButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "PauseContinueButton");
+            var pauseSaveButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "PauseSaveButton");
+            var pauseSettingsButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "PauseSettingsButton");
+            var pauseEndGameButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "PauseEndGameButton");
+            var pauseBackToMenuButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "PauseBackToMenuButton");
+            var pauseSaveStatusText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "PauseSaveStatusText");
             var mainBoardFrame = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "MainBoardFrame");
             var menuButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "GameplayMenuButton");
             var newGameButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "NewGameButton");
+                .FirstOrDefault(button => button.Name == "NewGameButton");
             var settingsButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "GameplaySettingsButton");
+                .FirstOrDefault(button => button.Name == "GameplaySettingsButton");
             var finalScoreText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "GameOverFinalScoreText");
             var bestScoreText = FindVisualChildren<TextBlock>(window)
@@ -291,14 +309,22 @@ public sealed class WpfSmokeTests
             Assert.True(gameplayStatusBanner.MinHeight >= 58);
             Assert.True(gameplayScoreBlock.Padding.Left >= 16);
             Assert.True(gameplayNextCatsBlock.Padding.Left >= 16);
-            Assert.True(gameplayActionBar.Children.Count >= 3);
+            Assert.Single(gameplayActionBar.Children);
+            Assert.NotNull(pauseMenuView);
+            Assert.Equal(Visibility.Collapsed, pauseMenuView.Visibility);
+            Assert.True(pauseMenuPanel.Padding.Left >= 24);
+            Assert.True(pauseMenuActionList.Children.Count >= 5);
             Assert.True(mainBoardFrame.Padding.Left >= 18);
-            Assert.Same(shell.BackToMenuCommand, menuButton.Command);
-            Assert.Same(shell.NewGameCommand, newGameButton.Command);
-            Assert.Same(shell.OpenSettingsCommand, settingsButton.Command);
+            Assert.Same(shell.OpenPauseMenuCommand, menuButton.Command);
+            Assert.Null(newGameButton);
+            Assert.Null(settingsButton);
+            Assert.Same(shell.BackToGameCommand, pauseContinueButton.Command);
+            Assert.Same(shell.SaveGameCommand, pauseSaveButton.Command);
+            Assert.Same(shell.OpenSettingsCommand, pauseSettingsButton.Command);
+            Assert.Same(shell.NewGameCommand, pauseEndGameButton.Command);
+            Assert.Same(shell.BackToMenuCommand, pauseBackToMenuButton.Command);
             Assert.Equal("MenuSecondaryButton", menuButton.Tag);
-            Assert.Equal("MenuPrimaryButton", newGameButton.Tag);
-            Assert.Equal("MenuSecondaryButton", settingsButton.Tag);
+            Assert.Equal(string.Empty, pauseSaveStatusText.Text);
             Assert.Equal("Final Score: 0", finalScoreText.Text);
             Assert.StartsWith("Best Score:", bestScoreText.Text);
             Assert.True(gameOverDialog.Padding.Left >= 24);
