@@ -6,6 +6,17 @@ namespace ColorLines.Windows.ViewModels;
 
 public sealed class CellViewModel : INotifyPropertyChanged
 {
+    private bool isOccupied;
+    private bool isSelected;
+    private string pieceLabel;
+    private string pieceName;
+    private PieceViewModel? piece;
+    private bool wasMovedTo;
+    private bool wasMovePath;
+    private bool wasSpawned;
+    private bool wasCleared;
+    private bool wasRejectedTarget;
+    private bool isReachableTarget;
     private bool isPathPreview;
 
     private CellViewModel(
@@ -26,17 +37,17 @@ public sealed class CellViewModel : INotifyPropertyChanged
     {
         Row = row;
         Column = column;
-        IsOccupied = isOccupied;
-        IsSelected = isSelected;
-        PieceLabel = pieceLabel;
-        PieceName = pieceName;
-        Piece = piece;
-        WasMovedTo = wasMovedTo;
-        WasMovePath = wasMovePath;
-        WasSpawned = wasSpawned;
-        WasCleared = wasCleared;
-        WasRejectedTarget = wasRejectedTarget;
-        IsReachableTarget = isReachableTarget;
+        this.isOccupied = isOccupied;
+        this.isSelected = isSelected;
+        this.pieceLabel = pieceLabel;
+        this.pieceName = pieceName;
+        this.piece = piece;
+        this.wasMovedTo = wasMovedTo;
+        this.wasMovePath = wasMovePath;
+        this.wasSpawned = wasSpawned;
+        this.wasCleared = wasCleared;
+        this.wasRejectedTarget = wasRejectedTarget;
+        this.isReachableTarget = isReachableTarget;
         this.isPathPreview = isPathPreview;
     }
 
@@ -46,27 +57,71 @@ public sealed class CellViewModel : INotifyPropertyChanged
 
     public int Column { get; }
 
-    public bool IsOccupied { get; }
+    public bool IsOccupied
+    {
+        get => isOccupied;
+        private set => SetProperty(ref isOccupied, value);
+    }
 
-    public bool IsSelected { get; }
+    public bool IsSelected
+    {
+        get => isSelected;
+        private set => SetProperty(ref isSelected, value);
+    }
 
-    public string PieceLabel { get; }
+    public string PieceLabel
+    {
+        get => pieceLabel;
+        private set => SetProperty(ref pieceLabel, value);
+    }
 
-    public string PieceName { get; }
+    public string PieceName
+    {
+        get => pieceName;
+        private set => SetProperty(ref pieceName, value);
+    }
 
-    public PieceViewModel? Piece { get; }
+    public PieceViewModel? Piece
+    {
+        get => piece;
+        private set => SetProperty(ref piece, value);
+    }
 
-    public bool WasMovedTo { get; }
+    public bool WasMovedTo
+    {
+        get => wasMovedTo;
+        private set => SetProperty(ref wasMovedTo, value);
+    }
 
-    public bool WasMovePath { get; }
+    public bool WasMovePath
+    {
+        get => wasMovePath;
+        private set => SetProperty(ref wasMovePath, value);
+    }
 
-    public bool WasSpawned { get; }
+    public bool WasSpawned
+    {
+        get => wasSpawned;
+        private set => SetProperty(ref wasSpawned, value);
+    }
 
-    public bool WasCleared { get; }
+    public bool WasCleared
+    {
+        get => wasCleared;
+        private set => SetProperty(ref wasCleared, value);
+    }
 
-    public bool WasRejectedTarget { get; }
+    public bool WasRejectedTarget
+    {
+        get => wasRejectedTarget;
+        private set => SetProperty(ref wasRejectedTarget, value);
+    }
 
-    public bool IsReachableTarget { get; }
+    public bool IsReachableTarget
+    {
+        get => isReachableTarget;
+        private set => SetProperty(ref isReachableTarget, value);
+    }
 
     public bool IsPathPreview
     {
@@ -142,6 +197,44 @@ public sealed class CellViewModel : INotifyPropertyChanged
     public void SetPathPreview(bool value)
     {
         IsPathPreview = value;
+    }
+
+    public void Update(
+        PieceKind? pieceKind,
+        bool isSelected,
+        bool wasMovedTo,
+        bool wasMovePath,
+        bool wasSpawned,
+        bool wasCleared,
+        bool wasRejectedTarget,
+        bool isReachableTarget,
+        bool isPathPreview)
+    {
+        var nextPiece = pieceKind is null ? null : PieceViewModel.FromPiece(pieceKind.Value);
+        IsOccupied = pieceKind is not null;
+        IsSelected = pieceKind is not null && isSelected;
+        PieceLabel = nextPiece?.Label ?? string.Empty;
+        PieceName = nextPiece?.Name ?? string.Empty;
+        Piece = nextPiece;
+        WasMovedTo = wasMovedTo;
+        WasMovePath = wasMovePath;
+        WasSpawned = wasSpawned;
+        WasCleared = wasCleared;
+        WasRejectedTarget = wasRejectedTarget;
+        IsReachableTarget = pieceKind is null && isReachableTarget;
+        IsPathPreview = isPathPreview;
+    }
+
+    private bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value))
+        {
+            return false;
+        }
+
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
