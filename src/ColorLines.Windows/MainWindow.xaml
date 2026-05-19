@@ -811,14 +811,14 @@
               Visibility="{Binding IsSettingsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid x:Name="SettingsShell">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="520" />
+                    <ColumnDefinition Width="0.85*" />
+                    <ColumnDefinition Width="1.15*" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel x:Name="SettingsHeader"
                             Grid.Column="0"
                             VerticalAlignment="Center"
-                            Margin="34,0,42,0">
+                            Margin="8,0,28,0">
                     <TextBlock Text="Settings"
                                FontSize="48"
                                FontWeight="Bold"
@@ -849,6 +849,7 @@
 
                 <Border x:Name="SettingsContentPanel"
                         Grid.Column="1"
+                        MaxWidth="520"
                         Background="{StaticResource SettingsSurfaceBrush}"
                         BorderBrush="{StaticResource PanelBorderBrush}"
                         BorderThickness="1"

@@ -176,6 +176,7 @@ public sealed class WpfSmokeTests
 
             Assert.Equal(Visibility.Visible, settingsView.Visibility);
             Assert.Equal(Visibility.Visible, settingsShell.Visibility);
+            Assert.True(settingsShell.ColumnDefinitions[1].Width.IsStar);
             Assert.True(settingsHeader.Children.Count >= 2);
             Assert.True(settingsContentPanel.Padding.Left >= 24);
             Assert.True(settingsOptionList.Children.Count >= 2);
