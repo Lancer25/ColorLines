@@ -395,7 +395,7 @@
                                     MouseLeave="BoardCellPointerLeft">
                                 <Grid Width="52" Height="52">
                                     <Border x:Name="ReachableTargetGlow"
-                                            Margin="8"
+                                            Margin="13"
                                             CornerRadius="16"
                                             Background="#FFFFE1A8"
                                             IsHitTestVisible="False">
@@ -404,14 +404,14 @@
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsReachableTarget}" Value="True">
-                                                        <Setter Property="Opacity" Value="0.42" />
+                                                        <Setter Property="Opacity" Value="0.34" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Border.Style>
                                     </Border>
                                     <Border x:Name="PathPreviewGlow"
-                                            Margin="14"
+                                            Margin="11"
                                             CornerRadius="14"
                                             Background="#FF7AC7C4"
                                             IsHitTestVisible="False">
@@ -420,7 +420,25 @@
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsPathPreview}" Value="True">
-                                                        <Setter Property="Opacity" Value="0.55" />
+                                                        <Setter Property="Opacity" Value="0.46" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                    <Border x:Name="PathPreviewTargetGlow"
+                                            Margin="7"
+                                            CornerRadius="17"
+                                            BorderBrush="#FFFFF4B8"
+                                            BorderThickness="2"
+                                            Background="#33FFFFFF"
+                                            IsHitTestVisible="False">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Opacity" Value="0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsPathPreviewTarget}" Value="True">
+                                                        <Setter Property="Opacity" Value="0.82" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
