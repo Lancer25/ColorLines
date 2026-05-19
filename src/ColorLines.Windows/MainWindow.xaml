@@ -11,6 +11,39 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:BooleanToHiddenVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" />
+        <Style x:Key="ShellViewTransitionStyle" TargetType="Grid">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform Y="0" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Style.Triggers>
+                <Trigger Property="Visibility" Value="Visible">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                 From="0.96"
+                                                 To="1"
+                                                 Duration="0:0:0.12"
+                                                 FillBehavior="Stop" />
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                 From="6"
+                                                 To="0"
+                                                 Duration="0:0:0.14"
+                                                 FillBehavior="Stop">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <Style x:Key="MenuPrimaryButton" TargetType="Button">
             <Setter Property="Tag" Value="MenuPrimaryButton" />
             <Setter Property="Height" Value="54" />
@@ -127,6 +160,7 @@
     <Grid>
         <Grid x:Name="MainMenuView"
               Margin="28"
+              Style="{StaticResource ShellViewTransitionStyle}"
               Visibility="{Binding IsMainMenuVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -298,6 +332,7 @@
 
         <Grid x:Name="GameplayView"
               Margin="28"
+              Style="{StaticResource ShellViewTransitionStyle}"
               Visibility="{Binding IsPlayingVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
             <Grid x:Name="GameplayShell">
                 <Grid.ColumnDefinitions>
@@ -885,6 +920,7 @@
 
         <Grid x:Name="PauseMenuView"
               Background="#66000000"
+              Style="{StaticResource ShellViewTransitionStyle}"
               Visibility="{Binding IsPauseMenuVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
             <Border x:Name="PauseMenuPanel"
                     Width="420"
@@ -984,6 +1020,7 @@
 
         <Grid x:Name="SettingsView"
               Margin="28"
+              Style="{StaticResource ShellViewTransitionStyle}"
               Visibility="{Binding IsSettingsVisible, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">
             <Grid x:Name="SettingsShell">
                 <Grid.ColumnDefinitions>
