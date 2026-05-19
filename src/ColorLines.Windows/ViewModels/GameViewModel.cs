@@ -323,7 +323,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private void RefreshFromState()
     {
-        Cells.Clear();
+        EnsureCellsInitialized();
         foreach (var cell in state.Board.Cells())
         {
             var isSelected = selectedPosition == cell.Position;
@@ -334,34 +334,39 @@ public sealed class GameViewModel : INotifyPropertyChanged
             var wasRejectedTarget = IsFullAnimation && rejectedPositions.Contains(cell.Position);
             var isReachableTarget = IsReachableTarget(cell.Position);
             var isPathPreview = pathPreviewPositions.Contains(cell.Position);
-            Cells.Add(cell.Piece is null
-                ? CellViewModel.Empty(
-                    cell.Position.Row,
-                    cell.Position.Column,
-                    wasMovedTo,
-                    wasMovePath,
-                    wasSpawned,
-                    wasCleared,
-                    wasRejectedTarget,
-                    isReachableTarget,
-                    isPathPreview)
-                : CellViewModel.Occupied(
-                    cell.Position.Row,
-                    cell.Position.Column,
-                    cell.Piece.Value,
-                    isSelected,
-                    wasMovedTo,
-                    wasMovePath,
-                    wasSpawned,
-                    wasCleared,
-                    wasRejectedTarget,
-                    isPathPreview));
+            var cellViewModel = Cells[(cell.Position.Row * BoardPosition.BoardSize) + cell.Position.Column];
+            cellViewModel.Update(
+                cell.Piece,
+                isSelected,
+                wasMovedTo,
+                wasMovePath,
+                wasSpawned,
+                wasCleared,
+                wasRejectedTarget,
+                isReachableTarget,
+                isPathPreview);
         }
 
         NextPieces.Clear();
         foreach (var piece in state.NextPieces)
         {
             NextPieces.Add(PieceViewModel.FromPiece(piece));
+        }
+    }
+
+    private void EnsureCellsInitialized()
+    {
+        if (Cells.Count > 0)
+        {
+            return;
+        }
+
+        for (var row = 0; row < BoardPosition.BoardSize; row++)
+        {
+            for (var column = 0; column < BoardPosition.BoardSize; column++)
+            {
+                Cells.Add(CellViewModel.Empty(row, column));
+            }
         }
     }
 
