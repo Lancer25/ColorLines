@@ -8,6 +8,11 @@
         MinWidth="820"
         MinHeight="620"
         Background="{StaticResource AppBackgroundBrush}">
+    <Window.InputBindings>
+        <KeyBinding Key="Escape"
+                    Command="{Binding EscapeCommand}" />
+    </Window.InputBindings>
+
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:BooleanToHiddenVisibilityConverter x:Key="BooleanToHiddenVisibilityConverter" />
@@ -978,6 +983,7 @@
                         <Border x:Name="EndGameConfirmPanel"
                                 Margin="0,12,0,0"
                                 Padding="14"
+                                FocusManager.FocusedElement="{Binding ElementName=EndGameCancelButton}"
                                 Background="{StaticResource MenuSecondaryButtonBrush}"
                                 BorderBrush="{StaticResource PanelBorderBrush}"
                                 BorderThickness="1"
@@ -1022,6 +1028,7 @@
                         <Border x:Name="ReturnToMenuConfirmPanel"
                                 Margin="0,12,0,0"
                                 Padding="14"
+                                FocusManager.FocusedElement="{Binding ElementName=ReturnToMenuCancelButton}"
                                 Background="{StaticResource MenuSecondaryButtonBrush}"
                                 BorderBrush="{StaticResource PanelBorderBrush}"
                                 BorderThickness="1"
