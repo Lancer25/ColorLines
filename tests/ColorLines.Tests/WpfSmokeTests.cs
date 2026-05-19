@@ -149,6 +149,20 @@ public sealed class WpfSmokeTests
 
             var settingsView = FindVisualChildren<Grid>(window)
                 .First(grid => grid.Name == "SettingsView");
+            var settingsShell = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "SettingsShell");
+            var settingsHeader = FindVisualChildren<StackPanel>(window)
+                .First(panel => panel.Name == "SettingsHeader");
+            var settingsContentPanel = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "SettingsContentPanel");
+            var settingsOptionList = FindVisualChildren<StackPanel>(window)
+                .First(panel => panel.Name == "SettingsOptionList");
+            var animationSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "AnimationSettingRow");
+            var soundSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "SoundSettingRow");
+            var settingsActionBar = FindVisualChildren<StackPanel>(window)
+                .First(panel => panel.Name == "SettingsActionBar");
             var gameplaySettingsPanel = FindVisualChildren<Border>(window)
                 .FirstOrDefault(border => border.Name == "SettingsPanel");
             var settingsToggleAnimationButton = FindVisualChildren<Button>(window)
@@ -157,11 +171,25 @@ public sealed class WpfSmokeTests
                 .First(button => button.Name == "SettingsToggleSoundButton");
             var backToMenuButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsBackToMenuButton");
+            var settingsNewGameButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsNewGameButton");
 
             Assert.Equal(Visibility.Visible, settingsView.Visibility);
+            Assert.Equal(Visibility.Visible, settingsShell.Visibility);
+            Assert.True(settingsHeader.Children.Count >= 2);
+            Assert.True(settingsContentPanel.Padding.Left >= 24);
+            Assert.True(settingsOptionList.Children.Count >= 2);
+            Assert.True(animationSettingRow.MinHeight >= 82);
+            Assert.True(soundSettingRow.MinHeight >= 82);
+            Assert.True(settingsActionBar.Children.Count >= 2);
+            Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
+            Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
+            Assert.Equal("MenuPrimaryButton", settingsNewGameButton.Tag);
+            Assert.Equal("MenuSecondaryButton", backToMenuButton.Tag);
             Assert.Null(gameplaySettingsPanel);
             Assert.Same(shell.Game.ToggleAnimationCommand, settingsToggleAnimationButton.Command);
             Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
+            Assert.Same(shell.NewGameCommand, settingsNewGameButton.Command);
             Assert.Same(shell.BackToMenuCommand, backToMenuButton.Command);
             window.Close();
         });
