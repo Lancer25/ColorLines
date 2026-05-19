@@ -22,7 +22,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         pauseSaveStatusText = string.Empty;
         ContinueCommand = new RelayCommand(_ => ReturnToGame(), _ => CanContinueGame);
         NewGameCommand = new RelayCommand(_ => StartNewGame());
-        OpenPauseMenuCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.PauseMenu);
+        OpenPauseMenuCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.PauseMenu, _ => CanOpenPauseMenu);
         OpenSettingsCommand = new RelayCommand(_ => OpenSettings());
         CloseSettingsCommand = new RelayCommand(_ => CurrentScreen = settingsReturnScreen);
         BackToMenuCommand = new RelayCommand(_ => ReturnToMainMenu());
@@ -73,6 +73,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(IsPlayingVisible));
                 OnPropertyChanged(nameof(IsPauseMenuVisible));
                 OnPropertyChanged(nameof(IsSettingsVisible));
+                OnPauseMenuStateChanged();
             }
         }
     }
@@ -103,6 +104,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         : $"Start a new game: Score {Game.Score} | Best {Game.HighScore}";
 
     public bool CanContinueGame => !Game.IsGameOver;
+
+    public bool CanOpenPauseMenu => CurrentScreen == ShellScreen.Playing && !Game.IsGameOver;
 
     public bool IsReturnToMenuConfirmVisible
     {
@@ -224,7 +227,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             return;
         }
 
-        if (CurrentScreen == ShellScreen.Playing)
+        if (CanOpenPauseMenu)
         {
             CurrentScreen = ShellScreen.PauseMenu;
             return;
@@ -276,6 +279,17 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         if (ContinueCommand is RelayCommand continueCommand)
         {
             continueCommand.RaiseCanExecuteChanged();
+        }
+
+        OnPauseMenuStateChanged();
+    }
+
+    private void OnPauseMenuStateChanged()
+    {
+        OnPropertyChanged(nameof(CanOpenPauseMenu));
+        if (OpenPauseMenuCommand is RelayCommand openPauseMenuCommand)
+        {
+            openPauseMenuCommand.RaiseCanExecuteChanged();
         }
     }
 

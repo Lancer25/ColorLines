@@ -862,6 +862,48 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void EscapeCommandDoesNotOpenPauseMenuAfterGameOver()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.ContinueCommand.Execute(null);
+        shell.OpenPauseMenuCommand.Execute(null);
+        shell.EndGameCommand.Execute(null);
+        shell.ConfirmEndGameCommand.Execute(null);
+
+        Assert.True(shell.Game.IsGameOver);
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
+
+        shell.EscapeCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
+        Assert.False(shell.IsPauseMenuVisible);
+    }
+
+    [Fact]
+    public void OpenPauseMenuCommandIsDisabledAfterGameOverAndRefreshesCanExecute()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+        var canExecuteChanges = 0;
+        shell.OpenPauseMenuCommand.CanExecuteChanged += (_, _) => canExecuteChanges++;
+
+        shell.ContinueCommand.Execute(null);
+        shell.OpenPauseMenuCommand.Execute(null);
+        shell.EndGameCommand.Execute(null);
+        shell.ConfirmEndGameCommand.Execute(null);
+
+        Assert.True(shell.Game.IsGameOver);
+        Assert.False(shell.CanOpenPauseMenu);
+        Assert.False(shell.OpenPauseMenuCommand.CanExecute(null));
+        Assert.True(canExecuteChanges > 0);
+
+        shell.OpenPauseMenuCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
+        Assert.False(shell.IsPauseMenuVisible);
+    }
+
+    [Fact]
     public void NewGameCommandResetsGameAndOpensPlayingScreen()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
