@@ -130,12 +130,15 @@ public sealed class WpfSmokeTests
             Assert.Equal(Visibility.Visible, menuBackdrop.Visibility);
             Assert.True(menuHeroArea.Margin.Left >= 24);
             Assert.NotNull(continueButton.Command);
-            Assert.Null(menuNewGameButton);
+            Assert.NotNull(menuNewGameButton);
             Assert.NotNull(menuSettingsButton.Command);
             Assert.True(continueButton.Height >= 52);
+            Assert.True(menuNewGameButton.Height >= 44);
             Assert.True(menuSettingsButton.Height >= 44);
             Assert.Equal("MenuPrimaryButton", continueButton.Tag);
+            Assert.Equal("MenuSecondaryButton", menuNewGameButton.Tag);
             Assert.Equal("MenuSecondaryButton", menuSettingsButton.Tag);
+            Assert.Same(shell.NewGameCommand, menuNewGameButton.Command);
             Assert.True(menuHeroBoard.Width >= 430);
             Assert.True(menuHeroBoard.Height >= 430);
             Assert.True(menuCommandPanel.Padding.Left >= 24);
