@@ -51,6 +51,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         NextPieces = new ObservableCollection<PieceViewModel>();
         SelectCellCommand = new RelayCommand(SelectCell, parameter => parameter is CellViewModel);
         NewGameCommand = new RelayCommand(_ => NewGame());
+        EndGameCommand = new RelayCommand(_ => EndGame());
         ToggleSoundCommand = new RelayCommand(_ => IsSoundEnabled = !IsSoundEnabled);
         ToggleAnimationCommand = new RelayCommand(_ => ToggleAnimation());
         PreviewPathCommand = new RelayCommand(PreviewPath, parameter => parameter is CellViewModel);
@@ -67,6 +68,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public ICommand SelectCellCommand { get; }
 
     public ICommand NewGameCommand { get; }
+
+    public ICommand EndGameCommand { get; }
 
     public ICommand ToggleSoundCommand { get; }
 
@@ -278,6 +281,18 @@ public sealed class GameViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(IsGameOver));
         StatusText = "Select a cat to move.";
         PlaySound(SoundCue.NewGame);
+        RefreshFromState();
+    }
+
+    private void EndGame()
+    {
+        selectedPosition = null;
+        pathPreviewPositions.Clear();
+        ClearCellFeedback();
+        Feedback = new TurnFeedback(false, false, false, false, true, 0);
+        OnPropertyChanged(nameof(IsGameOver));
+        StatusText = "Game over. Start a new game?";
+        PlaySound(SoundCue.GameOver);
         RefreshFromState();
     }
 

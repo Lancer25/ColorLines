@@ -30,6 +30,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         CancelBackToMenuCommand = new RelayCommand(_ => IsReturnToMenuConfirmVisible = false);
         BackToGameCommand = new RelayCommand(_ => ReturnToGame());
         SaveGameCommand = new RelayCommand(_ => SaveGame());
+        EndGameCommand = new RelayCommand(_ => EndGame());
         ExitCommand = new RelayCommand(_ => ExitRequested?.Invoke(this, EventArgs.Empty));
     }
 
@@ -130,6 +131,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public ICommand SaveGameCommand { get; }
 
+    public ICommand EndGameCommand { get; }
+
     public ICommand ExitCommand { get; }
 
     private void OpenSettings()
@@ -154,6 +157,13 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         IsReturnToMenuConfirmVisible = false;
         SaveRequested?.Invoke(this, EventArgs.Empty);
         PauseSaveStatusText = "Game saved.";
+    }
+
+    private void EndGame()
+    {
+        IsReturnToMenuConfirmVisible = false;
+        Game.EndGameCommand.Execute(null);
+        CurrentScreen = ShellScreen.Playing;
     }
 
     private void ReturnToMainMenu()
