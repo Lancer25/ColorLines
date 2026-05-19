@@ -14,6 +14,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     public ShellViewModel(GameViewModel game)
     {
         this.game = game;
+        this.game.PropertyChanged += GamePropertyChanged;
         currentScreen = ShellScreen.MainMenu;
         settingsReturnScreen = ShellScreen.MainMenu;
         pauseSaveStatusText = string.Empty;
@@ -41,8 +42,11 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         {
             if (!ReferenceEquals(game, value))
             {
+                game.PropertyChanged -= GamePropertyChanged;
                 game = value;
+                game.PropertyChanged += GamePropertyChanged;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(SaveSummaryText));
             }
         }
     }
@@ -85,6 +89,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         }
     }
 
+    public string SaveSummaryText => $"Saved run: Score {Game.Score} | Best {Game.HighScore}";
+
     public ICommand ContinueCommand { get; }
 
     public ICommand NewGameCommand { get; }
@@ -114,6 +120,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private void StartNewGame()
     {
         Game.NewGameCommand.Execute(null);
+        OnPropertyChanged(nameof(SaveSummaryText));
         CurrentScreen = ShellScreen.Playing;
     }
 
@@ -121,6 +128,14 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     {
         SaveRequested?.Invoke(this, EventArgs.Empty);
         PauseSaveStatusText = "Game saved.";
+    }
+
+    private void GamePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(GameViewModel.Score) or nameof(GameViewModel.HighScore))
+        {
+            OnPropertyChanged(nameof(SaveSummaryText));
+        }
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
