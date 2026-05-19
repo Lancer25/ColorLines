@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -224,6 +225,10 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "AnimationSettingRow");
             var soundSettingRow = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "SoundSettingRow");
+            var languageSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "LanguageSettingRow");
+            var difficultySettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "DifficultySettingRow");
             var settingsActionBar = FindVisualChildren<StackPanel>(window)
                 .First(panel => panel.Name == "SettingsActionBar");
             var gameplaySettingsPanel = FindVisualChildren<Border>(window)
@@ -232,6 +237,10 @@ public sealed class WpfSmokeTests
                 .First(button => button.Name == "SettingsToggleAnimationButton");
             var settingsToggleSoundButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsToggleSoundButton");
+            var settingsChineseButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsChineseButton");
+            var settingsHardButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsHardButton");
             var backToMenuButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsBackToMenuButton");
             var settingsNewGameButton = FindVisualChildren<Button>(window)
@@ -245,14 +254,20 @@ public sealed class WpfSmokeTests
             Assert.True(settingsOptionList.Children.Count >= 2);
             Assert.True(animationSettingRow.MinHeight >= 82);
             Assert.True(soundSettingRow.MinHeight >= 82);
+            Assert.True(languageSettingRow.MinHeight >= 82);
+            Assert.True(difficultySettingRow.MinHeight >= 82);
             Assert.True(settingsActionBar.Children.Count >= 2);
             Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
+            Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
+            Assert.Equal("MenuSecondaryButton", settingsHardButton.Tag);
             Assert.Equal("MenuPrimaryButton", settingsNewGameButton.Tag);
             Assert.Equal("MenuSecondaryButton", backToMenuButton.Tag);
             Assert.Null(gameplaySettingsPanel);
             Assert.Same(shell.Game.ToggleAnimationCommand, settingsToggleAnimationButton.Command);
             Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
+            Assert.Same(shell.SetLanguageCommand, settingsChineseButton.Command);
+            Assert.Same(shell.Game.SetDifficultyCommand, settingsHardButton.Command);
             Assert.Same(shell.NewGameCommand, settingsNewGameButton.Command);
             Assert.Same(shell.CloseSettingsCommand, backToMenuButton.Command);
             window.Close();
@@ -326,6 +341,8 @@ public sealed class WpfSmokeTests
                 .First(textBlock => textBlock.Name == "PauseSaveStatusText");
             var mainBoardFrame = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "MainBoardFrame");
+            var boardGrid = FindVisualChildren<UniformGrid>(window)
+                .First(grid => grid.Rows == shell.Game.BoardSize && grid.Columns == shell.Game.BoardSize);
             var menuButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "GameplayMenuButton");
             var newGameButton = FindVisualChildren<Button>(window)
@@ -375,8 +392,9 @@ public sealed class WpfSmokeTests
             var actorTransform = Assert.IsType<TranslateTransform>(pieceActor.RenderTransform);
             var scaleTransform = Assert.IsType<ScaleTransform>(pieceScaleActor.RenderTransform);
 
-            Assert.Equal(44, pieceImage.Width);
-            Assert.Equal(44, pieceImage.Height);
+            Assert.True(pieceImage.Width > 0);
+            Assert.True(pieceImage.Width <= 44);
+            Assert.Equal(pieceImage.Width, pieceImage.Height);
             Assert.Equal(Visibility.Visible, gameplayView.Visibility);
             AssertShellTransitionStyle(window, gameplayView);
             AssertShellTransitionStyle(window, pauseMenuView);
@@ -393,6 +411,8 @@ public sealed class WpfSmokeTests
             Assert.True(pauseMenuPanel.Padding.Left >= 24);
             Assert.True(pauseMenuActionList.Children.Count >= 5);
             Assert.True(mainBoardFrame.Padding.Left >= 18);
+            Assert.Equal(shell.Game.BoardSize, boardGrid.Rows);
+            Assert.Equal(shell.Game.BoardSize, boardGrid.Columns);
             Assert.Same(shell.OpenPauseMenuCommand, menuButton.Command);
             Assert.Null(newGameButton);
             Assert.Null(settingsButton);
@@ -424,9 +444,9 @@ public sealed class WpfSmokeTests
             Assert.Equal(0, scoreDeltaBadge.Opacity);
             Assert.Equal(0, clearPulseGlow.Opacity);
             Assert.Equal(1, pieceImage.Opacity);
-            Assert.True(pieceBase.Width >= 42);
+            Assert.True(pieceBase.Width >= 40);
             Assert.True(pieceBase.Opacity > 0);
-            Assert.True(pieceShadow.Width >= 38);
+            Assert.True(pieceShadow.Width >= 36);
             Assert.Equal(1, pieceShadow.Opacity);
             Assert.Equal(0, moveFeedbackGlow.Opacity);
             Assert.Equal(0, movePathPulseGlow.Opacity);

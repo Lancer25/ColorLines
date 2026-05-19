@@ -58,6 +58,21 @@ public sealed class LineDetectorTests
         Assert.Equal(9, clearPositions.Count);
     }
 
+    [Fact]
+    public void UsesTheBoardsConfiguredBounds()
+    {
+        var board = GameBoard.CreateEmpty(7);
+        for (var column = 2; column < 7; column++)
+        {
+            board.SetPiece(new BoardPosition(6, column), PieceKind.White);
+        }
+
+        var lines = LineDetector.FindLines(board, new[] { new BoardPosition(6, 5) });
+
+        Assert.Single(lines);
+        Assert.Equal(5, lines[0].Positions.Count);
+    }
+
     [Theory]
     [InlineData(1, 5, 10)]
     [InlineData(1, 6, 14)]

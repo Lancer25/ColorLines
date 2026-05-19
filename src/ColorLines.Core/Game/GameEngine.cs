@@ -17,7 +17,7 @@ public sealed class GameEngine
 
     public GameState NewGame()
     {
-        var board = GameBoard.CreateEmpty();
+        var board = GameBoard.CreateEmpty(options.BoardSize);
         SpawnPieces(board, DrawPieces(options.InitialPieceCount), out _);
         return new GameState(board, DrawPieces(options.SpawnPieceCount), 0, GameStatus.Playing);
     }

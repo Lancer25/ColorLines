@@ -25,6 +25,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OpenPauseMenuCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.PauseMenu, _ => CanOpenPauseMenu);
         OpenSettingsCommand = new RelayCommand(_ => OpenSettings());
         CloseSettingsCommand = new RelayCommand(_ => CurrentScreen = settingsReturnScreen);
+        SetLanguageCommand = new RelayCommand(SetLanguage);
         BackToMenuCommand = new RelayCommand(_ => ReturnToMainMenu());
         RequestBackToMenuCommand = new RelayCommand(_ => RequestBackToMenu());
         ConfirmBackToMenuCommand = new RelayCommand(_ => ReturnToMainMenu());
@@ -100,8 +101,52 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     }
 
     public string SaveSummaryText => CanContinueGame
-        ? $"Continue available: Score {Game.Score} | Best {Game.HighScore}"
-        : $"Start a new game: Score {Game.Score} | Best {Game.HighScore}";
+        ? (Language == "zh"
+            ? $"继续游戏：分数 {Game.Score} | 最高 {Game.HighScore}"
+            : $"Continue available: Score {Game.Score} | Best {Game.HighScore}")
+        : (Language == "zh"
+            ? $"开始新游戏：分数 {Game.Score} | 最高 {Game.HighScore}"
+            : $"Start a new game: Score {Game.Score} | Best {Game.HighScore}");
+
+    public string Language => Game.Language;
+
+    public string ContinueText => IsChinese ? "继续游戏" : "Continue";
+
+    public string NewGameText => IsChinese ? "新游戏" : "New Game";
+
+    public string SettingsText => IsChinese ? "设置" : "Settings";
+
+    public string ExitText => IsChinese ? "退出" : "Exit";
+
+    public string MenuText => IsChinese ? "菜单" : "Menu";
+
+    public string SaveGameText => IsChinese ? "保存游戏" : "Save Game";
+
+    public string EndGameText => IsChinese ? "结束游戏" : "End Game";
+
+    public string ReturnToMainMenuText => IsChinese ? "返回主菜单" : "Return to Main Menu";
+
+    public string BackText => IsChinese ? "返回" : "Back";
+
+    public string GameMenuTitle => IsChinese ? "游戏菜单" : "Game Menu";
+
+    public string PauseSubtitle => IsChinese ? "棋盘会在这里等你。" : "The board is waiting.";
+
+    public string SettingsTitle => IsChinese ? "设置" : "Settings";
+
+    public string SettingsSubtitle => IsChinese ? "在下一局开始前调整棋盘。" : "Tune the table before the next run.";
+
+    public string AnimationText => IsChinese ? "动效" : "Animation";
+
+    public string SoundText => IsChinese ? "声音" : "Sound";
+
+    public string ToggleSoundText => IsChinese ? "切换声音" : "Toggle Sound";
+
+    public string LanguageText => IsChinese ? "语言" : "Language";
+
+    public string DifficultyText => IsChinese ? "难度" : "Difficulty";
+
+    private bool IsChinese => Language == "zh";
 
     public bool CanContinueGame => !Game.IsGameOver;
 
@@ -142,6 +187,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     public ICommand OpenSettingsCommand { get; }
 
     public ICommand CloseSettingsCommand { get; }
+
+    public ICommand SetLanguageCommand { get; }
 
     public ICommand BackToMenuCommand { get; }
 
@@ -189,7 +236,19 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         SaveRequested?.Invoke(this, EventArgs.Empty);
-        PauseSaveStatusText = "Game saved.";
+        PauseSaveStatusText = Language == "zh" ? "游戏已保存。" : "Game saved.";
+    }
+
+    private void SetLanguage(object? parameter)
+    {
+        Game.SetLanguageCommand.Execute(parameter);
+        OnPropertyChanged(nameof(Language));
+        OnPropertyChanged(nameof(SaveSummaryText));
+        OnLocalizedTextChanged();
+        if (!string.IsNullOrEmpty(PauseSaveStatusText))
+        {
+            PauseSaveStatusText = Language == "zh" ? "游戏已保存。" : "Game saved.";
+        }
     }
 
     private void RequestBackToMenu()
@@ -249,6 +308,12 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     {
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
+        if (!Game.IsGameOver)
+        {
+            Game.EndGameCommand.Execute(null);
+            OnContinueStateChanged();
+        }
+
         CurrentScreen = ShellScreen.MainMenu;
     }
 
@@ -264,6 +329,13 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         if (e.PropertyName is nameof(GameViewModel.Score) or nameof(GameViewModel.HighScore))
         {
             OnPropertyChanged(nameof(SaveSummaryText));
+        }
+
+        if (e.PropertyName is nameof(GameViewModel.Language))
+        {
+            OnPropertyChanged(nameof(Language));
+            OnPropertyChanged(nameof(SaveSummaryText));
+            OnLocalizedTextChanged();
         }
 
         if (e.PropertyName is nameof(GameViewModel.IsGameOver))
@@ -282,6 +354,28 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         }
 
         OnPauseMenuStateChanged();
+    }
+
+    private void OnLocalizedTextChanged()
+    {
+        OnPropertyChanged(nameof(ContinueText));
+        OnPropertyChanged(nameof(NewGameText));
+        OnPropertyChanged(nameof(SettingsText));
+        OnPropertyChanged(nameof(ExitText));
+        OnPropertyChanged(nameof(MenuText));
+        OnPropertyChanged(nameof(SaveGameText));
+        OnPropertyChanged(nameof(EndGameText));
+        OnPropertyChanged(nameof(ReturnToMainMenuText));
+        OnPropertyChanged(nameof(BackText));
+        OnPropertyChanged(nameof(GameMenuTitle));
+        OnPropertyChanged(nameof(PauseSubtitle));
+        OnPropertyChanged(nameof(SettingsTitle));
+        OnPropertyChanged(nameof(SettingsSubtitle));
+        OnPropertyChanged(nameof(AnimationText));
+        OnPropertyChanged(nameof(SoundText));
+        OnPropertyChanged(nameof(ToggleSoundText));
+        OnPropertyChanged(nameof(LanguageText));
+        OnPropertyChanged(nameof(DifficultyText));
     }
 
     private void OnPauseMenuStateChanged()

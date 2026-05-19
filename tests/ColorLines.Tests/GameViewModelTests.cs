@@ -57,11 +57,30 @@ public sealed class GameViewModelTests
     {
         var viewModel = GameViewModel.CreateForNewGame();
 
+        Assert.Equal(9, viewModel.BoardSize);
         Assert.Equal(81, viewModel.Cells.Count);
         Assert.Equal(0, viewModel.Score);
         Assert.Equal(3, viewModel.NextPieces.Count);
         Assert.All(viewModel.NextPieces, piece => Assert.Equal("=^.^=", piece.FaceText));
         Assert.Equal("Select a cat to move.", viewModel.StatusText);
+    }
+
+    [Theory]
+    [InlineData("Easy", 7)]
+    [InlineData("Normal", 9)]
+    [InlineData("Hard", 11)]
+    public void DifficultyControlsTheNextNewGameBoardSize(string difficulty, int expectedSize)
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        viewModel.SetDifficultyCommand.Execute(difficulty);
+        viewModel.NewGameCommand.Execute(null);
+
+        Assert.Equal(difficulty, viewModel.Difficulty);
+        Assert.Equal(expectedSize, viewModel.BoardSize);
+        Assert.Equal(expectedSize * expectedSize, viewModel.Cells.Count);
+        Assert.Equal(expectedSize - 1, viewModel.Cells.Max(cell => cell.Row));
+        Assert.Equal(expectedSize - 1, viewModel.Cells.Max(cell => cell.Column));
     }
 
     [Fact]
@@ -538,6 +557,8 @@ public sealed class GameViewModelTests
         Assert.Equal("Cozy Board", viewModel.SelectedThemeName);
         Assert.True(viewModel.IsSoundEnabled);
         Assert.Equal("Full", viewModel.AnimationIntensity);
+        Assert.Equal("Normal", viewModel.Difficulty);
+        Assert.Equal(9, viewModel.BoardSize);
         Assert.True(viewModel.IsFullAnimation);
         Assert.Equal("Use Reduced Animation", viewModel.AnimationToggleText);
     }
@@ -573,13 +594,19 @@ public sealed class GameViewModelTests
     [Fact]
     public void CreateFromSaveRestoresHighScoreAndSettings()
     {
-        var save = new LocalSaveData(1, 99, false, "Reduced", "CozyBoard", null, new WindowPlacementData(800, 600));
+        var save = new LocalSaveData(1, 99, false, "Reduced", "CozyBoard", null, new WindowPlacementData(800, 600))
+        {
+            Difficulty = "Hard",
+            Language = "zh"
+        };
 
         var viewModel = GameViewModel.CreateFromSave(save);
 
         Assert.Equal(99, viewModel.HighScore);
         Assert.False(viewModel.IsSoundEnabled);
         Assert.Equal("Reduced", viewModel.AnimationIntensity);
+        Assert.Equal("Hard", viewModel.Difficulty);
+        Assert.Equal(11, viewModel.BoardSize);
         Assert.False(viewModel.IsFullAnimation);
     }
 
@@ -593,8 +620,23 @@ public sealed class GameViewModelTests
 
         Assert.False(save.IsSoundEnabled);
         Assert.Equal("Full", save.AnimationIntensity);
+        Assert.Equal("Normal", save.Difficulty);
+        Assert.Equal("en", save.Language);
         Assert.Equal("CozyBoard", save.ThemeId);
         Assert.NotNull(save.Game);
+    }
+
+    [Fact]
+    public void LanguageSwitchUpdatesShellAndGameText()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.SetLanguageCommand.Execute("zh");
+
+        Assert.Equal("zh", shell.Language);
+        Assert.Equal("继续游戏：分数 0 | 最高 0", shell.SaveSummaryText);
+        Assert.Equal("选择一只猫咪移动。", shell.Game.StatusText);
+        Assert.Equal("使用精简动效", shell.Game.AnimationToggleText);
     }
 
     [Fact]
@@ -785,6 +827,8 @@ public sealed class GameViewModelTests
 
         Assert.Equal(ShellScreen.MainMenu, shell.CurrentScreen);
         Assert.True(shell.IsMainMenuVisible);
+        Assert.True(shell.Game.IsGameOver);
+        Assert.False(shell.CanContinueGame);
         Assert.False(shell.IsReturnToMenuConfirmVisible);
     }
 

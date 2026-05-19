@@ -6,7 +6,7 @@ public static class PathFinder
 {
     public static IReadOnlyList<BoardPosition> FindPath(GameBoard board, BoardPosition source, BoardPosition target)
     {
-        if (source == target || board.GetPiece(source) is null || !board.IsEmpty(target))
+        if (!board.Contains(source) || !board.Contains(target) || source == target || board.GetPiece(source) is null || !board.IsEmpty(target))
         {
             return Array.Empty<BoardPosition>();
         }
@@ -20,7 +20,7 @@ public static class PathFinder
         while (queue.Count > 0)
         {
             var current = queue.Dequeue();
-            foreach (var next in current.OrthogonalNeighbors())
+            foreach (var next in current.OrthogonalNeighbors(board.Size))
             {
                 if (visited.Contains(next))
                 {

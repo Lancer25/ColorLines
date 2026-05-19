@@ -9,4 +9,7 @@ public sealed record GameSnapshot(
     IReadOnlyList<PieceSnapshot> Pieces,
     IReadOnlyList<PieceKind> NextPieces,
     int Score,
-    GameStatus Status);
+    GameStatus Status)
+{
+    public int BoardSize { get; init; } = 9;
+}

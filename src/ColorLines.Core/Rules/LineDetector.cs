@@ -22,6 +22,11 @@ public static class LineDetector
 
         foreach (var position in changedPositions.Distinct())
         {
+            if (!board.Contains(position))
+            {
+                continue;
+            }
+
             var piece = board.GetPiece(position);
             if (piece is null)
             {
@@ -76,7 +81,7 @@ public static class LineDetector
         var row = origin.Row + rowDelta;
         var column = origin.Column + columnDelta;
 
-        while (row >= 0 && row < BoardPosition.BoardSize && column >= 0 && column < BoardPosition.BoardSize)
+        while (row >= 0 && row < board.Size && column >= 0 && column < board.Size)
         {
             var position = new BoardPosition(row, column);
             if (board.GetPiece(position) != piece)

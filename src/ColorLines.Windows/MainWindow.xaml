@@ -145,7 +145,7 @@
         </Style>
 
         <Style x:Key="BoardCellButton" TargetType="Button">
-            <Setter Property="Margin" Value="5" />
+            <Setter Property="Margin" Value="3" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Background" Value="{StaticResource CellBackgroundBrush}" />
             <Setter Property="BorderBrush" Value="#D9D0A269" />
@@ -326,25 +326,25 @@
                                    Foreground="{StaticResource TextMutedBrush}" />
                     </StackPanel>
                     <Button x:Name="ContinueButton"
-                            Content="Continue"
+                            Content="{Binding ContinueText}"
                             Command="{Binding ContinueCommand}"
                             Style="{StaticResource MenuPrimaryButton}"
                             Margin="0,26,0,0"
                             />
                     <Button x:Name="MenuNewGameButton"
-                            Content="New Game"
+                            Content="{Binding NewGameText}"
                             Command="{Binding NewGameCommand}"
                             Style="{StaticResource MenuSecondaryButton}"
                             Margin="0,10,0,0"
                             />
                     <Button x:Name="MenuSettingsButton"
-                            Content="Settings"
+                            Content="{Binding SettingsText}"
                             Command="{Binding OpenSettingsCommand}"
                             Style="{StaticResource MenuSecondaryButton}"
                             Margin="0,10,0,0"
                             />
                     <Button x:Name="ExitButton"
-                            Content="Exit"
+                            Content="{Binding ExitText}"
                             Command="{Binding ExitCommand}"
                             Style="{StaticResource MenuSecondaryButton}"
                             Margin="0,10,0,0"
@@ -383,7 +383,8 @@
                                 <ItemsControl ItemsSource="{Binding Game.Cells}" Width="560" Height="560">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Rows="9" Columns="9" />
+                            <UniformGrid Rows="{Binding DataContext.Game.BoardSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                         Columns="{Binding DataContext.Game.BoardSize, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -393,7 +394,7 @@
                                     CommandParameter="{Binding}"
                                     MouseEnter="BoardCellPointerEntered"
                                     MouseLeave="BoardCellPointerLeft">
-                                <Grid Width="52" Height="52">
+                                <Grid Width="44" Height="44">
                                     <Border x:Name="ReachableTargetGlow"
                                             Margin="13"
                                             CornerRadius="16"
@@ -594,8 +595,8 @@
                                         </Border.Style>
                                     </Border>
                                     <Ellipse x:Name="SpawnFeedbackGlow"
-                                             Width="44"
-                                             Height="30"
+                                             Width="40"
+                                             Height="28"
                                              VerticalAlignment="Bottom"
                                              Fill="#5562B96C"
                                              IsHitTestVisible="False">
@@ -631,8 +632,8 @@
                                         </Ellipse.Style>
                                     </Ellipse>
                                     <Ellipse x:Name="MoveFeedbackGlow"
-                                             Width="44"
-                                             Height="30"
+                                             Width="40"
+                                             Height="28"
                                              VerticalAlignment="Bottom"
                                              Fill="#5568A9FF"
                                              IsHitTestVisible="False">
@@ -668,7 +669,7 @@
                                         </Ellipse.Style>
                                     </Ellipse>
                                     <Ellipse x:Name="PieceBase"
-                                             Width="44"
+                                             Width="40"
                                              Height="23"
                                              VerticalAlignment="Bottom"
                                              Fill="#55FFF4DC"
@@ -685,7 +686,7 @@
                                         </Ellipse.Style>
                                     </Ellipse>
                                     <Ellipse x:Name="PieceShadow"
-                                             Width="40"
+                                             Width="36"
                                              Height="16"
                                              VerticalAlignment="Bottom"
                                              Fill="#3A24170F"
@@ -701,7 +702,7 @@
                                             </Style>
                                         </Ellipse.Style>
                                     </Ellipse>
-                                    <Ellipse Width="47"
+                                    <Ellipse Width="42"
                                              Height="34"
                                              VerticalAlignment="Bottom"
                                              Fill="#44FFE06B"
@@ -776,8 +777,8 @@
                                                 </Style>
                                             </Grid.Style>
                                             <Image x:Name="PieceImage"
-                                                   Width="44"
-                                                   Height="44"
+                                                   Width="40"
+                                                   Height="40"
                                                    Source="{Binding Piece.AssetPath}"
                                                    Stretch="Uniform"
                                                    RenderOptions.BitmapScalingMode="HighQuality">
@@ -950,7 +951,7 @@
                         <StackPanel x:Name="GameplayActionBar"
                                     Grid.Row="6">
                             <Button x:Name="GameplayMenuButton"
-                                    Content="Menu"
+                                    Content="{Binding MenuText}"
                                     Command="{Binding OpenPauseMenuCommand}"
                                     Style="{StaticResource GameplayCompactButton}" />
                         </StackPanel>
@@ -973,23 +974,23 @@
                     CornerRadius="14"
                     Padding="28">
                 <StackPanel>
-                    <TextBlock Text="Game Menu"
+                    <TextBlock Text="{Binding GameMenuTitle}"
                                FontSize="34"
                                FontWeight="Bold"
                                Foreground="{StaticResource TextPrimaryBrush}"
                                HorizontalAlignment="Center" />
-                    <TextBlock Text="The board is waiting."
+                    <TextBlock Text="{Binding PauseSubtitle}"
                                Margin="0,8,0,22"
                                FontSize="15"
                                Foreground="{StaticResource TextMutedBrush}"
                                HorizontalAlignment="Center" />
                     <StackPanel x:Name="PauseMenuActionList">
                         <Button x:Name="PauseContinueButton"
-                                Content="Continue"
+                                Content="{Binding ContinueText}"
                                 Command="{Binding BackToGameCommand}"
                                 Style="{StaticResource MenuPrimaryButton}" />
                         <Button x:Name="PauseSaveButton"
-                                Content="Save Game"
+                                Content="{Binding SaveGameText}"
                                 Command="{Binding SaveGameCommand}"
                                 Style="{StaticResource GameplayCompactButton}"
                                 Margin="0,10,0,0" />
@@ -1001,12 +1002,12 @@
                                    Foreground="{StaticResource TextMutedBrush}"
                                    HorizontalAlignment="Center" />
                         <Button x:Name="PauseSettingsButton"
-                                Content="Settings"
+                                Content="{Binding SettingsText}"
                                 Command="{Binding OpenSettingsCommand}"
                                 Style="{StaticResource GameplayCompactButton}"
                                 Margin="0,10,0,0" />
                         <Button x:Name="PauseEndGameButton"
-                                Content="End Game"
+                                Content="{Binding EndGameText}"
                                 Command="{Binding EndGameCommand}"
                                 Style="{StaticResource GameplayCompactButton}"
                                 Margin="0,10,0,0" />
@@ -1051,7 +1052,7 @@
                             </StackPanel>
                         </Border>
                         <Button x:Name="PauseBackToMenuButton"
-                                Content="Return to Main Menu"
+                                Content="{Binding ReturnToMainMenuText}"
                                 Command="{Binding RequestBackToMenuCommand}"
                                 Style="{StaticResource GameplayCompactButton}"
                                 Margin="0,10,0,0" />
@@ -1114,11 +1115,11 @@
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Margin="8,0,28,0">
-                    <TextBlock Text="Settings"
+                    <TextBlock Text="{Binding SettingsTitle}"
                                FontSize="48"
                                FontWeight="Bold"
                                Foreground="{StaticResource TextPrimaryBrush}" />
-                    <TextBlock Text="Tune the table before the next run."
+                    <TextBlock Text="{Binding SettingsSubtitle}"
                                Margin="0,10,0,0"
                                FontSize="18"
                                TextWrapping="Wrap"
@@ -1172,7 +1173,7 @@
                                         <ColumnDefinition Width="160" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="Animation"
+                                        <TextBlock Text="{Binding AnimationText}"
                                                    FontSize="18"
                                                    FontWeight="SemiBold"
                                                    Foreground="{StaticResource TextPrimaryBrush}" />
@@ -1204,7 +1205,7 @@
                                         <ColumnDefinition Width="160" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="Sound"
+                                        <TextBlock Text="{Binding SoundText}"
                                                    FontSize="18"
                                                    FontWeight="SemiBold"
                                                    Foreground="{StaticResource TextPrimaryBrush}" />
@@ -1215,10 +1216,102 @@
                                     </StackPanel>
                                     <Button x:Name="SettingsToggleSoundButton"
                                             Grid.Column="1"
-                                            Content="Toggle Sound"
+                                            Content="{Binding ToggleSoundText}"
                                             Command="{Binding Game.ToggleSoundCommand}"
                                             Style="{StaticResource GameplayCompactButton}"
                                             VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="LanguageSettingRow"
+                                    MinHeight="84"
+                                    Margin="0,12,0,0"
+                                    Background="{StaticResource SettingsRowBrush}"
+                                    BorderBrush="{StaticResource PanelBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="10"
+                                    Padding="18,14">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="220" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding LanguageText}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                                        <TextBlock Text="{Binding Language, StringFormat=Current: {0}}"
+                                                   Margin="0,5,0,0"
+                                                   FontSize="14"
+                                                   Foreground="{StaticResource TextMutedBrush}" />
+                                    </StackPanel>
+                                    <UniformGrid Grid.Column="1"
+                                                 Rows="1"
+                                                 Columns="2"
+                                                 VerticalAlignment="Center">
+                                        <Button x:Name="SettingsEnglishButton"
+                                                Content="English"
+                                                Command="{Binding SetLanguageCommand}"
+                                                CommandParameter="en"
+                                                Style="{StaticResource GameplayCompactButton}"
+                                                Margin="0,0,6,0" />
+                                        <Button x:Name="SettingsChineseButton"
+                                                Content="中文"
+                                                Command="{Binding SetLanguageCommand}"
+                                                CommandParameter="zh"
+                                                Style="{StaticResource GameplayCompactButton}"
+                                                Margin="6,0,0,0" />
+                                    </UniformGrid>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="DifficultySettingRow"
+                                    MinHeight="84"
+                                    Margin="0,12,0,0"
+                                    Background="{StaticResource SettingsRowBrush}"
+                                    BorderBrush="{StaticResource PanelBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="10"
+                                    Padding="18,14">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="240" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding DifficultyText}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                                        <TextBlock Text="{Binding Game.Difficulty, StringFormat=Next board: {0}}"
+                                                   Margin="0,5,0,0"
+                                                   FontSize="14"
+                                                   Foreground="{StaticResource TextMutedBrush}" />
+                                    </StackPanel>
+                                    <UniformGrid Grid.Column="1"
+                                                 Rows="1"
+                                                 Columns="3"
+                                                 VerticalAlignment="Center">
+                                        <Button x:Name="SettingsEasyButton"
+                                                Content="Easy"
+                                                Command="{Binding Game.SetDifficultyCommand}"
+                                                CommandParameter="Easy"
+                                                Style="{StaticResource GameplayCompactButton}"
+                                                Margin="0,0,5,0" />
+                                        <Button x:Name="SettingsNormalButton"
+                                                Content="Normal"
+                                                Command="{Binding Game.SetDifficultyCommand}"
+                                                CommandParameter="Normal"
+                                                Style="{StaticResource GameplayCompactButton}"
+                                                Margin="5,0,5,0" />
+                                        <Button x:Name="SettingsHardButton"
+                                                Content="Hard"
+                                                Command="{Binding Game.SetDifficultyCommand}"
+                                                CommandParameter="Hard"
+                                                Style="{StaticResource GameplayCompactButton}"
+                                                Margin="5,0,0,0" />
+                                    </UniformGrid>
                                 </Grid>
                             </Border>
                         </StackPanel>
@@ -1226,11 +1319,11 @@
                         <StackPanel x:Name="SettingsActionBar"
                                     Grid.Row="2">
                             <Button x:Name="SettingsNewGameButton"
-                                    Content="New Game"
+                                    Content="{Binding NewGameText}"
                                     Command="{Binding NewGameCommand}"
                                     Style="{StaticResource MenuPrimaryButton}" />
                             <Button x:Name="SettingsBackToMenuButton"
-                                    Content="Back"
+                                    Content="{Binding BackText}"
                                     Command="{Binding CloseSettingsCommand}"
                                     Style="{StaticResource GameplayCompactButton}"
                                     Margin="0,10,0,0" />
@@ -1301,7 +1394,7 @@
                     </Border>
                     <StackPanel x:Name="GameOverActionBar">
                         <Button x:Name="GameOverNewGameButton"
-                                Content="New Game"
+                            Content="{Binding NewGameText}"
                                 Command="{Binding NewGameCommand}"
                                 Style="{StaticResource MenuPrimaryButton}" />
                         <Button x:Name="GameOverMenuButton"

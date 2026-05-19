@@ -6,6 +6,7 @@ using ColorLines.Core.Board;
 using ColorLines.Core.Game;
 using ColorLines.Core.Rules;
 using ColorLines.Core.Storage;
+using ColorLines.Windows.Localization;
 using ColorLines.Windows.Services;
 using ColorLines.Windows.Themes;
 
@@ -13,8 +14,9 @@ namespace ColorLines.Windows.ViewModels;
 
 public sealed class GameViewModel : INotifyPropertyChanged
 {
-    private readonly GameEngine engine;
+    private GameEngine engine;
     private readonly ISoundPlayer soundPlayer;
+    private readonly UiTextProvider text;
     private GameState state;
     private BoardPosition? selectedPosition;
     private int score;
@@ -23,6 +25,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private TurnFeedback feedback;
     private bool isSoundEnabled;
     private string animationIntensity;
+    private string difficulty;
     private HashSet<BoardPosition> movedPositions;
     private HashSet<BoardPosition> movePathPositions;
     private HashSet<BoardPosition> spawnedPositions;
@@ -31,17 +34,19 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private HashSet<BoardPosition> pathPreviewPositions;
     private BoardPosition? pathPreviewTargetPosition;
 
-    public GameViewModel(GameEngine engine, GameState state, int highScore = 0, ISoundPlayer? soundPlayer = null)
+    public GameViewModel(GameEngine engine, GameState state, int highScore = 0, ISoundPlayer? soundPlayer = null, string? difficulty = null, UiTextProvider? text = null)
     {
         this.engine = engine;
         this.soundPlayer = soundPlayer ?? NullSoundPlayer.Instance;
+        this.text = text ?? new UiTextProvider();
         this.state = state;
         score = state.Score;
         this.highScore = Math.Max(highScore, score);
-        statusText = "Select a cat to move.";
+        statusText = this.text.SelectCatToMove;
         feedback = TurnFeedback.Neutral;
         isSoundEnabled = true;
         animationIntensity = "Full";
+        this.difficulty = DifficultyCatalog.Normalize(difficulty);
         movedPositions = new HashSet<BoardPosition>();
         movePathPositions = new HashSet<BoardPosition>();
         spawnedPositions = new HashSet<BoardPosition>();
@@ -55,6 +60,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
         EndGameCommand = new RelayCommand(_ => EndGame());
         ToggleSoundCommand = new RelayCommand(_ => IsSoundEnabled = !IsSoundEnabled);
         ToggleAnimationCommand = new RelayCommand(_ => ToggleAnimation());
+        SetDifficultyCommand = new RelayCommand(SetDifficulty);
+        SetLanguageCommand = new RelayCommand(SetLanguage);
         PreviewPathCommand = new RelayCommand(PreviewPath, parameter => parameter is CellViewModel);
         ClearPreviewPathCommand = new RelayCommand(_ => ClearPreviewPath());
         RefreshFromState();
@@ -75,6 +82,10 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public ICommand ToggleSoundCommand { get; }
 
     public ICommand ToggleAnimationCommand { get; }
+
+    public ICommand SetDifficultyCommand { get; }
+
+    public ICommand SetLanguageCommand { get; }
 
     public ICommand PreviewPathCommand { get; }
 
@@ -146,13 +157,13 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     public bool IsGameOver => state.Status == GameStatus.GameOver || Feedback.IsGameOver;
 
-    public string GameOverTitle => "Game Over";
+    public string GameOverTitle => text.GameOverTitle;
 
-    public string GameOverSummaryText => "The board is full. Start a new run?";
+    public string GameOverSummaryText => text.GameOverSummary;
 
-    public string FinalScoreText => $"Final Score: {Score}";
+    public string FinalScoreText => text.FinalScore(Score);
 
-    public string BestScoreText => $"Best Score: {HighScore}";
+    public string BestScoreText => text.BestScore(HighScore);
 
     public string ScoreDeltaText => Feedback.HasScore ? $"+{Feedback.ScoreDelta}" : string.Empty;
 
@@ -190,7 +201,25 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     public bool IsFullAnimation => AnimationIntensity == "Full";
 
-    public string AnimationToggleText => IsFullAnimation ? "Use Reduced Animation" : "Use Full Animation";
+    public string AnimationToggleText => IsFullAnimation ? text.UseReducedAnimation : text.UseFullAnimation;
+
+    public string Difficulty
+    {
+        get => difficulty;
+        private set
+        {
+            var next = DifficultyCatalog.Normalize(value);
+            if (difficulty != next)
+            {
+                difficulty = next;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public int BoardSize => state.Board.Size;
+
+    public string Language => text.Language;
 
     public static GameViewModel CreateForNewGame()
     {
@@ -200,9 +229,11 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     public static GameViewModel CreateFromSave(LocalSaveData? save)
     {
-        var engine = new GameEngine(new SystemRandomSource());
+        var difficulty = DifficultyCatalog.Normalize(save?.Difficulty);
+        var languageText = new UiTextProvider(save?.Language);
+        var engine = new GameEngine(new SystemRandomSource(), new GameOptions(BoardSize: DifficultyCatalog.ToBoardSize(difficulty)));
         var state = save?.Game is null ? engine.NewGame() : GameSnapshotMapper.ToState(save.Game);
-        var viewModel = new GameViewModel(engine, state, save?.HighScore ?? 0, SystemSoundPlayer.Instance);
+        var viewModel = new GameViewModel(engine, state, save?.HighScore ?? 0, SystemSoundPlayer.Instance, difficulty, languageText);
         if (save is not null)
         {
             viewModel.isSoundEnabled = save.IsSoundEnabled;
@@ -221,7 +252,11 @@ public sealed class GameViewModel : INotifyPropertyChanged
             AnimationIntensity,
             ThemeCatalog.DefaultTheme.Id,
             GameSnapshotMapper.FromState(state),
-            window);
+            window)
+        {
+            Difficulty = Difficulty,
+            Language = Language
+        };
     }
 
     private void SelectCell(object? parameter)
@@ -241,7 +276,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             pathPreviewTargetPosition = null;
             Feedback = TurnFeedback.Neutral;
             selectedPosition = position;
-            StatusText = $"Selected {piece}. Choose an empty cell.";
+            StatusText = text.SelectedPiece(piece.Value.ToString());
             PlaySound(SoundCue.Select);
             RefreshFromState();
             return;
@@ -254,7 +289,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             pathPreviewTargetPosition = null;
             rejectedPositions.Add(position);
             Feedback = new TurnFeedback(false, true, false, false, false, 0);
-            StatusText = "Select a cat before choosing a target.";
+            StatusText = text.SelectCatBeforeTarget;
             PlaySound(SoundCue.Reject);
             RefreshFromState();
             return;
@@ -276,6 +311,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private void NewGame()
     {
+        engine = new GameEngine(new SystemRandomSource(), new GameOptions(BoardSize: DifficultyCatalog.ToBoardSize(Difficulty)));
         state = engine.NewGame();
         selectedPosition = null;
         pathPreviewPositions.Clear();
@@ -284,7 +320,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
         Score = state.Score;
         Feedback = TurnFeedback.Neutral;
         OnPropertyChanged(nameof(IsGameOver));
-        StatusText = "Select a cat to move.";
+        OnPropertyChanged(nameof(BoardSize));
+        StatusText = text.SelectCatToMove;
         PlaySound(SoundCue.NewGame);
         RefreshFromState();
     }
@@ -298,7 +335,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         ClearCellFeedback();
         Feedback = new TurnFeedback(false, false, false, false, true, 0);
         OnPropertyChanged(nameof(IsGameOver));
-        StatusText = "Game over. Start a new game?";
+        StatusText = text.GameOverStatus;
         PlaySound(SoundCue.GameOver);
         RefreshFromState();
     }
@@ -307,6 +344,31 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         AnimationIntensity = IsFullAnimation ? "Reduced" : "Full";
         RefreshFromState();
+    }
+
+    private void SetDifficulty(object? parameter)
+    {
+        if (parameter is string value)
+        {
+            Difficulty = value;
+        }
+    }
+
+    private void SetLanguage(object? parameter)
+    {
+        if (parameter is not string value)
+        {
+            return;
+        }
+
+        text.SetLanguage(value);
+        StatusText = text.SelectCatToMove;
+        OnPropertyChanged(nameof(Language));
+        OnPropertyChanged(nameof(GameOverTitle));
+        OnPropertyChanged(nameof(GameOverSummaryText));
+        OnPropertyChanged(nameof(FinalScoreText));
+        OnPropertyChanged(nameof(BestScoreText));
+        OnPropertyChanged(nameof(AnimationToggleText));
     }
 
     private void PlayTurnSound(TurnFeedback turnFeedback)
@@ -358,7 +420,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             var isReachableTarget = reachableTargets.Contains(cell.Position);
             var isPathPreview = pathPreviewPositions.Contains(cell.Position);
             var isPathPreviewTarget = pathPreviewTargetPosition == cell.Position;
-            var cellViewModel = Cells[(cell.Position.Row * BoardPosition.BoardSize) + cell.Position.Column];
+            var cellViewModel = Cells[(cell.Position.Row * state.Board.Size) + cell.Position.Column];
             cellViewModel.Update(
                 cell.Piece,
                 isSelected,
@@ -381,14 +443,16 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private void EnsureCellsInitialized()
     {
-        if (Cells.Count > 0)
+        var neededCount = state.Board.Size * state.Board.Size;
+        if (Cells.Count == neededCount)
         {
             return;
         }
 
-        for (var row = 0; row < BoardPosition.BoardSize; row++)
+        Cells.Clear();
+        for (var row = 0; row < state.Board.Size; row++)
         {
-            for (var column = 0; column < BoardPosition.BoardSize; column++)
+            for (var column = 0; column < state.Board.Size; column++)
             {
                 Cells.Add(CellViewModel.Empty(row, column));
             }
@@ -461,7 +525,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         while (queue.Count > 0)
         {
             var current = queue.Dequeue();
-            foreach (var next in current.OrthogonalNeighbors())
+            foreach (var next in current.OrthogonalNeighbors(state.Board.Size))
             {
                 if (visited.Contains(next) || !state.Board.IsEmpty(next))
                 {
@@ -477,25 +541,25 @@ public sealed class GameViewModel : INotifyPropertyChanged
         return reachable;
     }
 
-    private static string BuildStatusText(GameTurnResult result)
+    private string BuildStatusText(GameTurnResult result)
     {
         if (result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.MoveRejected))
         {
-            return "That cat cannot move there.";
+            return text.CannotMoveThere;
         }
 
         if (result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.GameOver))
         {
-            return "Game over. Start a new game?";
+            return text.GameOverStatus;
         }
 
         var scoreEvent = result.Events.LastOrDefault(gameEvent => gameEvent.Kind == GameEventKind.ScoreChanged);
         if (scoreEvent is not null && scoreEvent.ScoreDelta > 0)
         {
-            return $"+{scoreEvent.ScoreDelta} points!";
+            return text.Points(scoreEvent.ScoreDelta);
         }
 
-        return "Select a cat to move.";
+        return text.SelectCatToMove;
     }
 
     private static TurnFeedback BuildFeedback(GameTurnResult result)

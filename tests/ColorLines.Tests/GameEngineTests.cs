@@ -18,6 +18,21 @@ public sealed class GameEngineTests
         Assert.Equal(GameStatus.Playing, state.Status);
     }
 
+    [Theory]
+    [InlineData(7)]
+    [InlineData(11)]
+    public void NewGameUsesConfiguredBoardSize(int boardSize)
+    {
+        var engine = new GameEngine(
+            new SequenceRandomSource(0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
+            new GameOptions(BoardSize: boardSize));
+
+        var state = engine.NewGame();
+
+        Assert.Equal(boardSize, state.Board.Size);
+        Assert.Equal(boardSize * boardSize, state.Board.Cells().Count());
+    }
+
     [Fact]
     public void MoveThatClearsLineDoesNotSpawnNewPieces()
     {

@@ -43,4 +43,16 @@ public sealed class PathFinderTests
 
         Assert.Empty(path);
     }
+
+    [Fact]
+    public void UsesTheBoardsConfiguredBounds()
+    {
+        var board = GameBoard.CreateEmpty(7);
+        board.SetPiece(new BoardPosition(6, 0), PieceKind.Orange);
+
+        var path = PathFinder.FindPath(board, new BoardPosition(6, 0), new BoardPosition(6, 6));
+
+        Assert.Equal(new BoardPosition(6, 6), path[^1]);
+        Assert.DoesNotContain(path, position => position.Row >= board.Size || position.Column >= board.Size);
+    }
 }

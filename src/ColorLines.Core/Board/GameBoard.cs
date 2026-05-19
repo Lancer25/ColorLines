@@ -9,18 +9,24 @@ public sealed class GameBoard
     private GameBoard(PieceKind?[,] pieces)
     {
         this.pieces = pieces;
+        Size = pieces.GetLength(0);
     }
 
-    public int Size => BoardPosition.BoardSize;
+    public int Size { get; }
 
-    public static GameBoard CreateEmpty()
+    public static GameBoard CreateEmpty(int size = BoardPosition.DefaultBoardSize)
     {
-        return new GameBoard(new PieceKind?[BoardPosition.BoardSize, BoardPosition.BoardSize]);
+        if (size < 5)
+        {
+            throw new ArgumentOutOfRangeException(nameof(size), size, "Board size must be at least 5.");
+        }
+
+        return new GameBoard(new PieceKind?[size, size]);
     }
 
-    public static GameBoard FromPieces(IEnumerable<Cell> cells)
+    public static GameBoard FromPieces(IEnumerable<Cell> cells, int size = BoardPosition.DefaultBoardSize)
     {
-        var board = CreateEmpty();
+        var board = CreateEmpty(size);
         foreach (var cell in cells)
         {
             if (cell.Piece is not null)
@@ -34,16 +40,19 @@ public sealed class GameBoard
 
     public PieceKind? GetPiece(BoardPosition position)
     {
+        EnsureContains(position);
         return pieces[position.Row, position.Column];
     }
 
     public void SetPiece(BoardPosition position, PieceKind piece)
     {
+        EnsureContains(position);
         pieces[position.Row, position.Column] = piece;
     }
 
     public void ClearPiece(BoardPosition position)
     {
+        EnsureContains(position);
         pieces[position.Row, position.Column] = null;
     }
 
@@ -93,5 +102,21 @@ public sealed class GameBoard
     public GameBoard Clone()
     {
         return new GameBoard((PieceKind?[,])pieces.Clone());
+    }
+
+    public bool Contains(BoardPosition position)
+    {
+        return position.Row >= 0
+            && position.Row < Size
+            && position.Column >= 0
+            && position.Column < Size;
+    }
+
+    private void EnsureContains(BoardPosition position)
+    {
+        if (!Contains(position))
+        {
+            throw new ArgumentOutOfRangeException(nameof(position), position, $"Position must be inside a {Size}x{Size} board.");
+        }
     }
 }

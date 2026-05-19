@@ -11,4 +11,9 @@ public sealed record LocalSaveData(
     string AnimationIntensity,
     string ThemeId,
     GameSnapshot? Game,
-    WindowPlacementData Window);
+    WindowPlacementData Window)
+{
+    public string Difficulty { get; init; } = "Normal";
+
+    public string Language { get; init; } = "en";
+}

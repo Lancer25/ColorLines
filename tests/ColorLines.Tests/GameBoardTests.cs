@@ -6,13 +6,25 @@ namespace ColorLines.Tests;
 public sealed class GameBoardTests
 {
     [Fact]
-    public void NewBoardCreatesEmptyNineByNineGrid()
+    public void NewBoardCreatesEmptyDefaultNineByNineGrid()
     {
         var board = GameBoard.CreateEmpty();
 
         Assert.Equal(9, board.Size);
         Assert.Equal(81, board.EmptyPositions().Count());
         Assert.All(board.AllPositions(), position => Assert.Null(board.GetPiece(position)));
+    }
+
+    [Theory]
+    [InlineData(7)]
+    [InlineData(11)]
+    public void NewBoardCanUseConfiguredSize(int size)
+    {
+        var board = GameBoard.CreateEmpty(size);
+
+        Assert.Equal(size, board.Size);
+        Assert.Equal(size * size, board.EmptyPositions().Count());
+        Assert.Contains(new BoardPosition(size - 1, size - 1), board.AllPositions());
     }
 
     [Fact]
@@ -49,10 +61,18 @@ public sealed class GameBoardTests
     [Theory]
     [InlineData(-1, 0)]
     [InlineData(0, -1)]
-    [InlineData(9, 0)]
-    [InlineData(0, 9)]
-    public void PositionRejectsCoordinatesOutsideBoard(int row, int column)
+    public void PositionRejectsNegativeCoordinates(int row, int column)
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new BoardPosition(row, column));
+    }
+
+    [Theory]
+    [InlineData(7, 7, 0)]
+    [InlineData(7, 0, 7)]
+    public void BoardRejectsCoordinatesOutsideItsSize(int size, int row, int column)
+    {
+        var board = GameBoard.CreateEmpty(size);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => board.GetPiece(new BoardPosition(row, column)));
     }
 }
