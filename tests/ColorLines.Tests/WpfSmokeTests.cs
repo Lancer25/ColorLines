@@ -134,12 +134,14 @@ public sealed class WpfSmokeTests
             Assert.Equal(Visibility.Visible, menuBackdrop.Visibility);
             Assert.True(menuHeroArea.Margin.Left >= 24);
             Assert.NotNull(continueButton.Command);
+            Assert.True(continueButton.IsEnabled);
             Assert.NotNull(menuNewGameButton);
             Assert.NotNull(menuSettingsButton.Command);
             Assert.True(continueButton.Height >= 52);
             Assert.True(menuNewGameButton.Height >= 44);
             Assert.True(menuSettingsButton.Height >= 44);
             Assert.Equal("MenuPrimaryButton", continueButton.Tag);
+            Assert.Same(shell.ContinueCommand, continueButton.Command);
             Assert.Equal("MenuSecondaryButton", menuNewGameButton.Tag);
             Assert.Equal("MenuSecondaryButton", menuSettingsButton.Tag);
             Assert.Same(shell.NewGameCommand, menuNewGameButton.Command);
@@ -149,6 +151,42 @@ public sealed class WpfSmokeTests
             Assert.True(menuStatusStrip.Children.Count >= 5);
             Assert.Equal(shell.SaveSummaryText, menuSaveSummary.Text);
             Assert.True(previewImages.Length >= 4);
+            window.Close();
+        });
+    }
+
+    [Fact]
+    public void MainMenuDisablesContinueAfterGameOver()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-window-{Guid.NewGuid():N}.json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+            window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            shell.ContinueCommand.Execute(null);
+            shell.OpenPauseMenuCommand.Execute(null);
+            shell.EndGameCommand.Execute(null);
+            shell.ConfirmEndGameCommand.Execute(null);
+            shell.BackToMenuCommand.Execute(null);
+            window.UpdateLayout();
+
+            var continueButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "ContinueButton");
+            var menuSaveSummary = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "MenuSaveSummary");
+
+            Assert.False(continueButton.IsEnabled);
+            Assert.True(continueButton.Opacity <= 0.65);
+            Assert.Equal(shell.SaveSummaryText, menuSaveSummary.Text);
+            Assert.Contains("Start a new game", menuSaveSummary.Text, StringComparison.Ordinal);
             window.Close();
         });
     }
