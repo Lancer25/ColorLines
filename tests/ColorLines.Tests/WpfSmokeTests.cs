@@ -384,6 +384,48 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void TransientFeedbackLayersRespectAnimationIntensity()
+    {
+        var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "ColorLines.Windows",
+            "MainWindow.xaml"));
+        var document = XDocument.Load(mainWindowPath);
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var feedbackLayerNames = new[]
+        {
+            "MovePathPulseGlow",
+            "ClearFeedbackGlow",
+            "ClearPulseGlow",
+            "RejectFeedbackGlow",
+            "SpawnFeedbackGlow",
+            "MoveFeedbackGlow",
+            "ScoreDeltaBadge"
+        };
+
+        foreach (var feedbackLayerName in feedbackLayerNames)
+        {
+            var layer = document
+                .Descendants()
+                .Single(element => element.Attribute(x + "Name")?.Value == feedbackLayerName);
+
+            Assert.Contains("Game.IsFullAnimation", layer.ToString(SaveOptions.DisableFormatting));
+        }
+
+        var pieceScaleActor = document
+            .Descendants()
+            .Single(element => element.Attribute(x + "Name")?.Value == "PieceScaleActor");
+
+        Assert.Contains("Game.IsFullAnimation", pieceScaleActor.ToString(SaveOptions.DisableFormatting));
+    }
+
+    [Fact]
     public void GameOverOverlayIsOutsideContentMargin()
     {
         var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
