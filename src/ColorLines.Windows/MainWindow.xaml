@@ -873,22 +873,72 @@
                                     Grid.Row="6">
                             <Button x:Name="GameplayMenuButton"
                                     Content="Menu"
-                                    Command="{Binding BackToMenuCommand}"
+                                    Command="{Binding OpenPauseMenuCommand}"
                                     Style="{StaticResource GameplayCompactButton}" />
-                            <Button x:Name="NewGameButton"
-                                    Content="New Game"
-                                    Command="{Binding NewGameCommand}"
-                                    Style="{StaticResource MenuPrimaryButton}"
-                                    Margin="0,10,0,0" />
-                            <Button x:Name="GameplaySettingsButton"
-                                    Content="Settings"
-                                    Command="{Binding OpenSettingsCommand}"
-                                    Style="{StaticResource GameplayCompactButton}"
-                                    Margin="0,10,0,0" />
                         </StackPanel>
                     </Grid>
                 </Border>
             </Grid>
+        </Grid>
+
+        <Grid x:Name="PauseMenuView"
+              Background="#66000000"
+              Visibility="{Binding IsPauseMenuVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border x:Name="PauseMenuPanel"
+                    Width="420"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="{StaticResource SettingsSurfaceBrush}"
+                    BorderBrush="{StaticResource PanelBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="14"
+                    Padding="28">
+                <StackPanel>
+                    <TextBlock Text="Game Menu"
+                               FontSize="34"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="The board is waiting."
+                               Margin="0,8,0,22"
+                               FontSize="15"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               HorizontalAlignment="Center" />
+                    <StackPanel x:Name="PauseMenuActionList">
+                        <Button x:Name="PauseContinueButton"
+                                Content="Continue"
+                                Command="{Binding BackToGameCommand}"
+                                Style="{StaticResource MenuPrimaryButton}" />
+                        <Button x:Name="PauseSaveButton"
+                                Content="Save Game"
+                                Command="{Binding SaveGameCommand}"
+                                Style="{StaticResource GameplayCompactButton}"
+                                Margin="0,10,0,0" />
+                        <TextBlock x:Name="PauseSaveStatusText"
+                                   Text="{Binding PauseSaveStatusText}"
+                                   MinHeight="18"
+                                   Margin="0,6,0,0"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TextMutedBrush}"
+                                   HorizontalAlignment="Center" />
+                        <Button x:Name="PauseSettingsButton"
+                                Content="Settings"
+                                Command="{Binding OpenSettingsCommand}"
+                                Style="{StaticResource GameplayCompactButton}"
+                                Margin="0,10,0,0" />
+                        <Button x:Name="PauseEndGameButton"
+                                Content="End Game"
+                                Command="{Binding NewGameCommand}"
+                                Style="{StaticResource GameplayCompactButton}"
+                                Margin="0,10,0,0" />
+                        <Button x:Name="PauseBackToMenuButton"
+                                Content="Return to Main Menu"
+                                Command="{Binding BackToMenuCommand}"
+                                Style="{StaticResource GameplayCompactButton}"
+                                Margin="0,10,0,0" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
         </Grid>
 
         <Grid x:Name="SettingsView"
@@ -1020,8 +1070,8 @@
                                     Command="{Binding NewGameCommand}"
                                     Style="{StaticResource MenuPrimaryButton}" />
                             <Button x:Name="SettingsBackToMenuButton"
-                                    Content="Back to Menu"
-                                    Command="{Binding BackToMenuCommand}"
+                                    Content="Back"
+                                    Command="{Binding CloseSettingsCommand}"
                                     Style="{StaticResource GameplayCompactButton}"
                                     Margin="0,10,0,0" />
                         </StackPanel>
