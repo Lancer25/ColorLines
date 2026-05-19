@@ -243,6 +243,14 @@ public sealed class WpfSmokeTests
                 .First(textBlock => textBlock.Name == "GameOverFinalScoreText");
             var bestScoreText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "GameOverBestScoreText");
+            var gameOverDialog = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "GameOverDialog");
+            var gameOverActionBar = FindVisualChildren<StackPanel>(window)
+                .First(panel => panel.Name == "GameOverActionBar");
+            var gameOverNewGameButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "GameOverNewGameButton");
+            var gameOverMenuButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "GameOverMenuButton");
             var occupiedButton = FindVisualChildren<Button>(window)
                 .First(button => button.DataContext is CellViewModel { IsOccupied: true });
             occupiedButton.ApplyTemplate();
@@ -292,6 +300,12 @@ public sealed class WpfSmokeTests
             Assert.Equal("MenuSecondaryButton", settingsButton.Tag);
             Assert.Equal("Final Score: 0", finalScoreText.Text);
             Assert.StartsWith("Best Score:", bestScoreText.Text);
+            Assert.True(gameOverDialog.Padding.Left >= 24);
+            Assert.True(gameOverActionBar.Children.Count >= 2);
+            Assert.Same(shell.NewGameCommand, gameOverNewGameButton.Command);
+            Assert.Same(shell.BackToMenuCommand, gameOverMenuButton.Command);
+            Assert.Equal("MenuPrimaryButton", gameOverNewGameButton.Tag);
+            Assert.Equal("MenuSecondaryButton", gameOverMenuButton.Tag);
             Assert.Equal(0, scoreDeltaBadge.Opacity);
             Assert.Equal(0, clearPulseGlow.Opacity);
             Assert.Equal(1, pieceImage.Opacity);
