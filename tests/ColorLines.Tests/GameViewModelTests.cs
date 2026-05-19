@@ -782,6 +782,33 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void EscapeCommandNavigatesPauseFlowSafely()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.ContinueCommand.Execute(null);
+        shell.EscapeCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
+
+        shell.EndGameCommand.Execute(null);
+        shell.EscapeCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
+        Assert.False(shell.IsEndGameConfirmVisible);
+
+        shell.RequestBackToMenuCommand.Execute(null);
+        shell.EscapeCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
+        Assert.False(shell.IsReturnToMenuConfirmVisible);
+
+        shell.EscapeCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
+    }
+
+    [Fact]
     public void NewGameCommandResetsGameAndOpensPlayingScreen()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
