@@ -375,18 +375,29 @@
                                             <Style TargetType="Border">
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding WasMovePath}" Value="True">
-                                                        <DataTrigger.EnterActions>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasMovePath}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                                      From="0.58"
                                                                                      To="0"
                                                                                      Duration="0:0:0.36" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
-                                                    </DataTrigger>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </MultiDataTrigger.EnterActions>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasMovePath}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Opacity" Value="0.24" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Border.Style>
@@ -400,18 +411,29 @@
                                             <Style TargetType="Border">
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding WasCleared}" Value="True">
-                                                        <DataTrigger.EnterActions>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasCleared}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                                      From="0.42"
                                                                                      To="0"
                                                                                      Duration="0:0:0.28" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
-                                                    </DataTrigger>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </MultiDataTrigger.EnterActions>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasCleared}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Opacity" Value="0.22" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Border.Style>
@@ -427,18 +449,29 @@
                                             <Style TargetType="Border">
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding WasCleared}" Value="True">
-                                                        <DataTrigger.EnterActions>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasCleared}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                                      From="0.88"
                                                                                      To="0"
                                                                                      Duration="0:0:0.42" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
-                                                    </DataTrigger>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </MultiDataTrigger.EnterActions>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasCleared}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Opacity" Value="0.28" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Border.Style>
@@ -455,18 +488,29 @@
                                             <Style TargetType="Border">
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding WasRejectedTarget}" Value="True">
-                                                        <DataTrigger.EnterActions>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasRejectedTarget}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                                      From="0.45"
                                                                                      To="0"
                                                                                      Duration="0:0:0.28" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
-                                                    </DataTrigger>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </MultiDataTrigger.EnterActions>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasRejectedTarget}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Opacity" Value="0.24" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Border.Style>
@@ -481,18 +525,29 @@
                                             <Style TargetType="Ellipse">
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding WasSpawned}" Value="True">
-                                                        <DataTrigger.EnterActions>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasSpawned}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                                      From="0.55"
                                                                                      To="0"
                                                                                      Duration="0:0:0.34" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
-                                                    </DataTrigger>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </MultiDataTrigger.EnterActions>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasSpawned}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Opacity" Value="0.24" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Ellipse.Style>
@@ -507,18 +562,29 @@
                                             <Style TargetType="Ellipse">
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding WasMovedTo}" Value="True">
-                                                        <DataTrigger.EnterActions>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasMovedTo}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                                      From="0.55"
                                                                                      To="0"
                                                                                      Duration="0:0:0.32" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
-                                                    </DataTrigger>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </MultiDataTrigger.EnterActions>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding WasMovedTo}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Opacity" Value="0.24" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Ellipse.Style>
@@ -596,8 +662,12 @@
                                             <Grid.Style>
                                                 <Style TargetType="Grid">
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding WasMovedTo}" Value="True">
-                                                            <DataTrigger.EnterActions>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding WasMovedTo}" Value="True" />
+                                                                <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <MultiDataTrigger.EnterActions>
                                                                 <BeginStoryboard>
                                                                     <Storyboard>
                                                                         <DoubleAnimation Storyboard.TargetProperty="Opacity"
@@ -606,10 +676,14 @@
                                                                                          Duration="0:0:0.16" />
                                                                     </Storyboard>
                                                                 </BeginStoryboard>
-                                                            </DataTrigger.EnterActions>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding WasSpawned}" Value="True">
-                                                            <DataTrigger.EnterActions>
+                                                            </MultiDataTrigger.EnterActions>
+                                                        </MultiDataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding WasSpawned}" Value="True" />
+                                                                <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <MultiDataTrigger.EnterActions>
                                                                 <BeginStoryboard>
                                                                     <Storyboard>
                                                                         <DoubleAnimation Storyboard.TargetProperty="Opacity"
@@ -618,8 +692,8 @@
                                                                                          Duration="0:0:0.18" />
                                                                     </Storyboard>
                                                                 </BeginStoryboard>
-                                                            </DataTrigger.EnterActions>
-                                                        </DataTrigger>
+                                                            </MultiDataTrigger.EnterActions>
+                                                        </MultiDataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Grid.Style>
@@ -722,8 +796,12 @@
                                         <Style TargetType="Border">
                                             <Setter Property="Opacity" Value="0" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Game.ShowScoreDelta}" Value="True">
-                                                    <DataTrigger.EnterActions>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Game.ShowScoreDelta}" Value="True" />
+                                                        <Condition Binding="{Binding Game.IsFullAnimation}" Value="True" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.EnterActions>
                                                         <BeginStoryboard>
                                                             <Storyboard>
                                                                 <DoubleAnimation Storyboard.TargetProperty="Opacity"
@@ -732,8 +810,15 @@
                                                                                  Duration="0:0:0.85" />
                                                             </Storyboard>
                                                         </BeginStoryboard>
-                                                    </DataTrigger.EnterActions>
-                                                </DataTrigger>
+                                                    </MultiDataTrigger.EnterActions>
+                                                </MultiDataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Game.ShowScoreDelta}" Value="True" />
+                                                        <Condition Binding="{Binding Game.IsFullAnimation}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Opacity" Value="0.28" />
+                                                </MultiDataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
