@@ -253,6 +253,12 @@
                                    FontSize="18"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock x:Name="MenuSaveSummary"
+                                   Text="{Binding SaveSummaryText}"
+                                   Margin="0,8,0,0"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextMutedBrush}" />
                         <TextBlock Text="{Binding Game.SelectedThemeName, StringFormat=Theme: {0}}"
                                    Margin="0,8,0,0"
                                    FontSize="13"
