@@ -297,23 +297,30 @@
         <Grid x:Name="GameplayView"
               Margin="28"
               Visibility="{Binding IsPlayingVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="300" />
-            </Grid.ColumnDefinitions>
+            <Grid x:Name="GameplayShell">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="320" />
+                </Grid.ColumnDefinitions>
 
-            <Border x:Name="MainBoardFrame"
-                    Grid.Column="0"
-                    Background="{StaticResource BoardShadowBrush}"
-                    BorderBrush="{StaticResource BoardBorderBrush}"
-                    BorderThickness="2"
-                    CornerRadius="16"
-                    Padding="20">
-                <Border Background="{StaticResource BoardInnerBrush}"
-                        CornerRadius="12"
-                        Padding="8">
-                    <Viewbox Stretch="Uniform">
-                        <ItemsControl ItemsSource="{Binding Game.Cells}" Width="560" Height="560">
+                <Grid x:Name="GameplayBoardArea"
+                      Grid.Column="0"
+                      Margin="0,0,24,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border x:Name="MainBoardFrame"
+                            Background="{StaticResource BoardShadowBrush}"
+                            BorderBrush="{StaticResource BoardBorderBrush}"
+                            BorderThickness="2"
+                            CornerRadius="16"
+                            Padding="20">
+                        <Border Background="{StaticResource BoardInnerBrush}"
+                                CornerRadius="12"
+                                Padding="8">
+                            <Viewbox Stretch="Uniform">
+                                <ItemsControl ItemsSource="{Binding Game.Cells}" Width="560" Height="560">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Rows="9" Columns="9" />
@@ -639,139 +646,164 @@
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Viewbox>
-                </Border>
-            </Border>
-
-            <StackPanel x:Name="RightRail" Grid.Column="1" Margin="28,0,0,0">
-            <TextBlock Text="Color Lines"
-                       FontSize="34"
-                       FontWeight="Bold"
-                       Foreground="{StaticResource TextPrimaryBrush}" />
-            <Border x:Name="StatusTextRegion"
-                    MinHeight="58"
-                    Margin="0,6,0,18">
-                <TextBlock Text="{Binding Game.StatusText}"
-                           TextWrapping="Wrap"
-                           FontSize="15"
-                           Foreground="{StaticResource TextMutedBrush}" />
-            </Border>
-
-            <Border x:Name="ScorePanel"
-                    Background="{StaticResource PanelBackgroundBrush}"
-                    BorderBrush="{StaticResource PanelBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="18"
-                    Margin="0,0,0,14">
-                <StackPanel>
-                    <TextBlock Text="Score"
-                               Foreground="{StaticResource TextMutedBrush}"
-                               FontSize="13"
-                               FontWeight="SemiBold" />
-                    <TextBlock Text="{Binding Game.Score}"
-                               Foreground="{StaticResource TextPrimaryBrush}"
-                               FontSize="34"
-                               FontWeight="Bold" />
-                    <TextBlock Text="{Binding Game.HighScore, StringFormat=Best: {0}}"
-                               Foreground="{StaticResource TextMutedBrush}"
-                               FontSize="14"
-                               FontWeight="SemiBold" />
-                    <Border x:Name="ScoreDeltaBadge"
-                            HorizontalAlignment="Left"
-                            Margin="0,8,0,0"
-                            Padding="10,4"
-                            CornerRadius="8"
-                            Background="#FFFFE1A8">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Opacity" Value="0" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Game.ShowScoreDelta}" Value="True">
-                                        <DataTrigger.EnterActions>
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                     From="1"
-                                                                     To="0"
-                                                                     Duration="0:0:0.85" />
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </DataTrigger.EnterActions>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <TextBlock Text="{Binding Game.ScoreDeltaBadgeText}"
-                                   Foreground="{StaticResource ScoreAccentBrush}"
-                                   FontSize="18"
-                                   FontWeight="Bold" />
+                                </ItemsControl>
+                            </Viewbox>
+                        </Border>
                     </Border>
-                </StackPanel>
-            </Border>
+                </Grid>
 
-            <Border x:Name="NextCatsPanel"
-                    Background="{StaticResource PanelBackgroundBrush}"
-                    BorderBrush="{StaticResource PanelBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Padding="18"
-                    Margin="0,0,0,14">
-                <StackPanel>
-                    <TextBlock Text="Next Cats"
-                               Foreground="{StaticResource TextMutedBrush}"
-                               FontSize="13"
-                               FontWeight="SemiBold" />
-                    <ItemsControl ItemsSource="{Binding Game.NextPieces}" Margin="0,10,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="{StaticResource CellHoverBrush}"
-                                        CornerRadius="14"
-                                        Padding="8"
-                                        Margin="0,0,8,0">
-                                    <Grid Width="44" Height="40">
-                                        <Ellipse Width="34"
-                                                 Height="18"
-                                                 VerticalAlignment="Bottom"
-                                                 Fill="#332C1B14" />
-                                        <Image Width="40"
-                                               Height="40"
-                                               Source="{Binding AssetPath}"
-                                               Stretch="Uniform"
-                                               RenderOptions.BitmapScalingMode="HighQuality" />
-                                    </Grid>
+                <Border x:Name="GameplayHudPanel"
+                        Grid.Column="1"
+                        MaxWidth="320"
+                        Background="{StaticResource GameplayHudBrush}"
+                        BorderBrush="{StaticResource PanelBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="14"
+                        Padding="20"
+                        VerticalAlignment="Stretch">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="14" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="14" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border x:Name="GameplayStatusBanner"
+                                Grid.Row="0"
+                                MinHeight="58"
+                                Background="{StaticResource GameplayHudAccentBrush}"
+                                CornerRadius="10"
+                                Padding="14,10">
+                            <TextBlock Text="{Binding Game.StatusText}"
+                                       FontSize="15"
+                                       LineHeight="19"
+                                       TextWrapping="Wrap"
+                                       Foreground="{StaticResource TextPrimaryBrush}" />
+                        </Border>
+
+                        <Border x:Name="GameplayScoreBlock"
+                                Grid.Row="2"
+                                Background="{StaticResource PanelBackgroundBrush}"
+                                BorderBrush="{StaticResource PanelBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Padding="18,16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Score"
+                                               FontSize="13"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextMutedBrush}" />
+                                    <TextBlock Text="{Binding Game.Score}"
+                                               FontSize="42"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" />
+                                    <TextBlock Text="{Binding Game.HighScore, StringFormat=Best: {0}}"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextMutedBrush}" />
+                                </StackPanel>
+                                <Border x:Name="ScoreDeltaBadge"
+                                        Grid.Column="1"
+                                        MinWidth="52"
+                                        Height="40"
+                                        Background="{StaticResource GameplayHudAccentBrush}"
+                                        CornerRadius="10"
+                                        VerticalAlignment="Bottom">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Opacity" Value="0" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Game.ShowScoreDelta}" Value="True">
+                                                    <DataTrigger.EnterActions>
+                                                        <BeginStoryboard>
+                                                            <Storyboard>
+                                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                 From="1"
+                                                                                 To="0"
+                                                                                 Duration="0:0:0.85" />
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </DataTrigger.EnterActions>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding Game.ScoreDeltaBadgeText}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontSize="21"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource ScoreAccentBrush}" />
                                 </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
+                            </Grid>
+                        </Border>
 
-            <Button x:Name="NewGameButton"
-                    Content="New Game"
-                    Command="{Binding NewGameCommand}"
-                    Height="44"
-                    Background="{StaticResource AccentBrush}"
-                    Foreground="#FFFFFB"
-                    BorderThickness="0"
-                    FontSize="15"
-                    FontWeight="SemiBold" />
+                        <Border x:Name="GameplayNextCatsBlock"
+                                Grid.Row="4"
+                                Background="{StaticResource PanelBackgroundBrush}"
+                                BorderBrush="{StaticResource PanelBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Padding="18,16">
+                            <StackPanel>
+                                <TextBlock Text="Next Cats"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextMutedBrush}" />
+                                <ItemsControl ItemsSource="{Binding Game.NextPieces}" Margin="0,12,0,0">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Width="64"
+                                                    Height="64"
+                                                    Margin="0,0,10,0"
+                                                    Background="{StaticResource GameplayHudAccentBrush}"
+                                                    CornerRadius="14">
+                                                <Image Source="{Binding AssetPath}"
+                                                       Width="48"
+                                                       Height="48"
+                                                       Stretch="Uniform"
+                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
 
-            <Button x:Name="GameplaySettingsButton"
-                    Content="Settings"
-                    Command="{Binding OpenSettingsCommand}"
-                    Height="36"
-                    Margin="0,10,0,0"
-                    Background="{StaticResource CellHoverBrush}"
-                    Foreground="{StaticResource TextPrimaryBrush}"
-                    BorderBrush="{StaticResource CellBorderBrush}" />
-            </StackPanel>
+                        <StackPanel x:Name="GameplayActionBar"
+                                    Grid.Row="6">
+                            <Button x:Name="GameplayMenuButton"
+                                    Content="Menu"
+                                    Command="{Binding BackToMenuCommand}"
+                                    Style="{StaticResource GameplayCompactButton}" />
+                            <Button x:Name="NewGameButton"
+                                    Content="New Game"
+                                    Command="{Binding NewGameCommand}"
+                                    Style="{StaticResource MenuPrimaryButton}"
+                                    Margin="0,10,0,0" />
+                            <Button x:Name="GameplaySettingsButton"
+                                    Content="Settings"
+                                    Command="{Binding OpenSettingsCommand}"
+                                    Style="{StaticResource GameplayCompactButton}"
+                                    Margin="0,10,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
         </Grid>
 
         <Grid x:Name="SettingsView"
