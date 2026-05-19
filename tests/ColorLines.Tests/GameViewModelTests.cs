@@ -693,6 +693,35 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SaveSummaryTextDescribesCurrentRun()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        Assert.Equal("Saved run: Score 0 | Best 0", shell.SaveSummaryText);
+    }
+
+    [Fact]
+    public void SaveSummaryTextUpdatesWhenScoreChanges()
+    {
+        var board = GameBoard.CreateEmpty();
+        for (var column = 0; column < 4; column++)
+        {
+            board.SetPiece(new BoardPosition(0, column), PieceKind.Orange);
+        }
+
+        board.SetPiece(new BoardPosition(1, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var shell = new ShellViewModel(new GameViewModel(new GameEngine(new SequenceRandomSource()), state));
+        var source = shell.Game.Cells.Single(cell => cell.Row == 1 && cell.Column == 0);
+        var target = shell.Game.Cells.Single(cell => cell.Row == 0 && cell.Column == 4);
+
+        shell.Game.SelectCellCommand.Execute(source);
+        shell.Game.SelectCellCommand.Execute(target);
+
+        Assert.Equal("Saved run: Score 10 | Best 10", shell.SaveSummaryText);
+    }
+
+    [Fact]
     public void NewGameCommandResetsGameAndOpensPlayingScreen()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
