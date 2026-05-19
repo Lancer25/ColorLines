@@ -104,9 +104,15 @@ public sealed class WpfSmokeTests
             var previewImages = FindVisualChildren<Image>(menuHeroBoard)
                 .Where(image => image.Name.StartsWith("MenuPreviewCat", StringComparison.Ordinal))
                 .ToArray();
+            var menuBackdrop = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "MenuBackdrop");
+            var menuHeroArea = FindVisualChildren<Grid>(window)
+                .First(grid => grid.Name == "MenuHeroArea");
 
             Assert.Equal(Visibility.Visible, mainMenuView.Visibility);
             Assert.Equal(Visibility.Collapsed, gameplayView.Visibility);
+            Assert.Equal(Visibility.Visible, menuBackdrop.Visibility);
+            Assert.True(menuHeroArea.Margin.Left >= 24);
             Assert.NotNull(continueButton.Command);
             Assert.NotNull(menuSettingsButton.Command);
             Assert.True(continueButton.Height >= 52);

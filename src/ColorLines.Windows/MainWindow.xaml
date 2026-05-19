@@ -123,32 +123,38 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="340" />
             </Grid.ColumnDefinitions>
+            <Border x:Name="MenuBackdrop"
+                    Grid.ColumnSpan="2"
+                    Background="{StaticResource MenuBackdropBrush}"
+                    CornerRadius="18" />
 
-            <StackPanel Grid.Column="0"
-                        VerticalAlignment="Center"
-                        Margin="36,0,48,0">
-                <TextBlock Text="Color Lines"
-                           FontSize="54"
-                           FontWeight="Bold"
-                           Foreground="{StaticResource TextPrimaryBrush}" />
-                <TextBlock Text="Cute cats. Classic lines. One cozy board."
-                           Margin="0,10,0,0"
-                           FontSize="18"
-                           Foreground="{StaticResource TextMutedBrush}" />
-                <Border x:Name="MenuHeroBoard"
-                        Margin="0,30,0,0"
-                        Width="460"
-                        Height="460"
-                        Background="{StaticResource BoardShadowBrush}"
-                        BorderBrush="{StaticResource BoardBorderBrush}"
-                        BorderThickness="2"
-                        CornerRadius="20"
-                        Padding="16"
-                        HorizontalAlignment="Left">
-                    <Border Background="{StaticResource BoardInnerBrush}"
-                            CornerRadius="15"
-                            Padding="14">
-                        <UniformGrid Rows="5" Columns="5">
+            <Grid x:Name="MenuHeroArea"
+                  Grid.Column="0"
+                  Margin="30,0,44,0"
+                  VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="Color Lines"
+                               FontSize="54"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}" />
+                    <TextBlock Text="Cute cats. Classic lines. One cozy board."
+                               Margin="0,10,0,0"
+                               FontSize="18"
+                               Foreground="{StaticResource TextMutedBrush}" />
+                    <Border x:Name="MenuHeroBoard"
+                            Margin="0,30,0,0"
+                            Width="460"
+                            Height="460"
+                            Background="{StaticResource BoardShadowBrush}"
+                            BorderBrush="{StaticResource BoardBorderBrush}"
+                            BorderThickness="2"
+                            CornerRadius="20"
+                            Padding="16"
+                            HorizontalAlignment="Left">
+                        <Border Background="{StaticResource BoardInnerBrush}"
+                                CornerRadius="15"
+                                Padding="14">
+                            <UniformGrid Rows="5" Columns="5">
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
@@ -215,10 +221,11 @@
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Border>
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                        </UniformGrid>
+                            </UniformGrid>
+                        </Border>
                     </Border>
-                </Border>
-            </StackPanel>
+                </StackPanel>
+            </Grid>
 
             <Border x:Name="MenuCommandPanel"
                     Grid.Column="1"
