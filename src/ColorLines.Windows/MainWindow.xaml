@@ -137,7 +137,7 @@
                                FontSize="54"
                                FontWeight="Bold"
                                Foreground="{StaticResource TextPrimaryBrush}" />
-                    <TextBlock Text="Cute cats. Classic lines. One cozy board."
+                    <TextBlock Text="Match five cats. Clear the board. Chase your best score."
                                Margin="0,10,0,0"
                                FontSize="18"
                                Foreground="{StaticResource TextMutedBrush}" />
@@ -148,12 +148,12 @@
                             Background="{StaticResource BoardShadowBrush}"
                             BorderBrush="{StaticResource BoardBorderBrush}"
                             BorderThickness="2"
-                            CornerRadius="20"
-                            Padding="16"
+                            CornerRadius="22"
+                            Padding="18"
                             HorizontalAlignment="Left">
                         <Border Background="{StaticResource BoardInnerBrush}"
-                                CornerRadius="15"
-                                Padding="14">
+                                CornerRadius="16"
+                                Padding="16">
                             <UniformGrid Rows="5" Columns="5">
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
@@ -251,6 +251,10 @@
                                    FontSize="13"
                                    Foreground="{StaticResource TextMutedBrush}" />
                         <TextBlock Text="{Binding Game.AnimationIntensity, StringFormat=Animation: {0}}"
+                                   Margin="0,4,0,0"
+                                   FontSize="13"
+                                   Foreground="{StaticResource TextMutedBrush}" />
+                        <TextBlock Text="{Binding Game.IsSoundEnabled, StringFormat=Sound: {0}}"
                                    Margin="0,4,0,0"
                                    FontSize="13"
                                    Foreground="{StaticResource TextMutedBrush}" />

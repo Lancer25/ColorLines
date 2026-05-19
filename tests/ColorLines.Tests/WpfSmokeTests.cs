@@ -122,7 +122,7 @@ public sealed class WpfSmokeTests
             Assert.True(menuHeroBoard.Width >= 430);
             Assert.True(menuHeroBoard.Height >= 430);
             Assert.True(menuCommandPanel.Padding.Left >= 24);
-            Assert.True(menuStatusStrip.Children.Count >= 3);
+            Assert.True(menuStatusStrip.Children.Count >= 4);
             Assert.True(previewImages.Length >= 4);
             window.Close();
         });
