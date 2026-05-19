@@ -434,11 +434,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
                 isPathPreviewTarget);
         }
 
-        NextPieces.Clear();
-        foreach (var piece in state.NextPieces)
-        {
-            NextPieces.Add(PieceViewModel.FromPiece(piece));
-        }
+        RefreshNextPieces();
     }
 
     private void EnsureCellsInitialized()
@@ -456,6 +452,21 @@ public sealed class GameViewModel : INotifyPropertyChanged
             {
                 Cells.Add(CellViewModel.Empty(row, column));
             }
+        }
+    }
+
+    private void RefreshNextPieces()
+    {
+        if (NextPieces.Count == state.NextPieces.Count
+            && NextPieces.Select(piece => piece.Kind).SequenceEqual(state.NextPieces))
+        {
+            return;
+        }
+
+        NextPieces.Clear();
+        foreach (var piece in state.NextPieces)
+        {
+            NextPieces.Add(PieceViewModel.FromPiece(piece));
         }
     }
 

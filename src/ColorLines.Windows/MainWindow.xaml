@@ -312,6 +312,13 @@
                                    FontSize="13"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource TextMutedBrush}" />
+                        <TextBlock x:Name="MenuNoticeText"
+                                   Text="{Binding MenuNoticeText}"
+                                   Margin="0,8,0,0"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"
+                                   Foreground="{StaticResource TextMutedBrush}" />
                         <TextBlock Text="{Binding Game.SelectedThemeName, StringFormat=Theme: {0}}"
                                    Margin="0,8,0,0"
                                    FontSize="13"

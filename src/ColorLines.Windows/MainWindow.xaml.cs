@@ -20,10 +20,34 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         this.saveService = saveService;
-        var save = this.saveService.Load();
+        LocalSaveData? save = null;
+        var loadFailed = false;
+        try
+        {
+            save = this.saveService.Load();
+        }
+        catch
+        {
+            loadFailed = true;
+        }
+
         shellViewModel = new ShellViewModel(GameViewModel.CreateFromSave(save));
+        if (loadFailed)
+        {
+            shellViewModel.SetMenuNotice("Save file could not be loaded. Starting fresh.");
+        }
+
         shellViewModel.ExitRequested += (_, _) => Close();
-        shellViewModel.SaveRequested += (_, _) => SaveCurrentGame();
+        shellViewModel.SaveRequested += (_, args) =>
+        {
+            if (SaveCurrentGame())
+            {
+                args.MarkSucceeded();
+                return;
+            }
+
+            args.MarkFailed();
+        };
         DataContext = shellViewModel;
 
         if (save?.Window is not null)
@@ -39,9 +63,17 @@ public partial class MainWindow : Window
         base.OnClosing(e);
     }
 
-    private void SaveCurrentGame()
+    private bool SaveCurrentGame()
     {
-        saveService.Save(shellViewModel.Game.CreateSaveData(new WindowPlacementData(Width, Height)));
+        try
+        {
+            saveService.Save(shellViewModel.Game.CreateSaveData(new WindowPlacementData(Width, Height)));
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private void BoardCellPointerEntered(object sender, MouseEventArgs e)

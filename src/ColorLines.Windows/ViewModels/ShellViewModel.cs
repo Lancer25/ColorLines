@@ -10,6 +10,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private ShellScreen currentScreen;
     private ShellScreen settingsReturnScreen;
     private string pauseSaveStatusText;
+    private string menuNoticeText;
     private bool isReturnToMenuConfirmVisible;
     private bool isEndGameConfirmVisible;
 
@@ -20,6 +21,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         currentScreen = ShellScreen.MainMenu;
         settingsReturnScreen = ShellScreen.MainMenu;
         pauseSaveStatusText = string.Empty;
+        menuNoticeText = string.Empty;
         ContinueCommand = new RelayCommand(_ => ReturnToGame(), _ => CanContinueGame);
         NewGameCommand = new RelayCommand(_ => StartNewGame());
         OpenPauseMenuCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.PauseMenu, _ => CanOpenPauseMenu);
@@ -43,7 +45,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public event EventHandler? ExitRequested;
 
-    public event EventHandler? SaveRequested;
+    public event EventHandler<SaveRequestedEventArgs>? SaveRequested;
 
     public GameViewModel Game
     {
@@ -95,6 +97,19 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             if (pauseSaveStatusText != value)
             {
                 pauseSaveStatusText = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public string MenuNoticeText
+    {
+        get => menuNoticeText;
+        private set
+        {
+            if (menuNoticeText != value)
+            {
+                menuNoticeText = value;
                 OnPropertyChanged();
             }
         }
@@ -235,8 +250,16 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     {
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
-        SaveRequested?.Invoke(this, EventArgs.Empty);
-        PauseSaveStatusText = Language == "zh" ? "游戏已保存。" : "Game saved.";
+        var args = new SaveRequestedEventArgs();
+        SaveRequested?.Invoke(this, args);
+        PauseSaveStatusText = args.WasSuccessful
+            ? (Language == "zh" ? "游戏已保存。" : "Game saved.")
+            : (Language == "zh" ? "保存失败，请重试。" : "Save failed. Please try again.");
+    }
+
+    public void SetMenuNotice(string message)
+    {
+        MenuNoticeText = message;
     }
 
     private void SetLanguage(object? parameter)

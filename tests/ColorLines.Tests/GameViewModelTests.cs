@@ -110,6 +110,19 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SelectingOccupiedCellDoesNotRebuildUnchangedNextPieces()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+        var collectionChanges = 0;
+        viewModel.NextPieces.CollectionChanged += (_, _) => collectionChanges++;
+        var occupied = viewModel.Cells.First(cell => cell.IsOccupied);
+
+        viewModel.SelectCellCommand.Execute(occupied);
+
+        Assert.Equal(0, collectionChanges);
+    }
+
+    [Fact]
     public void SelectingOccupiedCellPlaysSelectSound()
     {
         var soundPlayer = new RecordingSoundPlayer();
@@ -729,12 +742,37 @@ public sealed class GameViewModelTests
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
         var raised = false;
-        shell.SaveRequested += (_, _) => raised = true;
+        shell.SaveRequested += (_, args) =>
+        {
+            raised = true;
+            args.MarkSucceeded();
+        };
 
         shell.SaveGameCommand.Execute(null);
 
         Assert.True(raised);
         Assert.Equal("Game saved.", shell.PauseSaveStatusText);
+    }
+
+    [Fact]
+    public void SaveGameCommandShowsFailureWhenSaveRequestFails()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+        shell.SaveRequested += (_, args) => args.MarkFailed("disk full");
+
+        shell.SaveGameCommand.Execute(null);
+
+        Assert.Equal("Save failed. Please try again.", shell.PauseSaveStatusText);
+    }
+
+    [Fact]
+    public void ShellCanExposeStartupNotice()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.SetMenuNotice("Save file could not be loaded. Starting fresh.");
+
+        Assert.Equal("Save file could not be loaded. Starting fresh.", shell.MenuNoticeText);
     }
 
     [Fact]

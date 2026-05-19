@@ -76,6 +76,35 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void MainWindowStartsFreshAndShowsNoticeWhenSaveIsCorrupt()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-corrupt-{Guid.NewGuid():N}.json");
+            File.WriteAllText(savePath, "{ bad json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+
+            window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            var menuNotice = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "MenuNoticeText");
+
+            Assert.True(shell.IsMainMenuVisible);
+            Assert.Contains("could not be loaded", shell.MenuNoticeText, StringComparison.Ordinal);
+            Assert.Equal(shell.MenuNoticeText, menuNotice.Text);
+            window.Close();
+            File.Delete(savePath);
+        });
+    }
+
+    [Fact]
     public void MainMenuShowsActionsBeforeGameplay()
     {
         RunOnWpfThread(() =>
