@@ -24,7 +24,7 @@
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 
-- [ ] **Step 1: Add failing tabletop smoke assertions**
+- [x] **Step 1: Add failing tabletop smoke assertions**
 
 In `MainMenuShowsActionsBeforeGameplay`, add these lookups after `menuSettingsButton`:
 
@@ -49,7 +49,7 @@ Assert.True(menuStatusStrip.Children.Count >= 3);
 Assert.True(previewImages.Length >= 4);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -59,7 +59,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: FAIL because `MenuHeroBoard`, `MenuCommandPanel`, `MenuStatusStrip`, and named preview cats do not exist yet.
 
-- [ ] **Step 3: Add stable names without changing layout yet**
+- [x] **Step 3: Add stable names without changing layout yet**
 
 In `MainWindow.xaml`:
 
@@ -90,7 +90,7 @@ In `MainWindow.xaml`:
 
 Remove the old standalone `Best Score` text block so best score is represented only inside `MenuStatusStrip`.
 
-- [ ] **Step 4: Run focused smoke test**
+- [x] **Step 4: Run focused smoke test**
 
 Run:
 
@@ -100,7 +100,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -115,7 +115,7 @@ git commit -m "test: protect tabletop main menu structure"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add failing hero-size assertion**
+- [x] **Step 1: Add failing hero-size assertion**
 
 In `MainMenuShowsActionsBeforeGameplay`, add:
 
@@ -123,7 +123,7 @@ In `MainMenuShowsActionsBeforeGameplay`, add:
 Assert.True(menuHeroBoard.Height >= 430);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -133,7 +133,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: FAIL if the hero board is still the old short 3x3 preview.
 
-- [ ] **Step 3: Replace preview with a 5x5 tabletop board**
+- [x] **Step 3: Replace preview with a 5x5 tabletop board**
 
 In `MainWindow.xaml`, replace the existing `MenuHeroBoard` content with:
 
@@ -224,7 +224,7 @@ In `MainWindow.xaml`, replace the existing `MenuHeroBoard` content with:
 </Border>
 ```
 
-- [ ] **Step 4: Run focused smoke test**
+- [x] **Step 4: Run focused smoke test**
 
 Run:
 
@@ -234,7 +234,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -249,7 +249,7 @@ git commit -m "feat: enlarge tabletop menu board"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add command size assertions**
+- [x] **Step 1: Add command size assertions**
 
 In `MainMenuShowsActionsBeforeGameplay`, add:
 
@@ -258,7 +258,7 @@ Assert.True(continueButton.Height >= 52);
 Assert.True(menuSettingsButton.Height >= 44);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -268,7 +268,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: FAIL because the current menu buttons are smaller.
 
-- [ ] **Step 3: Restyle command panel and buttons**
+- [x] **Step 3: Restyle command panel and buttons**
 
 In `MainWindow.xaml`, update `MenuCommandPanel`:
 
@@ -298,7 +298,7 @@ Add a small heading above `MenuStatusStrip`:
            Foreground="{StaticResource TextPrimaryBrush}" />
 ```
 
-- [ ] **Step 4: Run focused smoke test**
+- [x] **Step 4: Run focused smoke test**
 
 Run:
 
@@ -308,7 +308,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -322,7 +322,7 @@ git commit -m "feat: polish tabletop menu commands"
 **Files:**
 - Modify: `docs/superpowers/plans/2026-05-19-color-lines-tabletop-main-menu.md`
 
-- [ ] **Step 1: Run full tests**
+- [x] **Step 1: Run full tests**
 
 Run:
 
@@ -332,7 +332,7 @@ dotnet test ColorLines.sln
 
 Expected: PASS.
 
-- [ ] **Step 2: Run full build**
+- [x] **Step 2: Run full build**
 
 Run:
 
@@ -342,7 +342,7 @@ dotnet build ColorLines.sln
 
 Expected: PASS with 0 errors.
 
-- [ ] **Step 3: Launch Windows app**
+- [x] **Step 3: Launch Windows app**
 
 Run:
 
@@ -352,11 +352,11 @@ Start-Process -FilePath (Resolve-Path 'src\ColorLines.Windows\bin\Debug\net8.0-w
 
 Expected: the app launches to the redesigned tabletop main menu.
 
-- [ ] **Step 4: Mark plan complete**
+- [x] **Step 4: Mark plan complete**
 
 Replace every unchecked checkbox in this file with a checked checkbox.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add docs\superpowers\plans\2026-05-19-color-lines-tabletop-main-menu.md
