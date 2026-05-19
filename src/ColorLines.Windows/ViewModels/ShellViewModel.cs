@@ -11,6 +11,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private ShellScreen settingsReturnScreen;
     private string pauseSaveStatusText;
     private bool isReturnToMenuConfirmVisible;
+    private bool isEndGameConfirmVisible;
 
     public ShellViewModel(GameViewModel game)
     {
@@ -25,12 +26,14 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OpenSettingsCommand = new RelayCommand(_ => OpenSettings());
         CloseSettingsCommand = new RelayCommand(_ => CurrentScreen = settingsReturnScreen);
         BackToMenuCommand = new RelayCommand(_ => ReturnToMainMenu());
-        RequestBackToMenuCommand = new RelayCommand(_ => IsReturnToMenuConfirmVisible = true);
+        RequestBackToMenuCommand = new RelayCommand(_ => RequestBackToMenu());
         ConfirmBackToMenuCommand = new RelayCommand(_ => ReturnToMainMenu());
         CancelBackToMenuCommand = new RelayCommand(_ => IsReturnToMenuConfirmVisible = false);
         BackToGameCommand = new RelayCommand(_ => ReturnToGame());
         SaveGameCommand = new RelayCommand(_ => SaveGame());
-        EndGameCommand = new RelayCommand(_ => EndGame());
+        EndGameCommand = new RelayCommand(_ => RequestEndGame());
+        ConfirmEndGameCommand = new RelayCommand(_ => EndGame());
+        CancelEndGameCommand = new RelayCommand(_ => IsEndGameConfirmVisible = false);
         ExitCommand = new RelayCommand(_ => ExitRequested?.Invoke(this, EventArgs.Empty));
     }
 
@@ -109,6 +112,19 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool IsEndGameConfirmVisible
+    {
+        get => isEndGameConfirmVisible;
+        private set
+        {
+            if (isEndGameConfirmVisible != value)
+            {
+                isEndGameConfirmVisible = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public ICommand ContinueCommand { get; }
 
     public ICommand NewGameCommand { get; }
@@ -133,11 +149,16 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public ICommand EndGameCommand { get; }
 
+    public ICommand ConfirmEndGameCommand { get; }
+
+    public ICommand CancelEndGameCommand { get; }
+
     public ICommand ExitCommand { get; }
 
     private void OpenSettings()
     {
         IsReturnToMenuConfirmVisible = false;
+        IsEndGameConfirmVisible = false;
         settingsReturnScreen = CurrentScreen == ShellScreen.PauseMenu
             ? ShellScreen.PauseMenu
             : ShellScreen.MainMenu;
@@ -147,6 +168,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private void StartNewGame()
     {
         IsReturnToMenuConfirmVisible = false;
+        IsEndGameConfirmVisible = false;
         Game.NewGameCommand.Execute(null);
         OnPropertyChanged(nameof(SaveSummaryText));
         CurrentScreen = ShellScreen.Playing;
@@ -155,13 +177,27 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private void SaveGame()
     {
         IsReturnToMenuConfirmVisible = false;
+        IsEndGameConfirmVisible = false;
         SaveRequested?.Invoke(this, EventArgs.Empty);
         PauseSaveStatusText = "Game saved.";
+    }
+
+    private void RequestBackToMenu()
+    {
+        IsEndGameConfirmVisible = false;
+        IsReturnToMenuConfirmVisible = true;
+    }
+
+    private void RequestEndGame()
+    {
+        IsReturnToMenuConfirmVisible = false;
+        IsEndGameConfirmVisible = true;
     }
 
     private void EndGame()
     {
         IsReturnToMenuConfirmVisible = false;
+        IsEndGameConfirmVisible = false;
         Game.EndGameCommand.Execute(null);
         CurrentScreen = ShellScreen.Playing;
     }
@@ -169,12 +205,14 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private void ReturnToMainMenu()
     {
         IsReturnToMenuConfirmVisible = false;
+        IsEndGameConfirmVisible = false;
         CurrentScreen = ShellScreen.MainMenu;
     }
 
     private void ReturnToGame()
     {
         IsReturnToMenuConfirmVisible = false;
+        IsEndGameConfirmVisible = false;
         CurrentScreen = ShellScreen.Playing;
     }
 
