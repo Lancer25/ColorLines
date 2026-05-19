@@ -542,7 +542,7 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
-    public void ReducedAnimationKeepsTransientFeedbackSubtle()
+    public void ReducedAnimationKeepsFeedbackGlowsSubtleAndScoreDeltaVisible()
     {
         var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
             AppContext.BaseDirectory,
@@ -563,8 +563,7 @@ public sealed class WpfSmokeTests
             "ClearPulseGlow",
             "RejectFeedbackGlow",
             "SpawnFeedbackGlow",
-            "MoveFeedbackGlow",
-            "ScoreDeltaBadge"
+            "MoveFeedbackGlow"
         };
 
         foreach (var feedbackLayerName in feedbackLayerNames)
@@ -586,6 +585,47 @@ public sealed class WpfSmokeTests
 
             var opacity = double.Parse(opacitySetter.Attribute("Value")!.Value, CultureInfo.InvariantCulture);
             Assert.True(opacity <= 0.08, $"{feedbackLayerName} reduced opacity should stay subtle.");
+        }
+
+        var scoreDeltaBadge = document
+            .Descendants()
+            .Single(element => element.Attribute(x + "Name")?.Value == "ScoreDeltaBadge");
+        var reducedScoreTrigger = scoreDeltaBadge
+            .Descendants()
+            .Single(element =>
+                element.Name.LocalName == "MultiDataTrigger"
+                && HasAnimationIntensityCondition(element, "False"));
+        var reducedScoreOpacitySetter = reducedScoreTrigger
+            .Descendants()
+            .Single(element =>
+                element.Name.LocalName == "Setter"
+                && element.Attribute("Property")?.Value == "Opacity");
+        var reducedScoreOpacity = double.Parse(
+            reducedScoreOpacitySetter.Attribute("Value")!.Value,
+            CultureInfo.InvariantCulture);
+
+        Assert.InRange(reducedScoreOpacity, 0.5, 1);
+
+        var fullScoreTrigger = scoreDeltaBadge
+            .Descendants()
+            .Single(element =>
+                element.Name.LocalName == "MultiDataTrigger"
+                && HasAnimationIntensityCondition(element, "True"));
+
+        Assert.Contains(fullScoreTrigger.Descendants(), element =>
+            element.Name.LocalName == "DoubleAnimation"
+            && element.Attribute("Storyboard.TargetProperty")?.Value == "Opacity");
+
+        static bool HasAnimationIntensityCondition(XElement trigger, string value)
+        {
+            return trigger
+                .Elements()
+                .Where(element => element.Name.LocalName == "MultiDataTrigger.Conditions")
+                .Elements()
+                .Any(element =>
+                    element.Name.LocalName == "Condition"
+                    && element.Attribute("Binding")?.Value.Contains("Game.IsFullAnimation", StringComparison.Ordinal) == true
+                    && element.Attribute("Value")?.Value == value);
         }
     }
 

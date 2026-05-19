@@ -895,7 +895,7 @@
                                                         <Condition Binding="{Binding Game.ShowScoreDelta}" Value="True" />
                                                         <Condition Binding="{Binding Game.IsFullAnimation}" Value="False" />
                                                     </MultiDataTrigger.Conditions>
-                                                    <Setter Property="Opacity" Value="0" />
+                                                    <Setter Property="Opacity" Value="0.85" />
                                                 </MultiDataTrigger>
                                             </Style.Triggers>
                                         </Style>
