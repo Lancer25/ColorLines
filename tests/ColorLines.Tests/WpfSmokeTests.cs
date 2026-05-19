@@ -111,6 +111,8 @@ public sealed class WpfSmokeTests
             Assert.NotNull(menuSettingsButton.Command);
             Assert.True(continueButton.Height >= 52);
             Assert.True(menuSettingsButton.Height >= 44);
+            Assert.Equal("MenuPrimaryButton", continueButton.Tag);
+            Assert.Equal("MenuSecondaryButton", menuSettingsButton.Tag);
             Assert.True(menuHeroBoard.Width >= 430);
             Assert.True(menuHeroBoard.Height >= 430);
             Assert.True(menuCommandPanel.Padding.Left >= 24);
