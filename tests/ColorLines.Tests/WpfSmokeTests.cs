@@ -90,11 +90,24 @@ public sealed class WpfSmokeTests
                 .First(button => button.Name == "ContinueButton");
             var menuSettingsButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "MenuSettingsButton");
+            var menuHeroBoard = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "MenuHeroBoard");
+            var menuCommandPanel = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "MenuCommandPanel");
+            var menuStatusStrip = FindVisualChildren<StackPanel>(window)
+                .First(panel => panel.Name == "MenuStatusStrip");
+            var previewImages = FindVisualChildren<Image>(menuHeroBoard)
+                .Where(image => image.Name.StartsWith("MenuPreviewCat", StringComparison.Ordinal))
+                .ToArray();
 
             Assert.Equal(Visibility.Visible, mainMenuView.Visibility);
             Assert.Equal(Visibility.Collapsed, gameplayView.Visibility);
             Assert.NotNull(continueButton.Command);
             Assert.NotNull(menuSettingsButton.Command);
+            Assert.True(menuHeroBoard.Width >= 430);
+            Assert.True(menuCommandPanel.Padding.Left >= 24);
+            Assert.True(menuStatusStrip.Children.Count >= 3);
+            Assert.True(previewImages.Length >= 4);
             window.Close();
         });
     }
