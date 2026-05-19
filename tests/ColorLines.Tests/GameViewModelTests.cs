@@ -79,6 +79,18 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SelectingOccupiedCellKeepsCellInstancesStable()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+        var originalCells = viewModel.Cells.ToArray();
+        var occupied = viewModel.Cells.First(cell => cell.IsOccupied);
+
+        viewModel.SelectCellCommand.Execute(occupied);
+
+        Assert.Equal(originalCells, viewModel.Cells);
+    }
+
+    [Fact]
     public void SelectingOccupiedCellPlaysSelectSound()
     {
         var soundPlayer = new RecordingSoundPlayer();
@@ -137,6 +149,17 @@ public sealed class GameViewModelTests
         Assert.Equal(0, viewModel.Score);
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsSelected);
         Assert.Equal("Select a cat to move.", viewModel.StatusText);
+    }
+
+    [Fact]
+    public void NewGameCommandKeepsCellInstancesStable()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+        var originalCells = viewModel.Cells.ToArray();
+
+        viewModel.NewGameCommand.Execute(null);
+
+        Assert.Equal(originalCells, viewModel.Cells);
     }
 
     [Fact]
@@ -202,6 +225,23 @@ public sealed class GameViewModelTests
 
         Assert.True(viewModel.Feedback.WasMoved);
         Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 1 && cell.WasMovedTo);
+    }
+
+    [Fact]
+    public void SuccessfulMoveKeepsCellInstancesStable()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var originalCells = viewModel.Cells.ToArray();
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 1);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+
+        Assert.Equal(originalCells, viewModel.Cells);
     }
 
     [Fact]
