@@ -20,7 +20,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         currentScreen = ShellScreen.MainMenu;
         settingsReturnScreen = ShellScreen.MainMenu;
         pauseSaveStatusText = string.Empty;
-        ContinueCommand = new RelayCommand(_ => ReturnToGame());
+        ContinueCommand = new RelayCommand(_ => ReturnToGame(), _ => CanContinueGame);
         NewGameCommand = new RelayCommand(_ => StartNewGame());
         OpenPauseMenuCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.PauseMenu);
         OpenSettingsCommand = new RelayCommand(_ => OpenSettings());
@@ -98,7 +98,11 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         }
     }
 
-    public string SaveSummaryText => $"Saved run: Score {Game.Score} | Best {Game.HighScore}";
+    public string SaveSummaryText => CanContinueGame
+        ? $"Continue available: Score {Game.Score} | Best {Game.HighScore}"
+        : $"Start a new game: Score {Game.Score} | Best {Game.HighScore}";
+
+    public bool CanContinueGame => !Game.IsGameOver;
 
     public bool IsReturnToMenuConfirmVisible
     {
@@ -173,7 +177,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         Game.NewGameCommand.Execute(null);
-        OnPropertyChanged(nameof(SaveSummaryText));
+        OnContinueStateChanged();
         CurrentScreen = ShellScreen.Playing;
     }
 
@@ -202,6 +206,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         Game.EndGameCommand.Execute(null);
+        OnContinueStateChanged();
         CurrentScreen = ShellScreen.Playing;
     }
 
@@ -256,6 +261,21 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         if (e.PropertyName is nameof(GameViewModel.Score) or nameof(GameViewModel.HighScore))
         {
             OnPropertyChanged(nameof(SaveSummaryText));
+        }
+
+        if (e.PropertyName is nameof(GameViewModel.IsGameOver))
+        {
+            OnContinueStateChanged();
+        }
+    }
+
+    private void OnContinueStateChanged()
+    {
+        OnPropertyChanged(nameof(CanContinueGame));
+        OnPropertyChanged(nameof(SaveSummaryText));
+        if (ContinueCommand is RelayCommand continueCommand)
+        {
+            continueCommand.RaiseCanExecuteChanged();
         }
     }
 
