@@ -291,6 +291,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private void EndGame()
     {
+        state = state with { Status = GameStatus.GameOver };
         selectedPosition = null;
         pathPreviewPositions.Clear();
         pathPreviewTargetPosition = null;
