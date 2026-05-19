@@ -266,6 +266,12 @@ public sealed class WpfSmokeTests
                 .First(button => button.Name == "PauseSettingsButton");
             var pauseEndGameButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "PauseEndGameButton");
+            var endGameConfirmPanel = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "EndGameConfirmPanel");
+            var endGameCancelButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "EndGameCancelButton");
+            var endGameConfirmButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "EndGameConfirmButton");
             var pauseBackToMenuButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "PauseBackToMenuButton");
             var returnToMenuConfirmPanel = FindVisualChildren<Border>(window)
@@ -350,6 +356,9 @@ public sealed class WpfSmokeTests
             Assert.Same(shell.SaveGameCommand, pauseSaveButton.Command);
             Assert.Same(shell.OpenSettingsCommand, pauseSettingsButton.Command);
             Assert.Same(shell.EndGameCommand, pauseEndGameButton.Command);
+            Assert.Equal(Visibility.Collapsed, endGameConfirmPanel.Visibility);
+            Assert.Same(shell.CancelEndGameCommand, endGameCancelButton.Command);
+            Assert.Same(shell.ConfirmEndGameCommand, endGameConfirmButton.Command);
             Assert.Same(shell.RequestBackToMenuCommand, pauseBackToMenuButton.Command);
             Assert.Same(pauseBackToMenuButton, pauseMenuActionList.Children[^2]);
             Assert.Same(returnToMenuConfirmPanel, pauseMenuActionList.Children[^1]);
