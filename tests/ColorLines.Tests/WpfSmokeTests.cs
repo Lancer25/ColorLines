@@ -349,8 +349,10 @@ public sealed class WpfSmokeTests
             Assert.Same(shell.BackToGameCommand, pauseContinueButton.Command);
             Assert.Same(shell.SaveGameCommand, pauseSaveButton.Command);
             Assert.Same(shell.OpenSettingsCommand, pauseSettingsButton.Command);
-            Assert.Same(shell.NewGameCommand, pauseEndGameButton.Command);
+            Assert.Same(shell.EndGameCommand, pauseEndGameButton.Command);
             Assert.Same(shell.RequestBackToMenuCommand, pauseBackToMenuButton.Command);
+            Assert.Same(pauseBackToMenuButton, pauseMenuActionList.Children[^2]);
+            Assert.Same(returnToMenuConfirmPanel, pauseMenuActionList.Children[^1]);
             Assert.Equal(Visibility.Collapsed, returnToMenuConfirmPanel.Visibility);
             Assert.Same(shell.CancelBackToMenuCommand, returnToMenuCancelButton.Command);
             Assert.Same(shell.ConfirmBackToMenuCommand, returnToMenuConfirmButton.Command);
