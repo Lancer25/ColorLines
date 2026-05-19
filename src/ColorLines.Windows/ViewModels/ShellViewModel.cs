@@ -34,6 +34,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         EndGameCommand = new RelayCommand(_ => RequestEndGame());
         ConfirmEndGameCommand = new RelayCommand(_ => EndGame());
         CancelEndGameCommand = new RelayCommand(_ => IsEndGameConfirmVisible = false);
+        EscapeCommand = new RelayCommand(_ => HandleEscape());
         ExitCommand = new RelayCommand(_ => ExitRequested?.Invoke(this, EventArgs.Empty));
     }
 
@@ -153,6 +154,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public ICommand CancelEndGameCommand { get; }
 
+    public ICommand EscapeCommand { get; }
+
     public ICommand ExitCommand { get; }
 
     private void OpenSettings()
@@ -200,6 +203,38 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         IsEndGameConfirmVisible = false;
         Game.EndGameCommand.Execute(null);
         CurrentScreen = ShellScreen.Playing;
+    }
+
+    private void HandleEscape()
+    {
+        if (IsEndGameConfirmVisible)
+        {
+            IsEndGameConfirmVisible = false;
+            return;
+        }
+
+        if (IsReturnToMenuConfirmVisible)
+        {
+            IsReturnToMenuConfirmVisible = false;
+            return;
+        }
+
+        if (CurrentScreen == ShellScreen.Playing)
+        {
+            CurrentScreen = ShellScreen.PauseMenu;
+            return;
+        }
+
+        if (CurrentScreen == ShellScreen.PauseMenu)
+        {
+            ReturnToGame();
+            return;
+        }
+
+        if (CurrentScreen == ShellScreen.Settings)
+        {
+            CurrentScreen = settingsReturnScreen;
+        }
     }
 
     private void ReturnToMainMenu()
