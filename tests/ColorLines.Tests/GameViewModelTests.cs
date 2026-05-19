@@ -650,6 +650,22 @@ public sealed class GameViewModelTests
         Assert.Equal("继续游戏：分数 0 | 最高 0", shell.SaveSummaryText);
         Assert.Equal("选择一只猫咪移动。", shell.Game.StatusText);
         Assert.Equal("使用精简动效", shell.Game.AnimationToggleText);
+        Assert.Equal("准备开始", shell.ReadyToPlayText);
+        Assert.Equal("分数", shell.ScoreText);
+        Assert.Equal("最高：0", shell.BestText);
+        Assert.Equal("下批猫咪", shell.NextCatsText);
+        Assert.Equal("主题：温馨棋盘", shell.ThemeSummaryText);
+        Assert.Equal("动效：完整", shell.AnimationSummaryText);
+        Assert.Equal("声音：开", shell.SoundSummaryText);
+        Assert.Equal("当前：完整", shell.CurrentAnimationText);
+        Assert.Equal("启用：是", shell.SoundEnabledText);
+        Assert.Equal("当前：中文", shell.LanguageSummaryText);
+        Assert.Equal("下一局棋盘：普通", shell.DifficultySummaryText);
+        Assert.Equal("结束当前游戏？", shell.EndGameConfirmTitle);
+        Assert.Equal("继续游戏", shell.KeepPlayingText);
+        Assert.Equal("返回主菜单？", shell.ReturnToMenuConfirmTitle);
+        Assert.Equal("仍然返回", shell.ReturnAnywayText);
+        Assert.Equal("返回菜单", shell.BackToMenuText);
     }
 
     [Fact]

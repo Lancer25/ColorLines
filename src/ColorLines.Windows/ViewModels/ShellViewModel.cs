@@ -161,7 +161,82 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public string DifficultyText => IsChinese ? "难度" : "Difficulty";
 
+    public string ReadyToPlayText => IsChinese ? "准备开始" : "Ready to play";
+
+    public string MenuTaglineText => IsChinese ? "连成五只猫咪，清空棋盘，刷新最高分。" : "Match five cats. Clear the board. Chase your best score.";
+
+    public string ScoreText => IsChinese ? "分数" : "Score";
+
+    public string BestText => IsChinese ? $"最高：{Game.HighScore}" : $"Best: {Game.HighScore}";
+
+    public string BestScoreSummaryText => IsChinese ? $"最高分：{Game.HighScore}" : $"Best Score: {Game.HighScore}";
+
+    public string NextCatsText => IsChinese ? "下批猫咪" : "Next Cats";
+
+    public string ThemeSummaryText => IsChinese ? "主题：温馨棋盘" : $"Theme: {Game.SelectedThemeName}";
+
+    public string AnimationSummaryText => IsChinese ? $"动效：{DisplayAnimationIntensity}" : $"Animation: {Game.AnimationIntensity}";
+
+    public string SoundSummaryText => IsChinese ? $"声音：{DisplaySoundEnabled}" : $"Sound: {Game.IsSoundEnabled}";
+
+    public string CurrentAnimationText => IsChinese ? $"当前：{DisplayAnimationIntensity}" : $"Current: {Game.AnimationIntensity}";
+
+    public string SoundEnabledText => IsChinese ? $"启用：{DisplayYesNo}" : $"Enabled: {Game.IsSoundEnabled}";
+
+    public string LanguageSummaryText => IsChinese ? "当前：中文" : "Current: English";
+
+    public string DifficultySummaryText => IsChinese ? $"下一局棋盘：{DisplayDifficulty}" : $"Next board: {Game.Difficulty}";
+
+    public string EnglishLanguageText => "English";
+
+    public string ChineseLanguageText => IsChinese ? "中文" : "中文";
+
+    public string EasyText => IsChinese ? "简单" : "Easy";
+
+    public string NormalText => IsChinese ? "普通" : "Normal";
+
+    public string HardText => IsChinese ? "困难" : "Hard";
+
+    public string EndGameConfirmTitle => IsChinese ? "结束当前游戏？" : "End current game?";
+
+    public string EndGameConfirmBody => IsChinese
+        ? "本局会结束，并打开最终分数界面。"
+        : "This run will end and the final score screen will open.";
+
+    public string KeepPlayingText => IsChinese ? "继续游戏" : "Keep Playing";
+
+    public string ReturnToMenuConfirmTitle => IsChinese ? "返回主菜单？" : "Return to main menu?";
+
+    public string ReturnToMenuConfirmBody => IsChinese
+        ? "当前这一局未保存的进度会丢失。"
+        : "Unsaved progress in the current run will be lost.";
+
+    public string StayInGameText => IsChinese ? "留在游戏" : "Stay in Game";
+
+    public string ReturnAnywayText => IsChinese ? "仍然返回" : "Return Anyway";
+
+    public string BackToMenuText => IsChinese ? "返回菜单" : "Back to Menu";
+
     private bool IsChinese => Language == "zh";
+
+    private string DisplayAnimationIntensity => Game.AnimationIntensity == "Full"
+        ? (IsChinese ? "完整" : "Full")
+        : (IsChinese ? "精简" : "Reduced");
+
+    private string DisplaySoundEnabled => Game.IsSoundEnabled
+        ? (IsChinese ? "开" : "True")
+        : (IsChinese ? "关" : "False");
+
+    private string DisplayYesNo => Game.IsSoundEnabled
+        ? (IsChinese ? "是" : "True")
+        : (IsChinese ? "否" : "False");
+
+    private string DisplayDifficulty => Game.Difficulty switch
+    {
+        DifficultyCatalog.Easy => IsChinese ? "简单" : "Easy",
+        DifficultyCatalog.Hard => IsChinese ? "困难" : "Hard",
+        _ => IsChinese ? "普通" : "Normal"
+    };
 
     public bool CanContinueGame => !Game.IsGameOver;
 
@@ -352,6 +427,25 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         if (e.PropertyName is nameof(GameViewModel.Score) or nameof(GameViewModel.HighScore))
         {
             OnPropertyChanged(nameof(SaveSummaryText));
+            OnPropertyChanged(nameof(BestText));
+            OnPropertyChanged(nameof(BestScoreSummaryText));
+        }
+
+        if (e.PropertyName is nameof(GameViewModel.AnimationIntensity))
+        {
+            OnPropertyChanged(nameof(AnimationSummaryText));
+            OnPropertyChanged(nameof(CurrentAnimationText));
+        }
+
+        if (e.PropertyName is nameof(GameViewModel.IsSoundEnabled))
+        {
+            OnPropertyChanged(nameof(SoundSummaryText));
+            OnPropertyChanged(nameof(SoundEnabledText));
+        }
+
+        if (e.PropertyName is nameof(GameViewModel.Difficulty))
+        {
+            OnPropertyChanged(nameof(DifficultySummaryText));
         }
 
         if (e.PropertyName is nameof(GameViewModel.Language))
@@ -399,6 +493,32 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(ToggleSoundText));
         OnPropertyChanged(nameof(LanguageText));
         OnPropertyChanged(nameof(DifficultyText));
+        OnPropertyChanged(nameof(ReadyToPlayText));
+        OnPropertyChanged(nameof(MenuTaglineText));
+        OnPropertyChanged(nameof(ScoreText));
+        OnPropertyChanged(nameof(BestText));
+        OnPropertyChanged(nameof(BestScoreSummaryText));
+        OnPropertyChanged(nameof(NextCatsText));
+        OnPropertyChanged(nameof(ThemeSummaryText));
+        OnPropertyChanged(nameof(AnimationSummaryText));
+        OnPropertyChanged(nameof(SoundSummaryText));
+        OnPropertyChanged(nameof(CurrentAnimationText));
+        OnPropertyChanged(nameof(SoundEnabledText));
+        OnPropertyChanged(nameof(LanguageSummaryText));
+        OnPropertyChanged(nameof(DifficultySummaryText));
+        OnPropertyChanged(nameof(EnglishLanguageText));
+        OnPropertyChanged(nameof(ChineseLanguageText));
+        OnPropertyChanged(nameof(EasyText));
+        OnPropertyChanged(nameof(NormalText));
+        OnPropertyChanged(nameof(HardText));
+        OnPropertyChanged(nameof(EndGameConfirmTitle));
+        OnPropertyChanged(nameof(EndGameConfirmBody));
+        OnPropertyChanged(nameof(KeepPlayingText));
+        OnPropertyChanged(nameof(ReturnToMenuConfirmTitle));
+        OnPropertyChanged(nameof(ReturnToMenuConfirmBody));
+        OnPropertyChanged(nameof(StayInGameText));
+        OnPropertyChanged(nameof(ReturnAnywayText));
+        OnPropertyChanged(nameof(BackToMenuText));
     }
 
     private void OnPauseMenuStateChanged()

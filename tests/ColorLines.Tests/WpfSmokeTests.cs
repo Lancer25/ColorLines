@@ -304,6 +304,46 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void LanguageSwitchUpdatesVisibleMenuAndSettingsCopy()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-window-{Guid.NewGuid():N}.json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+            window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            shell.SetLanguageCommand.Execute("zh");
+            shell.OpenSettingsCommand.Execute(null);
+            window.UpdateLayout();
+
+            var readyText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "ReadyToPlayText");
+            var scoreLabel = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "ScoreLabelText");
+            var nextCatsLabel = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "NextCatsLabelText");
+            var settingsChineseButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsChineseButton");
+            var difficultySummary = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "DifficultySummaryText");
+
+            Assert.Equal("准备开始", readyText.Text);
+            Assert.Equal("分数", scoreLabel.Text);
+            Assert.Equal("下批猫咪", nextCatsLabel.Text);
+            Assert.Equal("中文", settingsChineseButton.Content);
+            Assert.Equal(shell.DifficultySummaryText, difficultySummary.Text);
+            window.Close();
+        });
+    }
+
+    [Fact]
     public void OccupiedCellsShowPieceBody()
     {
         RunOnWpfThread(() =>
@@ -591,6 +631,22 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void PathPreviewGlowUsesFlowingAnimation()
+    {
+        var document = LoadMainWindowXaml();
+        var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
+        var pathPreviewGlow = document.Descendants()
+            .First(element => element.Name.LocalName == "Border"
+                && element.Attribute(x + "Name")?.Value == "PathPreviewGlow");
+
+        var previewMarkup = pathPreviewGlow.ToString(SaveOptions.DisableFormatting);
+
+        Assert.Contains("PathPreviewFlowStoryboard", previewMarkup, StringComparison.Ordinal);
+        Assert.Contains("RepeatBehavior=\"Forever\"", previewMarkup, StringComparison.Ordinal);
+        Assert.Contains("AutoReverse=\"True\"", previewMarkup, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ReducedAnimationKeepsFeedbackGlowsSubtleAndScoreDeltaVisible()
     {
         var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
@@ -730,6 +786,20 @@ public sealed class WpfSmokeTests
 
     private static void AssertGlowDoesNotHoldPersistentOpacity(string glowName)
     {
+        var document = LoadMainWindowXaml();
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var glow = document
+            .Descendants()
+            .Single(element => element.Attribute(x + "Name")?.Value == glowName);
+
+        Assert.DoesNotContain(glow.Descendants(), element =>
+            element.Name.LocalName == "Setter"
+            && element.Attribute("Property")?.Value == "Opacity"
+            && element.Attribute("Value")?.Value == "1");
+    }
+
+    private static XDocument LoadMainWindowXaml()
+    {
         var mainWindowPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
             AppContext.BaseDirectory,
             "..",
@@ -740,16 +810,7 @@ public sealed class WpfSmokeTests
             "src",
             "ColorLines.Windows",
             "MainWindow.xaml"));
-        var document = XDocument.Load(mainWindowPath);
-        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
-        var glow = document
-            .Descendants()
-            .Single(element => element.Attribute(x + "Name")?.Value == glowName);
-
-        Assert.DoesNotContain(glow.Descendants(), element =>
-            element.Name.LocalName == "Setter"
-            && element.Attribute("Property")?.Value == "Opacity"
-            && element.Attribute("Value")?.Value == "1");
+        return XDocument.Load(mainWindowPath);
     }
 
     private static void EnsureThemeResources()

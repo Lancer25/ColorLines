@@ -197,7 +197,7 @@
                                FontSize="54"
                                FontWeight="Bold"
                                Foreground="{StaticResource TextPrimaryBrush}" />
-                    <TextBlock Text="Match five cats. Clear the board. Chase your best score."
+                    <TextBlock Text="{Binding MenuTaglineText}"
                                Margin="0,10,0,0"
                                FontSize="18"
                                Foreground="{StaticResource TextMutedBrush}" />
@@ -297,12 +297,13 @@
                     Padding="28"
                     MinWidth="320">
                 <StackPanel>
-                    <TextBlock Text="Ready to play"
+                    <TextBlock x:Name="ReadyToPlayText"
+                               Text="{Binding ReadyToPlayText}"
                                FontSize="24"
                                FontWeight="Bold"
                                Foreground="{StaticResource TextPrimaryBrush}" />
                     <StackPanel x:Name="MenuStatusStrip">
-                        <TextBlock Text="{Binding Game.HighScore, StringFormat=Best Score: {0}}"
+                        <TextBlock Text="{Binding BestScoreSummaryText}"
                                    FontSize="18"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource TextPrimaryBrush}" />
@@ -319,15 +320,15 @@
                                    FontWeight="SemiBold"
                                    TextWrapping="Wrap"
                                    Foreground="{StaticResource TextMutedBrush}" />
-                        <TextBlock Text="{Binding Game.SelectedThemeName, StringFormat=Theme: {0}}"
+                        <TextBlock Text="{Binding ThemeSummaryText}"
                                    Margin="0,8,0,0"
                                    FontSize="13"
                                    Foreground="{StaticResource TextMutedBrush}" />
-                        <TextBlock Text="{Binding Game.AnimationIntensity, StringFormat=Animation: {0}}"
+                        <TextBlock Text="{Binding AnimationSummaryText}"
                                    Margin="0,4,0,0"
                                    FontSize="13"
                                    Foreground="{StaticResource TextMutedBrush}" />
-                        <TextBlock Text="{Binding Game.IsSoundEnabled, StringFormat=Sound: {0}}"
+                        <TextBlock Text="{Binding SoundSummaryText}"
                                    Margin="0,4,0,0"
                                    FontSize="13"
                                    Foreground="{StaticResource TextMutedBrush}" />
@@ -428,7 +429,21 @@
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsPathPreview}" Value="True">
-                                                        <Setter Property="Opacity" Value="0.46" />
+                                                        <DataTrigger.EnterActions>
+                                                            <BeginStoryboard x:Name="PathPreviewFlowStoryboard">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                     From="0.20"
+                                                                                     To="0.56"
+                                                                                     Duration="0:0:0.42"
+                                                                                     AutoReverse="True"
+                                                                                     RepeatBehavior="Forever" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.EnterActions>
+                                                        <DataTrigger.ExitActions>
+                                                            <StopStoryboard BeginStoryboardName="PathPreviewFlowStoryboard" />
+                                                        </DataTrigger.ExitActions>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -858,7 +873,8 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel>
-                                    <TextBlock Text="Score"
+                                    <TextBlock x:Name="ScoreLabelText"
+                                               Text="{Binding ScoreText}"
                                                FontSize="13"
                                                FontWeight="SemiBold"
                                                Foreground="{StaticResource TextMutedBrush}" />
@@ -866,7 +882,7 @@
                                                FontSize="42"
                                                FontWeight="Bold"
                                                Foreground="{StaticResource TextPrimaryBrush}" />
-                                    <TextBlock Text="{Binding Game.HighScore, StringFormat=Best: {0}}"
+                                    <TextBlock Text="{Binding BestText}"
                                                FontSize="14"
                                                FontWeight="SemiBold"
                                                Foreground="{StaticResource TextMutedBrush}" />
@@ -926,7 +942,8 @@
                                 CornerRadius="10"
                                 Padding="18,16">
                             <StackPanel>
-                                <TextBlock Text="Next Cats"
+                                <TextBlock x:Name="NextCatsLabelText"
+                                           Text="{Binding NextCatsText}"
                                            FontSize="15"
                                            FontWeight="SemiBold"
                                            Foreground="{StaticResource TextMutedBrush}" />
@@ -1028,12 +1045,12 @@
                                 CornerRadius="8"
                                 Visibility="{Binding IsEndGameConfirmVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <StackPanel>
-                                <TextBlock Text="End current game?"
+                                <TextBlock Text="{Binding EndGameConfirmTitle}"
                                            FontSize="15"
                                            FontWeight="SemiBold"
                                            Foreground="{StaticResource TextPrimaryBrush}"
                                            HorizontalAlignment="Center" />
-                                <TextBlock Text="This run will end and the final score screen will open."
+                                <TextBlock Text="{Binding EndGameConfirmBody}"
                                            Margin="0,6,0,12"
                                            FontSize="12"
                                            TextWrapping="Wrap"
@@ -1047,12 +1064,12 @@
                                     </Grid.ColumnDefinitions>
                                     <Button x:Name="EndGameCancelButton"
                                             Grid.Column="0"
-                                            Content="Keep Playing"
+                                            Content="{Binding KeepPlayingText}"
                                             Command="{Binding CancelEndGameCommand}"
                                             Style="{StaticResource GameplayCompactButton}" />
                                     <Button x:Name="EndGameConfirmButton"
                                             Grid.Column="2"
-                                            Content="End Game"
+                                            Content="{Binding EndGameText}"
                                             Command="{Binding ConfirmEndGameCommand}"
                                             Style="{StaticResource GameplayCompactButton}" />
                                 </Grid>
@@ -1073,12 +1090,12 @@
                                 CornerRadius="8"
                                 Visibility="{Binding IsReturnToMenuConfirmVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <StackPanel>
-                                <TextBlock Text="Return to main menu?"
+                                <TextBlock Text="{Binding ReturnToMenuConfirmTitle}"
                                            FontSize="15"
                                            FontWeight="SemiBold"
                                            Foreground="{StaticResource TextPrimaryBrush}"
                                            HorizontalAlignment="Center" />
-                                <TextBlock Text="Unsaved progress in the current run will be lost."
+                                <TextBlock Text="{Binding ReturnToMenuConfirmBody}"
                                            Margin="0,6,0,12"
                                            FontSize="12"
                                            TextWrapping="Wrap"
@@ -1092,12 +1109,12 @@
                                     </Grid.ColumnDefinitions>
                                     <Button x:Name="ReturnToMenuCancelButton"
                                             Grid.Column="0"
-                                            Content="Stay in Game"
+                                            Content="{Binding StayInGameText}"
                                             Command="{Binding CancelBackToMenuCommand}"
                                             Style="{StaticResource GameplayCompactButton}" />
                                     <Button x:Name="ReturnToMenuConfirmButton"
                                             Grid.Column="2"
-                                            Content="Return Anyway"
+                                            Content="{Binding ReturnAnywayText}"
                                             Command="{Binding ConfirmBackToMenuCommand}"
                                             Style="{StaticResource GameplayCompactButton}" />
                                 </Grid>
@@ -1138,11 +1155,11 @@
                             MaxWidth="360"
                             HorizontalAlignment="Left">
                         <StackPanel>
-                            <TextBlock Text="{Binding Game.SelectedThemeName, StringFormat=Theme: {0}}"
+                            <TextBlock Text="{Binding ThemeSummaryText}"
                                        FontSize="17"
                                        FontWeight="SemiBold"
                                        Foreground="{StaticResource TextPrimaryBrush}" />
-                            <TextBlock Text="{Binding Game.HighScore, StringFormat=Best Score: {0}}"
+                            <TextBlock Text="{Binding BestScoreSummaryText}"
                                        Margin="0,6,0,0"
                                        FontSize="14"
                                        Foreground="{StaticResource TextMutedBrush}" />
@@ -1184,7 +1201,7 @@
                                                    FontSize="18"
                                                    FontWeight="SemiBold"
                                                    Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="{Binding Game.AnimationIntensity, StringFormat=Current: {0}}"
+                                        <TextBlock Text="{Binding CurrentAnimationText}"
                                                    Margin="0,5,0,0"
                                                    FontSize="14"
                                                    Foreground="{StaticResource TextMutedBrush}" />
@@ -1216,7 +1233,7 @@
                                                    FontSize="18"
                                                    FontWeight="SemiBold"
                                                    Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="{Binding Game.IsSoundEnabled, StringFormat=Enabled: {0}}"
+                                        <TextBlock Text="{Binding SoundEnabledText}"
                                                    Margin="0,5,0,0"
                                                    FontSize="14"
                                                    Foreground="{StaticResource TextMutedBrush}" />
@@ -1248,7 +1265,7 @@
                                                    FontSize="18"
                                                    FontWeight="SemiBold"
                                                    Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="{Binding Language, StringFormat=Current: {0}}"
+                                        <TextBlock Text="{Binding LanguageSummaryText}"
                                                    Margin="0,5,0,0"
                                                    FontSize="14"
                                                    Foreground="{StaticResource TextMutedBrush}" />
@@ -1258,13 +1275,13 @@
                                                  Columns="2"
                                                  VerticalAlignment="Center">
                                         <Button x:Name="SettingsEnglishButton"
-                                                Content="English"
+                                                Content="{Binding EnglishLanguageText}"
                                                 Command="{Binding SetLanguageCommand}"
                                                 CommandParameter="en"
                                                 Style="{StaticResource GameplayCompactButton}"
                                                 Margin="0,0,6,0" />
                                         <Button x:Name="SettingsChineseButton"
-                                                Content="中文"
+                                                Content="{Binding ChineseLanguageText}"
                                                 Command="{Binding SetLanguageCommand}"
                                                 CommandParameter="zh"
                                                 Style="{StaticResource GameplayCompactButton}"
@@ -1291,7 +1308,8 @@
                                                    FontSize="18"
                                                    FontWeight="SemiBold"
                                                    Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="{Binding Game.Difficulty, StringFormat=Next board: {0}}"
+                                        <TextBlock x:Name="DifficultySummaryText"
+                                                   Text="{Binding DifficultySummaryText}"
                                                    Margin="0,5,0,0"
                                                    FontSize="14"
                                                    Foreground="{StaticResource TextMutedBrush}" />
@@ -1301,19 +1319,19 @@
                                                  Columns="3"
                                                  VerticalAlignment="Center">
                                         <Button x:Name="SettingsEasyButton"
-                                                Content="Easy"
+                                                Content="{Binding EasyText}"
                                                 Command="{Binding Game.SetDifficultyCommand}"
                                                 CommandParameter="Easy"
                                                 Style="{StaticResource GameplayCompactButton}"
                                                 Margin="0,0,5,0" />
                                         <Button x:Name="SettingsNormalButton"
-                                                Content="Normal"
+                                                Content="{Binding NormalText}"
                                                 Command="{Binding Game.SetDifficultyCommand}"
                                                 CommandParameter="Normal"
                                                 Style="{StaticResource GameplayCompactButton}"
                                                 Margin="5,0,5,0" />
                                         <Button x:Name="SettingsHardButton"
-                                                Content="Hard"
+                                                Content="{Binding HardText}"
                                                 Command="{Binding Game.SetDifficultyCommand}"
                                                 CommandParameter="Hard"
                                                 Style="{StaticResource GameplayCompactButton}"
@@ -1405,7 +1423,7 @@
                                 Command="{Binding NewGameCommand}"
                                 Style="{StaticResource MenuPrimaryButton}" />
                         <Button x:Name="GameOverMenuButton"
-                                Content="Back to Menu"
+                                Content="{Binding BackToMenuText}"
                                 Command="{Binding BackToMenuCommand}"
                                 Style="{StaticResource GameplayCompactButton}"
                                 Margin="0,10,0,0" />
