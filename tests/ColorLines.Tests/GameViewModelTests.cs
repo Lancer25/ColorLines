@@ -722,6 +722,33 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void PauseMenuReturnToMainMenuRequiresConfirmation()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.ContinueCommand.Execute(null);
+        shell.OpenPauseMenuCommand.Execute(null);
+        shell.RequestBackToMenuCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
+        Assert.True(shell.IsPauseMenuVisible);
+        Assert.True(shell.IsReturnToMenuConfirmVisible);
+
+        shell.CancelBackToMenuCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
+        Assert.True(shell.IsPauseMenuVisible);
+        Assert.False(shell.IsReturnToMenuConfirmVisible);
+
+        shell.RequestBackToMenuCommand.Execute(null);
+        shell.ConfirmBackToMenuCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.MainMenu, shell.CurrentScreen);
+        Assert.True(shell.IsMainMenuVisible);
+        Assert.False(shell.IsReturnToMenuConfirmVisible);
+    }
+
+    [Fact]
     public void NewGameCommandResetsGameAndOpensPlayingScreen()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
