@@ -25,7 +25,7 @@
 - Modify: `src/ColorLines.Windows/Themes/CozyBoard.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add failing resource smoke test assertions**
+- [x] **Step 1: Add failing resource smoke test assertions**
 
 In `CozyBoardThemeExposesVisualUpgradeBrushes`, add:
 
@@ -37,7 +37,7 @@ Assert.True(Application.Current.Resources.Contains("MenuSecondaryButtonBrush"));
 Assert.True(Application.Current.Resources.Contains("MenuSecondaryButtonHoverBrush"));
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -47,7 +47,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter CozyBoardThe
 
 Expected: FAIL because the new menu resources do not exist yet.
 
-- [ ] **Step 3: Add menu resources**
+- [x] **Step 3: Add menu resources**
 
 In `src/ColorLines.Windows/Themes/CozyBoard.xaml`, add these colors after the current color keys:
 
@@ -76,7 +76,7 @@ Add these brushes after the current brush keys:
 <SolidColorBrush x:Key="MenuSecondaryButtonPressedBrush" Color="{StaticResource MenuSecondaryButtonPressedColor}" />
 ```
 
-- [ ] **Step 4: Run resource smoke test**
+- [x] **Step 4: Run resource smoke test**
 
 Run:
 
@@ -86,7 +86,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter CozyBoardThe
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\Themes\CozyBoard.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -101,7 +101,7 @@ git commit -m "feat: add main menu polish theme resources"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add failing button style assertions**
+- [x] **Step 1: Add failing button style assertions**
 
 In `MainMenuShowsActionsBeforeGameplay`, after the existing button height assertions, add:
 
@@ -110,7 +110,7 @@ Assert.Equal("MenuPrimaryButton", continueButton.Style.Resources["StyleKey"]);
 Assert.Equal("MenuSecondaryButton", menuSettingsButton.Style.Resources["StyleKey"]);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -120,7 +120,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: FAIL because the styles do not exist yet.
 
-- [ ] **Step 3: Add button styles**
+- [x] **Step 3: Add button styles**
 
 In `MainWindow.xaml` `Window.Resources`, after `BoardCellButton`, add:
 
@@ -222,7 +222,7 @@ for `MenuNewGameButton`, `MenuSettingsButton`, and `ExitButton`.
 
 Remove duplicated explicit button `Height`, `Background`, `Foreground`, `BorderBrush`, `BorderThickness`, `FontSize`, and `FontWeight` attributes from those four buttons.
 
-- [ ] **Step 4: Run focused smoke test**
+- [x] **Step 4: Run focused smoke test**
 
 Run:
 
@@ -232,7 +232,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -247,7 +247,7 @@ git commit -m "feat: add game menu button styles"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add failing backdrop and hero assertions**
+- [x] **Step 1: Add failing backdrop and hero assertions**
 
 In `MainMenuShowsActionsBeforeGameplay`, add these lookups:
 
@@ -265,7 +265,7 @@ Assert.Equal(Visibility.Visible, menuBackdrop.Visibility);
 Assert.True(menuHeroArea.Margin.Left >= 24);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -275,7 +275,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: FAIL because `MenuBackdrop` and `MenuHeroArea` do not exist yet.
 
-- [ ] **Step 3: Add backdrop and hero area**
+- [x] **Step 3: Add backdrop and hero area**
 
 In `MainWindow.xaml`, inside `MainMenuView`, add this as the first child before `Grid.ColumnDefinitions`:
 
@@ -301,7 +301,7 @@ Wrap the existing left-side title and board `StackPanel` in a `Grid x:Name="Menu
 
 Remove `Grid.Column`, `VerticalAlignment`, and old margin from the inner `StackPanel` so the new `MenuHeroArea` owns positioning.
 
-- [ ] **Step 4: Run focused smoke test**
+- [x] **Step 4: Run focused smoke test**
 
 Run:
 
@@ -311,7 +311,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -326,7 +326,7 @@ git commit -m "feat: add tabletop main menu backdrop"
 - Modify: `src/ColorLines.Windows/MainWindow.xaml`
 - Modify: `tests/ColorLines.Tests/WpfSmokeTests.cs`
 
-- [ ] **Step 1: Add status strip sound assertion**
+- [x] **Step 1: Add status strip sound assertion**
 
 In `MainMenuShowsActionsBeforeGameplay`, update:
 
@@ -340,7 +340,7 @@ to:
 Assert.True(menuStatusStrip.Children.Count >= 4);
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 
@@ -350,7 +350,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: FAIL because the status strip only has best score, theme, and animation.
 
-- [ ] **Step 3: Add sound state and polish board frame**
+- [x] **Step 3: Add sound state and polish board frame**
 
 In `MenuStatusStrip`, add:
 
@@ -374,7 +374,7 @@ Update inner board border:
 
 Update menu title subtitle text from `"Cute cats. Classic lines. One cozy board."` to `"Match five cats. Clear the board. Chase your best score."`
 
-- [ ] **Step 4: Run focused smoke test**
+- [x] **Step 4: Run focused smoke test**
 
 Run:
 
@@ -384,7 +384,7 @@ dotnet test tests\ColorLines.Tests\ColorLines.Tests.csproj --filter MainMenuShow
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add src\ColorLines.Windows\MainWindow.xaml tests\ColorLines.Tests\WpfSmokeTests.cs
@@ -398,7 +398,7 @@ git commit -m "feat: polish menu hero board and status"
 **Files:**
 - Modify: `docs/superpowers/plans/2026-05-19-color-lines-main-menu-polish.md`
 
-- [ ] **Step 1: Run full tests**
+- [x] **Step 1: Run full tests**
 
 Run:
 
@@ -408,7 +408,7 @@ dotnet test ColorLines.sln
 
 Expected: PASS.
 
-- [ ] **Step 2: Run full build**
+- [x] **Step 2: Run full build**
 
 Run:
 
@@ -418,7 +418,7 @@ dotnet build ColorLines.sln
 
 Expected: PASS with 0 errors.
 
-- [ ] **Step 3: Launch Windows app**
+- [x] **Step 3: Launch Windows app**
 
 Run:
 
@@ -428,11 +428,11 @@ Start-Process -FilePath (Resolve-Path 'src\ColorLines.Windows\bin\Debug\net8.0-w
 
 Expected: the app launches to the polished tabletop title screen.
 
-- [ ] **Step 4: Mark plan complete**
+- [x] **Step 4: Mark plan complete**
 
 Replace every unchecked checkbox in this file with a checked checkbox.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add docs\superpowers\plans\2026-05-19-color-lines-main-menu-polish.md
