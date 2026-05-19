@@ -822,6 +822,19 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void EndGameCommandPersistsGameOverStatus()
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        viewModel.EndGameCommand.Execute(null);
+        var save = viewModel.CreateSaveData(new WindowPlacementData(1024, 768));
+        var restored = GameViewModel.CreateFromSave(save);
+
+        Assert.Equal(GameStatus.GameOver, save.Game!.Status);
+        Assert.True(restored.IsGameOver);
+    }
+
+    [Fact]
     public void EscapeCommandNavigatesPauseFlowSafely()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
