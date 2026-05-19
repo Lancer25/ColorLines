@@ -749,7 +749,7 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
-    public void EndGameCommandEndsCurrentRunAndShowsGameOver()
+    public void EndGameRequiresConfirmationBeforeEndingRun()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
 
@@ -757,10 +757,27 @@ public sealed class GameViewModelTests
         shell.OpenPauseMenuCommand.Execute(null);
         shell.EndGameCommand.Execute(null);
 
+        Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
+        Assert.True(shell.IsPauseMenuVisible);
+        Assert.True(shell.IsEndGameConfirmVisible);
+        Assert.False(shell.IsReturnToMenuConfirmVisible);
+        Assert.False(shell.Game.IsGameOver);
+
+        shell.CancelEndGameCommand.Execute(null);
+
+        Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
+        Assert.True(shell.IsPauseMenuVisible);
+        Assert.False(shell.IsEndGameConfirmVisible);
+        Assert.False(shell.Game.IsGameOver);
+
+        shell.EndGameCommand.Execute(null);
+        shell.ConfirmEndGameCommand.Execute(null);
+
         Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
         Assert.True(shell.IsPlayingVisible);
         Assert.True(shell.Game.IsGameOver);
         Assert.Equal("Game over. Start a new game?", shell.Game.StatusText);
+        Assert.False(shell.IsEndGameConfirmVisible);
         Assert.False(shell.IsReturnToMenuConfirmVisible);
     }
 
