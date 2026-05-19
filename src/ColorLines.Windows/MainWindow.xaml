@@ -85,6 +85,13 @@
             </Setter>
         </Style>
 
+        <Style x:Key="GameplayCompactButton" TargetType="Button" BasedOn="{StaticResource MenuSecondaryButton}">
+            <Setter Property="MinHeight" Value="38" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Tag" Value="MenuSecondaryButton" />
+        </Style>
+
         <Style x:Key="BoardCellButton" TargetType="Button">
             <Setter Property="Margin" Value="5" />
             <Setter Property="Padding" Value="0" />

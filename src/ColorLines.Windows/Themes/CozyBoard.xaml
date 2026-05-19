@@ -22,6 +22,9 @@
     <Color x:Key="MenuSecondaryButtonColor">#FFFFF2D6</Color>
     <Color x:Key="MenuSecondaryButtonHoverColor">#FFFFE4B8</Color>
     <Color x:Key="MenuSecondaryButtonPressedColor">#FFE9C88F</Color>
+    <Color x:Key="GameplayHudColor">#FFFFFCF4</Color>
+    <Color x:Key="GameplayHudAccentColor">#FFFFE4B8</Color>
+    <Color x:Key="GameplayHudMutedColor">#FFF5DDB7</Color>
 
     <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
     <SolidColorBrush x:Key="PanelBackgroundBrush" Color="{StaticResource PanelBackgroundColor}" />
@@ -54,4 +57,7 @@
     <SolidColorBrush x:Key="MenuSecondaryButtonBrush" Color="{StaticResource MenuSecondaryButtonColor}" />
     <SolidColorBrush x:Key="MenuSecondaryButtonHoverBrush" Color="{StaticResource MenuSecondaryButtonHoverColor}" />
     <SolidColorBrush x:Key="MenuSecondaryButtonPressedBrush" Color="{StaticResource MenuSecondaryButtonPressedColor}" />
+    <SolidColorBrush x:Key="GameplayHudBrush" Color="{StaticResource GameplayHudColor}" />
+    <SolidColorBrush x:Key="GameplayHudAccentBrush" Color="{StaticResource GameplayHudAccentColor}" />
+    <SolidColorBrush x:Key="GameplayHudMutedBrush" Color="{StaticResource GameplayHudMutedColor}" />
 </ResourceDictionary>
