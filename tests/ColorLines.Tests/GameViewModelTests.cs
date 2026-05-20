@@ -725,6 +725,8 @@ public sealed class GameViewModelTests
         Assert.Equal("zh", shell.Language);
         Assert.Equal("继续游戏：分数 0 | 最高 0", shell.SaveSummaryText);
         Assert.Equal("选择一只猫咪移动。", shell.Game.StatusText);
+        Assert.Equal("开始新游戏？", shell.NewGameConfirmTitle);
+        Assert.Equal("仍然开始", shell.StartAnywayText);
         Assert.Equal("使用精简动效", shell.Game.AnimationToggleText);
         Assert.Equal("准备开始", shell.ReadyToPlayText);
         Assert.Equal("分数", shell.ScoreText);
@@ -1141,6 +1143,25 @@ public sealed class GameViewModelTests
         Assert.Same(originalGame, shell.Game);
         Assert.Equal(0, shell.Game.Score);
         Assert.DoesNotContain(shell.Game.Cells, cell => cell.IsSelected);
+    }
+
+    [Fact]
+    public void NewGameFromMenuWithScoreRequiresConfirmation()
+    {
+        var state = new GameState(GameBoard.CreateEmpty(), Array.Empty<PieceKind>(), 12, GameStatus.Playing);
+        var shell = new ShellViewModel(new GameViewModel(new GameEngine(new SequenceRandomSource()), state));
+
+        shell.NewGameCommand.Execute(null);
+
+        Assert.True(shell.IsNewGameConfirmVisible);
+        Assert.Equal(ShellScreen.MainMenu, shell.CurrentScreen);
+        Assert.Equal(12, shell.Game.Score);
+
+        shell.ConfirmNewGameCommand.Execute(null);
+
+        Assert.False(shell.IsNewGameConfirmVisible);
+        Assert.Equal(ShellScreen.Playing, shell.CurrentScreen);
+        Assert.Equal(0, shell.Game.Score);
     }
 
     private sealed class SequenceRandomSource : IRandomSource

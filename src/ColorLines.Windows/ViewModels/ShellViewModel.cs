@@ -12,6 +12,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private string pauseSaveStatusText;
     private string menuNoticeText;
     private SaveStatus lastSaveStatus;
+    private bool isNewGameConfirmVisible;
     private bool isReturnToMenuConfirmVisible;
     private bool isEndGameConfirmVisible;
 
@@ -25,7 +26,9 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         menuNoticeText = string.Empty;
         lastSaveStatus = SaveStatus.None;
         ContinueCommand = new RelayCommand(_ => ReturnToGame(), _ => CanContinueGame);
-        NewGameCommand = new RelayCommand(_ => StartNewGame());
+        NewGameCommand = new RelayCommand(_ => RequestNewGame());
+        ConfirmNewGameCommand = new RelayCommand(_ => StartNewGame());
+        CancelNewGameCommand = new RelayCommand(_ => IsNewGameConfirmVisible = false);
         OpenPauseMenuCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.PauseMenu, _ => CanOpenPauseMenu);
         OpenSettingsCommand = new RelayCommand(_ => OpenSettings());
         CloseSettingsCommand = new RelayCommand(_ => CurrentScreen = settingsReturnScreen);
@@ -91,6 +94,19 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public bool IsSettingsVisible => CurrentScreen == ShellScreen.Settings;
 
+    public bool IsNewGameConfirmVisible
+    {
+        get => isNewGameConfirmVisible;
+        private set
+        {
+            if (isNewGameConfirmVisible != value)
+            {
+                isNewGameConfirmVisible = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public string PauseSaveStatusText
     {
         get => pauseSaveStatusText;
@@ -130,6 +146,14 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     public string ContinueText => IsChinese ? "继续游戏" : "Continue";
 
     public string NewGameText => IsChinese ? "新游戏" : "New Game";
+
+    public string NewGameConfirmTitle => IsChinese ? "开始新游戏？" : "Start a new game?";
+
+    public string NewGameConfirmBody => IsChinese
+        ? "当前得分进度会被新的棋盘替换。"
+        : "The current scored run will be replaced by a fresh board.";
+
+    public string StartAnywayText => IsChinese ? "仍然开始" : "Start Anyway";
 
     public string SettingsText => IsChinese ? "设置" : "Settings";
 
@@ -324,6 +348,10 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public ICommand NewGameCommand { get; }
 
+    public ICommand ConfirmNewGameCommand { get; }
+
+    public ICommand CancelNewGameCommand { get; }
+
     public ICommand OpenPauseMenuCommand { get; }
 
     public ICommand OpenSettingsCommand { get; }
@@ -354,8 +382,22 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public ICommand ExitCommand { get; }
 
+    private void RequestNewGame()
+    {
+        IsReturnToMenuConfirmVisible = false;
+        IsEndGameConfirmVisible = false;
+        if (CurrentScreen == ShellScreen.MainMenu && Game.Score > 0 && !Game.IsGameOver)
+        {
+            IsNewGameConfirmVisible = true;
+            return;
+        }
+
+        StartNewGame();
+    }
+
     private void OpenSettings()
     {
+        IsNewGameConfirmVisible = false;
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         settingsReturnScreen = CurrentScreen == ShellScreen.PauseMenu
@@ -366,6 +408,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     private void StartNewGame()
     {
+        IsNewGameConfirmVisible = false;
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         ClearSaveStatus();
@@ -376,6 +419,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     private void SaveGame()
     {
+        IsNewGameConfirmVisible = false;
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         var args = new SaveRequestedEventArgs();
@@ -400,18 +444,21 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     private void RequestBackToMenu()
     {
+        IsNewGameConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         IsReturnToMenuConfirmVisible = true;
     }
 
     private void RequestEndGame()
     {
+        IsNewGameConfirmVisible = false;
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = true;
     }
 
     private void EndGame()
     {
+        IsNewGameConfirmVisible = false;
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         ClearSaveStatus();
@@ -425,6 +472,12 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         if (IsEndGameConfirmVisible)
         {
             IsEndGameConfirmVisible = false;
+            return;
+        }
+
+        if (IsNewGameConfirmVisible)
+        {
+            IsNewGameConfirmVisible = false;
             return;
         }
 
@@ -454,6 +507,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     private void ReturnToMainMenu()
     {
+        IsNewGameConfirmVisible = false;
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         if (!Game.IsGameOver)
@@ -468,6 +522,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     private void ReturnToGame()
     {
+        IsNewGameConfirmVisible = false;
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
         CurrentScreen = ShellScreen.Playing;
@@ -543,6 +598,9 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     {
         OnPropertyChanged(nameof(ContinueText));
         OnPropertyChanged(nameof(NewGameText));
+        OnPropertyChanged(nameof(NewGameConfirmTitle));
+        OnPropertyChanged(nameof(NewGameConfirmBody));
+        OnPropertyChanged(nameof(StartAnywayText));
         OnPropertyChanged(nameof(SettingsText));
         OnPropertyChanged(nameof(ExitText));
         OnPropertyChanged(nameof(MenuText));

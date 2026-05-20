@@ -160,6 +160,12 @@ public sealed class WpfSmokeTests
                 .FirstOrDefault(button => button.Name == "MenuNewGameButton");
             var menuSettingsButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "MenuSettingsButton");
+            var menuNewGameConfirmPanel = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "MenuNewGameConfirmPanel");
+            var menuNewGameConfirmButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "MenuNewGameConfirmButton");
+            var menuNewGameCancelButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "MenuNewGameCancelButton");
             var menuHeroBoard = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "MenuHeroBoard");
             var menuCommandPanel = FindVisualChildren<Border>(window)
@@ -207,6 +213,9 @@ public sealed class WpfSmokeTests
             Assert.Equal("MenuSecondaryButton", menuNewGameButton.Tag);
             Assert.Equal("MenuSecondaryButton", menuSettingsButton.Tag);
             Assert.Same(shell.NewGameCommand, menuNewGameButton.Command);
+            Assert.Equal(Visibility.Collapsed, menuNewGameConfirmPanel.Visibility);
+            Assert.Same(shell.ConfirmNewGameCommand, menuNewGameConfirmButton.Command);
+            Assert.Same(shell.CancelNewGameCommand, menuNewGameCancelButton.Command);
             Assert.True(menuHeroBoard.Width >= 430);
             Assert.True(menuHeroBoard.Height >= 430);
             Assert.True(menuCommandPanel.Padding.Left >= 24);
