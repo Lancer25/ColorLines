@@ -170,6 +170,26 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void DisabledPathHintsHideReachableTargetsAndPreviewPath()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+
+        viewModel.TogglePathHintsCommand.Execute(null);
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.PreviewPathCommand.Execute(target);
+
+        Assert.False(viewModel.IsPathHintsEnabled);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsReachableTarget);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreview);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreviewTarget);
+    }
+
+    [Fact]
     public void NewGameCommandResetsScoreAndSelection()
     {
         var viewModel = GameViewModel.CreateForNewGame();
@@ -610,7 +630,8 @@ public sealed class GameViewModelTests
         var save = new LocalSaveData(1, 99, false, "Reduced", "CozyBoard", null, new WindowPlacementData(800, 600))
         {
             Difficulty = "Hard",
-            Language = "zh"
+            Language = "zh",
+            IsPathHintsEnabled = false
         };
 
         var viewModel = GameViewModel.CreateFromSave(save);
@@ -620,6 +641,7 @@ public sealed class GameViewModelTests
         Assert.Equal("Reduced", viewModel.AnimationIntensity);
         Assert.Equal("Hard", viewModel.Difficulty);
         Assert.Equal(11, viewModel.BoardSize);
+        Assert.False(viewModel.IsPathHintsEnabled);
         Assert.False(viewModel.IsFullAnimation);
     }
 
@@ -636,6 +658,7 @@ public sealed class GameViewModelTests
         Assert.Equal("Normal", save.Difficulty);
         Assert.Equal("en", save.Language);
         Assert.Equal("CozyBoard", save.ThemeId);
+        Assert.True(save.IsPathHintsEnabled);
         Assert.NotNull(save.Game);
     }
 
@@ -658,8 +681,13 @@ public sealed class GameViewModelTests
         Assert.Equal("动效：完整", shell.AnimationSummaryText);
         Assert.Equal("声音：开", shell.SoundSummaryText);
         Assert.Equal("关闭声音", shell.ToggleSoundText);
+        Assert.Equal("路径提示", shell.PathHintsText);
+        Assert.Equal("状态：开", shell.PathHintsStatusText);
+        Assert.Equal("关闭提示", shell.TogglePathHintsText);
         shell.Game.ToggleSoundCommand.Execute(null);
         Assert.Equal("开启声音", shell.ToggleSoundText);
+        shell.Game.TogglePathHintsCommand.Execute(null);
+        Assert.Equal("开启提示", shell.TogglePathHintsText);
         Assert.Equal("当前：完整", shell.CurrentAnimationText);
         Assert.Equal("启用：否", shell.SoundEnabledText);
         Assert.Equal("当前：中文", shell.LanguageSummaryText);

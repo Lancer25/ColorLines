@@ -24,6 +24,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private string statusText;
     private TurnFeedback feedback;
     private bool isSoundEnabled;
+    private bool isPathHintsEnabled;
     private string animationIntensity;
     private string difficulty;
     private HashSet<BoardPosition> movedPositions;
@@ -45,6 +46,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         statusText = this.text.SelectCatToMove;
         feedback = TurnFeedback.Neutral;
         isSoundEnabled = true;
+        isPathHintsEnabled = true;
         animationIntensity = "Full";
         this.difficulty = DifficultyCatalog.Normalize(difficulty);
         movedPositions = new HashSet<BoardPosition>();
@@ -59,6 +61,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         NewGameCommand = new RelayCommand(_ => NewGame());
         EndGameCommand = new RelayCommand(_ => EndGame());
         ToggleSoundCommand = new RelayCommand(_ => IsSoundEnabled = !IsSoundEnabled);
+        TogglePathHintsCommand = new RelayCommand(_ => TogglePathHints());
         ToggleAnimationCommand = new RelayCommand(_ => ToggleAnimation());
         SetDifficultyCommand = new RelayCommand(SetDifficulty);
         SetLanguageCommand = new RelayCommand(SetLanguage);
@@ -80,6 +83,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public ICommand EndGameCommand { get; }
 
     public ICommand ToggleSoundCommand { get; }
+
+    public ICommand TogglePathHintsCommand { get; }
 
     public ICommand ToggleAnimationCommand { get; }
 
@@ -184,6 +189,19 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool IsPathHintsEnabled
+    {
+        get => isPathHintsEnabled;
+        private set
+        {
+            if (isPathHintsEnabled != value)
+            {
+                isPathHintsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public string AnimationIntensity
     {
         get => animationIntensity;
@@ -238,6 +256,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
         {
             viewModel.isSoundEnabled = save.IsSoundEnabled;
             viewModel.animationIntensity = save.AnimationIntensity;
+            viewModel.isPathHintsEnabled = save.IsPathHintsEnabled;
+            viewModel.RefreshFromState();
         }
 
         return viewModel;
@@ -255,7 +275,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
             window)
         {
             Difficulty = Difficulty,
-            Language = Language
+            Language = Language,
+            IsPathHintsEnabled = IsPathHintsEnabled
         };
     }
 
@@ -405,6 +426,18 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
     }
 
+    private void TogglePathHints()
+    {
+        IsPathHintsEnabled = !IsPathHintsEnabled;
+        if (!IsPathHintsEnabled)
+        {
+            pathPreviewPositions.Clear();
+            pathPreviewTargetPosition = null;
+        }
+
+        RefreshFromState();
+    }
+
     private void RefreshFromState()
     {
         EnsureCellsInitialized();
@@ -472,7 +505,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private void PreviewPath(object? parameter)
     {
-        if (selectedPosition is null || parameter is not CellViewModel cell || cell.IsOccupied)
+        if (!IsPathHintsEnabled || selectedPosition is null || parameter is not CellViewModel cell || cell.IsOccupied)
         {
             ClearPreviewPath();
             return;
@@ -499,7 +532,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private void ClearPreviewPath()
     {
-        if (pathPreviewPositions.Count == 0)
+        if (pathPreviewPositions.Count == 0 && pathPreviewTargetPosition is null)
         {
             return;
         }
@@ -522,7 +555,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private HashSet<BoardPosition> GetReachableTargets()
     {
-        if (selectedPosition is null)
+        if (!IsPathHintsEnabled || selectedPosition is null)
         {
             return new HashSet<BoardPosition>();
         }

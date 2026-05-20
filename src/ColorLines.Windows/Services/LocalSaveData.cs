@@ -16,4 +16,6 @@ public sealed record LocalSaveData(
     public string Difficulty { get; init; } = "Normal";
 
     public string Language { get; init; } = "en";
+
+    public bool IsPathHintsEnabled { get; init; } = true;
 }

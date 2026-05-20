@@ -144,6 +144,20 @@
             <Setter Property="Tag" Value="MenuSecondaryButton" />
         </Style>
 
+        <Style x:Key="SettingsTabControl" TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style x:Key="SettingsTabItem" TargetType="TabItem">
+            <Setter Property="Padding" Value="18,8" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+        </Style>
+
         <Style x:Key="BoardCellButton" TargetType="Button">
             <Setter Property="Margin" Value="3" />
             <Setter Property="Padding" Value="0" />
@@ -1183,195 +1197,244 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel x:Name="SettingsOptionList">
-                            <Border x:Name="AnimationSettingRow"
-                                    MinHeight="84"
-                                    Background="{StaticResource SettingsRowBrush}"
-                                    BorderBrush="{StaticResource PanelBorderBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="10"
-                                    Padding="18,14">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="160" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding AnimationText}"
-                                                   FontSize="18"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="{Binding CurrentAnimationText}"
-                                                   Margin="0,5,0,0"
-                                                   FontSize="14"
-                                                   Foreground="{StaticResource TextMutedBrush}" />
-                                    </StackPanel>
-                                    <Button x:Name="SettingsToggleAnimationButton"
-                                            Grid.Column="1"
-                                            Content="{Binding Game.AnimationToggleText}"
-                                            Command="{Binding Game.ToggleAnimationCommand}"
-                                            Style="{StaticResource GameplayCompactButton}"
-                                            VerticalAlignment="Center" />
-                                </Grid>
-                            </Border>
+                        <TabControl x:Name="SettingsTabs"
+                                    Style="{StaticResource SettingsTabControl}">
+                            <TabItem x:Name="GameplaySettingsTab"
+                                     Header="{Binding GameplayTabText}"
+                                     Style="{StaticResource SettingsTabItem}">
+                                <StackPanel Margin="0,14,0,0">
+                                    <Border x:Name="DifficultySettingRow"
+                                            MinHeight="84"
+                                            Background="{StaticResource SettingsRowBrush}"
+                                            BorderBrush="{StaticResource PanelBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Padding="18,14">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="240" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding DifficultyText}"
+                                                           FontSize="18"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                <TextBlock x:Name="DifficultySummaryText"
+                                                           Text="{Binding DifficultySummaryText}"
+                                                           Margin="0,5,0,0"
+                                                           FontSize="14"
+                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                            </StackPanel>
+                                            <UniformGrid Grid.Column="1"
+                                                         Rows="1"
+                                                         Columns="3"
+                                                         VerticalAlignment="Center">
+                                                <Button x:Name="SettingsEasyButton"
+                                                        Content="{Binding EasyText}"
+                                                        Command="{Binding Game.SetDifficultyCommand}"
+                                                        CommandParameter="Easy"
+                                                        Style="{StaticResource GameplayCompactButton}"
+                                                        Margin="0,0,5,0" />
+                                                <Button x:Name="SettingsNormalButton"
+                                                        Content="{Binding NormalText}"
+                                                        Command="{Binding Game.SetDifficultyCommand}"
+                                                        CommandParameter="Normal"
+                                                        Style="{StaticResource GameplayCompactButton}"
+                                                        Margin="5,0,5,0" />
+                                                <Button x:Name="SettingsHardButton"
+                                                        Content="{Binding HardText}"
+                                                        Command="{Binding Game.SetDifficultyCommand}"
+                                                        CommandParameter="Hard"
+                                                        Style="{StaticResource GameplayCompactButton}"
+                                                        Margin="5,0,0,0" />
+                                            </UniformGrid>
+                                        </Grid>
+                                    </Border>
 
-                            <Border x:Name="SoundSettingRow"
-                                    MinHeight="84"
-                                    Margin="0,12,0,0"
-                                    Background="{StaticResource SettingsRowBrush}"
-                                    BorderBrush="{StaticResource PanelBorderBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="10"
-                                    Padding="18,14">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="160" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding SoundText}"
-                                                   FontSize="18"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="{Binding SoundEnabledText}"
-                                                   Margin="0,5,0,0"
-                                                   FontSize="14"
-                                                   Foreground="{StaticResource TextMutedBrush}" />
-                                    </StackPanel>
-                                    <Button x:Name="SettingsToggleSoundButton"
-                                            Grid.Column="1"
-                                            Content="{Binding ToggleSoundText}"
-                                            Command="{Binding Game.ToggleSoundCommand}"
-                                            Style="{StaticResource GameplayCompactButton}"
-                                            VerticalAlignment="Center" />
-                                </Grid>
-                            </Border>
+                                    <Border x:Name="PathHintsSettingRow"
+                                            MinHeight="84"
+                                            Margin="0,12,0,0"
+                                            Background="{StaticResource SettingsRowBrush}"
+                                            BorderBrush="{StaticResource PanelBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Padding="18,14">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="160" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding PathHintsText}"
+                                                           FontSize="18"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                <TextBlock Text="{Binding PathHintsStatusText}"
+                                                           Margin="0,5,0,0"
+                                                           FontSize="14"
+                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                            </StackPanel>
+                                            <Button x:Name="SettingsTogglePathHintsButton"
+                                                    Grid.Column="1"
+                                                    Content="{Binding TogglePathHintsText}"
+                                                    Command="{Binding Game.TogglePathHintsCommand}"
+                                                    Style="{StaticResource GameplayCompactButton}"
+                                                    VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </TabItem>
 
-                            <Border x:Name="ThemeSettingRow"
-                                    MinHeight="84"
-                                    Margin="0,12,0,0"
-                                    Background="{StaticResource SettingsRowBrush}"
-                                    BorderBrush="{StaticResource PanelBorderBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="10"
-                                    Padding="18,14">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="160" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding ThemeText}"
-                                                   FontSize="18"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="{Binding ThemeCurrentText}"
-                                                   Margin="0,5,0,0"
-                                                   FontSize="14"
-                                                   Foreground="{StaticResource TextMutedBrush}" />
-                                    </StackPanel>
-                                    <Button x:Name="SettingsThemeButton"
-                                            Grid.Column="1"
-                                            Content="{Binding ThemeOptionText}"
-                                            IsEnabled="False"
-                                            Style="{StaticResource GameplayCompactButton}"
-                                            VerticalAlignment="Center" />
-                                </Grid>
-                            </Border>
+                            <TabItem x:Name="AudioSettingsTab"
+                                     Header="{Binding AudioTabText}"
+                                     Style="{StaticResource SettingsTabItem}">
+                                <StackPanel Margin="0,14,0,0">
+                                    <Border x:Name="SoundSettingRow"
+                                            MinHeight="84"
+                                            Background="{StaticResource SettingsRowBrush}"
+                                            BorderBrush="{StaticResource PanelBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Padding="18,14">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="160" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding SoundText}"
+                                                           FontSize="18"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                <TextBlock Text="{Binding SoundEnabledText}"
+                                                           Margin="0,5,0,0"
+                                                           FontSize="14"
+                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                            </StackPanel>
+                                            <Button x:Name="SettingsToggleSoundButton"
+                                                    Grid.Column="1"
+                                                    Content="{Binding ToggleSoundText}"
+                                                    Command="{Binding Game.ToggleSoundCommand}"
+                                                    Style="{StaticResource GameplayCompactButton}"
+                                                    VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </TabItem>
 
-                            <Border x:Name="LanguageSettingRow"
-                                    MinHeight="84"
-                                    Margin="0,12,0,0"
-                                    Background="{StaticResource SettingsRowBrush}"
-                                    BorderBrush="{StaticResource PanelBorderBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="10"
-                                    Padding="18,14">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="220" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding LanguageText}"
-                                                   FontSize="18"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock Text="{Binding LanguageSummaryText}"
-                                                   Margin="0,5,0,0"
-                                                   FontSize="14"
-                                                   Foreground="{StaticResource TextMutedBrush}" />
-                                    </StackPanel>
-                                    <UniformGrid Grid.Column="1"
-                                                 Rows="1"
-                                                 Columns="2"
-                                                 VerticalAlignment="Center">
-                                        <Button x:Name="SettingsEnglishButton"
-                                                Content="{Binding EnglishLanguageText}"
-                                                Command="{Binding SetLanguageCommand}"
-                                                CommandParameter="en"
-                                                Style="{StaticResource GameplayCompactButton}"
-                                                Margin="0,0,6,0" />
-                                        <Button x:Name="SettingsChineseButton"
-                                                Content="{Binding ChineseLanguageText}"
-                                                Command="{Binding SetLanguageCommand}"
-                                                CommandParameter="zh"
-                                                Style="{StaticResource GameplayCompactButton}"
-                                                Margin="6,0,0,0" />
-                                    </UniformGrid>
-                                </Grid>
-                            </Border>
+                            <TabItem x:Name="DisplaySettingsTab"
+                                     Header="{Binding DisplayTabText}"
+                                     Style="{StaticResource SettingsTabItem}">
+                                <StackPanel Margin="0,14,0,0">
+                                    <Border x:Name="AnimationSettingRow"
+                                            MinHeight="84"
+                                            Background="{StaticResource SettingsRowBrush}"
+                                            BorderBrush="{StaticResource PanelBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Padding="18,14">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="160" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding AnimationText}"
+                                                           FontSize="18"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                <TextBlock Text="{Binding CurrentAnimationText}"
+                                                           Margin="0,5,0,0"
+                                                           FontSize="14"
+                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                            </StackPanel>
+                                            <Button x:Name="SettingsToggleAnimationButton"
+                                                    Grid.Column="1"
+                                                    Content="{Binding Game.AnimationToggleText}"
+                                                    Command="{Binding Game.ToggleAnimationCommand}"
+                                                    Style="{StaticResource GameplayCompactButton}"
+                                                    VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
 
-                            <Border x:Name="DifficultySettingRow"
-                                    MinHeight="84"
-                                    Margin="0,12,0,0"
-                                    Background="{StaticResource SettingsRowBrush}"
-                                    BorderBrush="{StaticResource PanelBorderBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="10"
-                                    Padding="18,14">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="240" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding DifficultyText}"
-                                                   FontSize="18"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="{StaticResource TextPrimaryBrush}" />
-                                        <TextBlock x:Name="DifficultySummaryText"
-                                                   Text="{Binding DifficultySummaryText}"
-                                                   Margin="0,5,0,0"
-                                                   FontSize="14"
-                                                   Foreground="{StaticResource TextMutedBrush}" />
-                                    </StackPanel>
-                                    <UniformGrid Grid.Column="1"
-                                                 Rows="1"
-                                                 Columns="3"
-                                                 VerticalAlignment="Center">
-                                        <Button x:Name="SettingsEasyButton"
-                                                Content="{Binding EasyText}"
-                                                Command="{Binding Game.SetDifficultyCommand}"
-                                                CommandParameter="Easy"
-                                                Style="{StaticResource GameplayCompactButton}"
-                                                Margin="0,0,5,0" />
-                                        <Button x:Name="SettingsNormalButton"
-                                                Content="{Binding NormalText}"
-                                                Command="{Binding Game.SetDifficultyCommand}"
-                                                CommandParameter="Normal"
-                                                Style="{StaticResource GameplayCompactButton}"
-                                                Margin="5,0,5,0" />
-                                        <Button x:Name="SettingsHardButton"
-                                                Content="{Binding HardText}"
-                                                Command="{Binding Game.SetDifficultyCommand}"
-                                                CommandParameter="Hard"
-                                                Style="{StaticResource GameplayCompactButton}"
-                                                Margin="5,0,0,0" />
-                                    </UniformGrid>
-                                </Grid>
-                            </Border>
-                        </StackPanel>
+                                    <Border x:Name="ThemeSettingRow"
+                                            MinHeight="84"
+                                            Margin="0,12,0,0"
+                                            Background="{StaticResource SettingsRowBrush}"
+                                            BorderBrush="{StaticResource PanelBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Padding="18,14">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="160" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding ThemeText}"
+                                                           FontSize="18"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                <TextBlock Text="{Binding ThemeCurrentText}"
+                                                           Margin="0,5,0,0"
+                                                           FontSize="14"
+                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                            </StackPanel>
+                                            <Button x:Name="SettingsThemeButton"
+                                                    Grid.Column="1"
+                                                    Content="{Binding ThemeOptionText}"
+                                                    IsEnabled="False"
+                                                    Style="{StaticResource GameplayCompactButton}"
+                                                    VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+
+                                    <Border x:Name="LanguageSettingRow"
+                                            MinHeight="84"
+                                            Margin="0,12,0,0"
+                                            Background="{StaticResource SettingsRowBrush}"
+                                            BorderBrush="{StaticResource PanelBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Padding="18,14">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="220" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding LanguageText}"
+                                                           FontSize="18"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                <TextBlock Text="{Binding LanguageSummaryText}"
+                                                           Margin="0,5,0,0"
+                                                           FontSize="14"
+                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                            </StackPanel>
+                                            <UniformGrid Grid.Column="1"
+                                                         Rows="1"
+                                                         Columns="2"
+                                                         VerticalAlignment="Center">
+                                                <Button x:Name="SettingsEnglishButton"
+                                                        Content="{Binding EnglishLanguageText}"
+                                                        Command="{Binding SetLanguageCommand}"
+                                                        CommandParameter="en"
+                                                        Style="{StaticResource GameplayCompactButton}"
+                                                        Margin="0,0,6,0" />
+                                                <Button x:Name="SettingsChineseButton"
+                                                        Content="{Binding ChineseLanguageText}"
+                                                        Command="{Binding SetLanguageCommand}"
+                                                        CommandParameter="zh"
+                                                        Style="{StaticResource GameplayCompactButton}"
+                                                        Margin="6,0,0,0" />
+                                            </UniformGrid>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </TabItem>
+                        </TabControl>
 
                         <StackPanel x:Name="SettingsActionBar"
                                     Grid.Row="2">

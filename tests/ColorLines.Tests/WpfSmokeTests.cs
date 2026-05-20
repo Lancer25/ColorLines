@@ -248,59 +248,87 @@ public sealed class WpfSmokeTests
                 .First(panel => panel.Name == "SettingsHeader");
             var settingsContentPanel = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "SettingsContentPanel");
-            var settingsOptionList = FindVisualChildren<StackPanel>(window)
-                .First(panel => panel.Name == "SettingsOptionList");
-            var animationSettingRow = FindVisualChildren<Border>(window)
-                .First(border => border.Name == "AnimationSettingRow");
-            var soundSettingRow = FindVisualChildren<Border>(window)
-                .First(border => border.Name == "SoundSettingRow");
-            var languageSettingRow = FindVisualChildren<Border>(window)
-                .First(border => border.Name == "LanguageSettingRow");
-            var difficultySettingRow = FindVisualChildren<Border>(window)
-                .First(border => border.Name == "DifficultySettingRow");
+            var settingsTabs = FindVisualChildren<TabControl>(window)
+                .First(tabControl => tabControl.Name == "SettingsTabs");
+            var gameplaySettingsTab = FindVisualChildren<TabItem>(window)
+                .First(tab => tab.Name == "GameplaySettingsTab");
+            var audioSettingsTab = FindVisualChildren<TabItem>(window)
+                .First(tab => tab.Name == "AudioSettingsTab");
+            var displaySettingsTab = FindVisualChildren<TabItem>(window)
+                .First(tab => tab.Name == "DisplaySettingsTab");
             var settingsActionBar = FindVisualChildren<StackPanel>(window)
                 .First(panel => panel.Name == "SettingsActionBar");
             var gameplaySettingsPanel = FindVisualChildren<Border>(window)
                 .FirstOrDefault(border => border.Name == "SettingsPanel");
-            var settingsToggleAnimationButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsToggleAnimationButton");
-            var settingsToggleSoundButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsToggleSoundButton");
-            var themeSettingRow = FindVisualChildren<Border>(window)
-                .First(border => border.Name == "ThemeSettingRow");
-            var settingsThemeButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsThemeButton");
-            var settingsChineseButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsChineseButton");
-            var settingsHardButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsHardButton");
             var backToMenuButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsBackToMenuButton");
             var settingsNewGameButton = FindVisualChildren<Button>(window)
                 .FirstOrDefault(button => button.Name == "SettingsNewGameButton");
+
+            settingsTabs.SelectedItem = gameplaySettingsTab;
+            window.UpdateLayout();
+
+            var difficultySettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "DifficultySettingRow");
+            var settingsHardButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsHardButton");
+            var pathHintsSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "PathHintsSettingRow");
+            var settingsTogglePathHintsButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsTogglePathHintsButton");
+
+            settingsTabs.SelectedItem = audioSettingsTab;
+            window.UpdateLayout();
+
+            var soundSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "SoundSettingRow");
+            var settingsToggleSoundButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsToggleSoundButton");
+
+            settingsTabs.SelectedItem = displaySettingsTab;
+            window.UpdateLayout();
+
+            var animationSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "AnimationSettingRow");
+            var settingsToggleAnimationButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsToggleAnimationButton");
+            var themeSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "ThemeSettingRow");
+            var settingsThemeButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsThemeButton");
+            var languageSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "LanguageSettingRow");
+            var settingsChineseButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsChineseButton");
 
             Assert.Equal(Visibility.Visible, settingsView.Visibility);
             Assert.Equal(Visibility.Visible, settingsShell.Visibility);
             Assert.True(settingsShell.ColumnDefinitions[1].Width.IsStar);
             Assert.True(settingsHeader.Children.Count >= 2);
             Assert.True(settingsContentPanel.Padding.Left >= 24);
-            Assert.True(settingsOptionList.Children.Count >= 2);
+            Assert.Equal(3, settingsTabs.Items.Count);
+            Assert.NotNull(gameplaySettingsTab.Header);
+            Assert.NotNull(audioSettingsTab.Header);
+            Assert.NotNull(displaySettingsTab.Header);
             Assert.True(animationSettingRow.MinHeight >= 82);
             Assert.True(soundSettingRow.MinHeight >= 82);
             Assert.True(themeSettingRow.MinHeight >= 82);
             Assert.True(languageSettingRow.MinHeight >= 82);
             Assert.True(difficultySettingRow.MinHeight >= 82);
+            Assert.True(pathHintsSettingRow.MinHeight >= 82);
             Assert.Single(settingsActionBar.Children);
             Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsThemeButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsHardButton.Tag);
+            Assert.Equal("MenuSecondaryButton", settingsTogglePathHintsButton.Tag);
             Assert.Equal("MenuSecondaryButton", backToMenuButton.Tag);
             Assert.Null(gameplaySettingsPanel);
             Assert.Null(settingsNewGameButton);
             Assert.Same(shell.Game.ToggleAnimationCommand, settingsToggleAnimationButton.Command);
             Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
+            Assert.Same(shell.Game.TogglePathHintsCommand, settingsTogglePathHintsButton.Command);
             Assert.Null(settingsThemeButton.Command);
             Assert.Same(shell.SetLanguageCommand, settingsChineseButton.Command);
             Assert.Same(shell.Game.SetDifficultyCommand, settingsHardButton.Command);
@@ -335,14 +363,30 @@ public sealed class WpfSmokeTests
                 .First(textBlock => textBlock.Name == "ScoreLabelText");
             var nextCatsLabel = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "NextCatsLabelText");
-            var settingsChineseButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsChineseButton");
-            var settingsToggleSoundButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsToggleSoundButton");
-            var settingsThemeButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsThemeButton");
+            var settingsTabs = FindVisualChildren<TabControl>(window)
+                .First(tabControl => tabControl.Name == "SettingsTabs");
+
+            settingsTabs.SelectedItem = FindVisualChildren<TabItem>(window)
+                .First(tab => tab.Name == "GameplaySettingsTab");
+            window.UpdateLayout();
+
             var difficultySummary = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "DifficultySummaryText");
+
+            settingsTabs.SelectedItem = FindVisualChildren<TabItem>(window)
+                .First(tab => tab.Name == "AudioSettingsTab");
+            window.UpdateLayout();
+
+            var settingsToggleSoundButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsToggleSoundButton");
+
+            settingsTabs.SelectedItem = FindVisualChildren<TabItem>(window)
+                .First(tab => tab.Name == "DisplaySettingsTab");
+            window.UpdateLayout();
+            var settingsChineseButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsChineseButton");
+            var settingsThemeButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsThemeButton");
 
             Assert.Equal("准备开始", readyText.Text);
             Assert.Equal("分数", scoreLabel.Text);

@@ -159,6 +159,20 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         ? (IsChinese ? "关闭声音" : "Turn Sound Off")
         : (IsChinese ? "开启声音" : "Turn Sound On");
 
+    public string GameplayTabText => IsChinese ? "玩法" : "Gameplay";
+
+    public string AudioTabText => IsChinese ? "音频" : "Audio";
+
+    public string DisplayTabText => IsChinese ? "显示" : "Display";
+
+    public string PathHintsText => IsChinese ? "路径提示" : "Path Hints";
+
+    public string PathHintsStatusText => IsChinese ? $"状态：{DisplayPathHintsEnabled}" : $"Status: {Game.IsPathHintsEnabled}";
+
+    public string TogglePathHintsText => Game.IsPathHintsEnabled
+        ? (IsChinese ? "关闭提示" : "Turn Hints Off")
+        : (IsChinese ? "开启提示" : "Turn Hints On");
+
     public string LanguageText => IsChinese ? "语言" : "Language";
 
     public string DifficultyText => IsChinese ? "难度" : "Difficulty";
@@ -232,6 +246,10 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         : (IsChinese ? "精简" : "Reduced");
 
     private string DisplaySoundEnabled => Game.IsSoundEnabled
+        ? (IsChinese ? "开" : "True")
+        : (IsChinese ? "关" : "False");
+
+    private string DisplayPathHintsEnabled => Game.IsPathHintsEnabled
         ? (IsChinese ? "开" : "True")
         : (IsChinese ? "关" : "False");
 
@@ -452,6 +470,12 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(ToggleSoundText));
         }
 
+        if (e.PropertyName is nameof(GameViewModel.IsPathHintsEnabled))
+        {
+            OnPropertyChanged(nameof(PathHintsStatusText));
+            OnPropertyChanged(nameof(TogglePathHintsText));
+        }
+
         if (e.PropertyName is nameof(GameViewModel.Difficulty))
         {
             OnPropertyChanged(nameof(DifficultySummaryText));
@@ -500,6 +524,12 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(AnimationText));
         OnPropertyChanged(nameof(SoundText));
         OnPropertyChanged(nameof(ToggleSoundText));
+        OnPropertyChanged(nameof(GameplayTabText));
+        OnPropertyChanged(nameof(AudioTabText));
+        OnPropertyChanged(nameof(DisplayTabText));
+        OnPropertyChanged(nameof(PathHintsText));
+        OnPropertyChanged(nameof(PathHintsStatusText));
+        OnPropertyChanged(nameof(TogglePathHintsText));
         OnPropertyChanged(nameof(LanguageText));
         OnPropertyChanged(nameof(DifficultyText));
         OnPropertyChanged(nameof(ThemeText));
