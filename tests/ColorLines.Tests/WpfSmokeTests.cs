@@ -340,6 +340,9 @@ public sealed class WpfSmokeTests
             Assert.Equal("SettingsTabItem", gameplaySettingsTab.Tag);
             Assert.Equal("SettingsTabItem", audioSettingsTab.Tag);
             Assert.Equal("SettingsTabItem", displaySettingsTab.Tag);
+            Assert.Equal(132, gameplaySettingsTab.Width);
+            Assert.Equal(gameplaySettingsTab.Width, audioSettingsTab.Width);
+            Assert.Equal(gameplaySettingsTab.Width, displaySettingsTab.Width);
             Assert.True(gameplaySettingsTab.MinHeight >= 40);
             Assert.True(animationSettingRow.MinHeight >= 82);
             Assert.True(soundSettingRow.MinHeight >= 82);

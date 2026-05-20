@@ -152,6 +152,7 @@
 
         <Style x:Key="SettingsTabItem" TargetType="TabItem">
             <Setter Property="Tag" Value="SettingsTabItem" />
+            <Setter Property="Width" Value="132" />
             <Setter Property="MinHeight" Value="40" />
             <Setter Property="Padding" Value="18,8" />
             <Setter Property="Margin" Value="0,0,8,0" />
