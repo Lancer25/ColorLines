@@ -368,6 +368,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     {
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
+        ClearSaveStatus();
         Game.NewGameCommand.Execute(null);
         OnContinueStateChanged();
         CurrentScreen = ShellScreen.Playing;
@@ -413,6 +414,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     {
         IsReturnToMenuConfirmVisible = false;
         IsEndGameConfirmVisible = false;
+        ClearSaveStatus();
         Game.EndGameCommand.Execute(null);
         OnContinueStateChanged();
         CurrentScreen = ShellScreen.Playing;
@@ -456,6 +458,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         IsEndGameConfirmVisible = false;
         if (!Game.IsGameOver)
         {
+            ClearSaveStatus();
             Game.EndGameCommand.Execute(null);
             OnContinueStateChanged();
         }
@@ -629,6 +632,12 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             SaveStatus.Failure => Language == "zh" ? "保存失败，请重试。" : "Save failed. Please try again.",
             _ => string.Empty
         };
+    }
+
+    private void ClearSaveStatus()
+    {
+        lastSaveStatus = SaveStatus.None;
+        RefreshPauseSaveStatusText();
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

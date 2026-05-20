@@ -896,6 +896,18 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void NewGameClearsPreviousSaveStatus()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+        shell.SaveRequested += (_, args) => args.MarkSucceeded();
+
+        shell.SaveGameCommand.Execute(null);
+        shell.NewGameCommand.Execute(null);
+
+        Assert.Equal(string.Empty, shell.PauseSaveStatusText);
+    }
+
+    [Fact]
     public void ShellCanExposeStartupNotice()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
