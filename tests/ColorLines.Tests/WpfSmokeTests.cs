@@ -277,7 +277,7 @@ public sealed class WpfSmokeTests
             var backToMenuButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsBackToMenuButton");
             var settingsNewGameButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsNewGameButton");
+                .FirstOrDefault(button => button.Name == "SettingsNewGameButton");
 
             Assert.Equal(Visibility.Visible, settingsView.Visibility);
             Assert.Equal(Visibility.Visible, settingsShell.Visibility);
@@ -290,21 +290,20 @@ public sealed class WpfSmokeTests
             Assert.True(themeSettingRow.MinHeight >= 82);
             Assert.True(languageSettingRow.MinHeight >= 82);
             Assert.True(difficultySettingRow.MinHeight >= 82);
-            Assert.True(settingsActionBar.Children.Count >= 2);
+            Assert.Single(settingsActionBar.Children);
             Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsThemeButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsHardButton.Tag);
-            Assert.Equal("MenuPrimaryButton", settingsNewGameButton.Tag);
             Assert.Equal("MenuSecondaryButton", backToMenuButton.Tag);
             Assert.Null(gameplaySettingsPanel);
+            Assert.Null(settingsNewGameButton);
             Assert.Same(shell.Game.ToggleAnimationCommand, settingsToggleAnimationButton.Command);
             Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
             Assert.Null(settingsThemeButton.Command);
             Assert.Same(shell.SetLanguageCommand, settingsChineseButton.Command);
             Assert.Same(shell.Game.SetDifficultyCommand, settingsHardButton.Command);
-            Assert.Same(shell.NewGameCommand, settingsNewGameButton.Command);
             Assert.Same(shell.CloseSettingsCommand, backToMenuButton.Command);
             window.Close();
         });

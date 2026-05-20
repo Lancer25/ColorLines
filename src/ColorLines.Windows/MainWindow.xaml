@@ -1375,15 +1375,11 @@
 
                         <StackPanel x:Name="SettingsActionBar"
                                     Grid.Row="2">
-                            <Button x:Name="SettingsNewGameButton"
-                                    Content="{Binding NewGameText}"
-                                    Command="{Binding NewGameCommand}"
-                                    Style="{StaticResource MenuPrimaryButton}" />
                             <Button x:Name="SettingsBackToMenuButton"
                                     Content="{Binding BackText}"
                                     Command="{Binding CloseSettingsCommand}"
                                     Style="{StaticResource GameplayCompactButton}"
-                                    Margin="0,10,0,0" />
+                                    Margin="0" />
                         </StackPanel>
                     </Grid>
                 </Border>
