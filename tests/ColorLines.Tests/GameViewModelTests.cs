@@ -683,6 +683,27 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void LanguageAndDifficultyExposeSelectedButtonTags()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        Assert.Equal("SettingsSelectedButton", shell.EnglishLanguageButtonTag);
+        Assert.Equal("MenuSecondaryButton", shell.ChineseLanguageButtonTag);
+        Assert.Equal("MenuSecondaryButton", shell.EasyDifficultyButtonTag);
+        Assert.Equal("SettingsSelectedButton", shell.NormalDifficultyButtonTag);
+        Assert.Equal("MenuSecondaryButton", shell.HardDifficultyButtonTag);
+
+        shell.SetLanguageCommand.Execute("zh");
+        shell.Game.SetDifficultyCommand.Execute("Hard");
+
+        Assert.Equal("MenuSecondaryButton", shell.EnglishLanguageButtonTag);
+        Assert.Equal("SettingsSelectedButton", shell.ChineseLanguageButtonTag);
+        Assert.Equal("MenuSecondaryButton", shell.EasyDifficultyButtonTag);
+        Assert.Equal("MenuSecondaryButton", shell.NormalDifficultyButtonTag);
+        Assert.Equal("SettingsSelectedButton", shell.HardDifficultyButtonTag);
+    }
+
+    [Fact]
     public void LanguageSwitchUpdatesShellAndGameText()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());

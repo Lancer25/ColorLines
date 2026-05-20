@@ -221,11 +221,21 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public string ChineseLanguageText => IsChinese ? "中文" : "中文";
 
+    public string EnglishLanguageButtonTag => Language == "en" ? "SettingsSelectedButton" : "MenuSecondaryButton";
+
+    public string ChineseLanguageButtonTag => Language == "zh" ? "SettingsSelectedButton" : "MenuSecondaryButton";
+
     public string EasyText => IsChinese ? "简单" : "Easy";
 
     public string NormalText => IsChinese ? "普通" : "Normal";
 
     public string HardText => IsChinese ? "困难" : "Hard";
+
+    public string EasyDifficultyButtonTag => Game.Difficulty == DifficultyCatalog.Easy ? "SettingsSelectedButton" : "MenuSecondaryButton";
+
+    public string NormalDifficultyButtonTag => Game.Difficulty == DifficultyCatalog.Normal ? "SettingsSelectedButton" : "MenuSecondaryButton";
+
+    public string HardDifficultyButtonTag => Game.Difficulty == DifficultyCatalog.Hard ? "SettingsSelectedButton" : "MenuSecondaryButton";
 
     public string EndGameConfirmTitle => IsChinese ? "结束当前游戏？" : "End current game?";
 
@@ -497,6 +507,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         if (e.PropertyName is nameof(GameViewModel.Difficulty))
         {
             OnPropertyChanged(nameof(DifficultySummaryText));
+            OnDifficultySelectionChanged();
         }
 
         if (e.PropertyName is nameof(GameViewModel.Language))
@@ -504,6 +515,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(Language));
             OnPropertyChanged(nameof(SaveSummaryText));
             OnLocalizedTextChanged();
+            OnLanguageSelectionChanged();
         }
 
         if (e.PropertyName is nameof(GameViewModel.IsGameOver))
@@ -571,9 +583,11 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(DifficultySummaryText));
         OnPropertyChanged(nameof(EnglishLanguageText));
         OnPropertyChanged(nameof(ChineseLanguageText));
+        OnLanguageSelectionChanged();
         OnPropertyChanged(nameof(EasyText));
         OnPropertyChanged(nameof(NormalText));
         OnPropertyChanged(nameof(HardText));
+        OnDifficultySelectionChanged();
         OnPropertyChanged(nameof(EndGameConfirmTitle));
         OnPropertyChanged(nameof(EndGameConfirmBody));
         OnPropertyChanged(nameof(KeepPlayingText));
@@ -582,6 +596,19 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(StayInGameText));
         OnPropertyChanged(nameof(ReturnAnywayText));
         OnPropertyChanged(nameof(BackToMenuText));
+    }
+
+    private void OnLanguageSelectionChanged()
+    {
+        OnPropertyChanged(nameof(EnglishLanguageButtonTag));
+        OnPropertyChanged(nameof(ChineseLanguageButtonTag));
+    }
+
+    private void OnDifficultySelectionChanged()
+    {
+        OnPropertyChanged(nameof(EasyDifficultyButtonTag));
+        OnPropertyChanged(nameof(NormalDifficultyButtonTag));
+        OnPropertyChanged(nameof(HardDifficultyButtonTag));
     }
 
     private void OnPauseMenuStateChanged()

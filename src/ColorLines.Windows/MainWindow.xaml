@@ -86,12 +86,17 @@
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Opacity" Value="0.55" />
-                    <Setter Property="Cursor" Value="Arrow" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.55" />
+                                <Setter Property="Cursor" Value="Arrow" />
+                            </Trigger>
+                            <Trigger Property="Tag" Value="SettingsSelectedButton">
+                                <Setter Property="Background" Value="{StaticResource MenuPrimaryButtonBrush}" />
+                                <Setter Property="Foreground" Value="#FFFFFB" />
+                                <Setter Property="BorderBrush" Value="{StaticResource MenuPrimaryButtonHoverBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
 
         <Style x:Key="MenuSecondaryButton" TargetType="Button">
             <Setter Property="Tag" Value="MenuSecondaryButton" />
@@ -1269,18 +1274,21 @@
                                                         Content="{Binding EasyText}"
                                                         Command="{Binding Game.SetDifficultyCommand}"
                                                         CommandParameter="Easy"
+                                                        Tag="{Binding EasyDifficultyButtonTag}"
                                                         Style="{StaticResource GameplayCompactButton}"
                                                         Margin="0,0,5,0" />
                                                 <Button x:Name="SettingsNormalButton"
                                                         Content="{Binding NormalText}"
                                                         Command="{Binding Game.SetDifficultyCommand}"
                                                         CommandParameter="Normal"
+                                                        Tag="{Binding NormalDifficultyButtonTag}"
                                                         Style="{StaticResource GameplayCompactButton}"
                                                         Margin="5,0,5,0" />
                                                 <Button x:Name="SettingsHardButton"
                                                         Content="{Binding HardText}"
                                                         Command="{Binding Game.SetDifficultyCommand}"
                                                         CommandParameter="Hard"
+                                                        Tag="{Binding HardDifficultyButtonTag}"
                                                         Style="{StaticResource GameplayCompactButton}"
                                                         Margin="5,0,0,0" />
                                             </UniformGrid>
@@ -1488,12 +1496,14 @@
                                                         Content="{Binding EnglishLanguageText}"
                                                         Command="{Binding SetLanguageCommand}"
                                                         CommandParameter="en"
+                                                        Tag="{Binding EnglishLanguageButtonTag}"
                                                         Style="{StaticResource GameplayCompactButton}"
                                                         Margin="0,0,6,0" />
                                                 <Button x:Name="SettingsChineseButton"
                                                         Content="{Binding ChineseLanguageText}"
                                                         Command="{Binding SetLanguageCommand}"
                                                         CommandParameter="zh"
+                                                        Tag="{Binding ChineseLanguageButtonTag}"
                                                         Style="{StaticResource GameplayCompactButton}"
                                                         Margin="6,0,0,0" />
                                             </UniformGrid>

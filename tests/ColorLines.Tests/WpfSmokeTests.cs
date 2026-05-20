@@ -293,6 +293,8 @@ public sealed class WpfSmokeTests
 
             var difficultySettingRow = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "DifficultySettingRow");
+            var settingsNormalButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsNormalButton");
             var settingsHardButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsHardButton");
             var pathHintsSettingRow = FindVisualChildren<Border>(window)
@@ -327,6 +329,8 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "LanguageSettingRow");
             var settingsChineseButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsChineseButton");
+            var settingsEnglishButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsEnglishButton");
 
             Assert.Equal(Visibility.Visible, settingsView.Visibility);
             Assert.Equal(Visibility.Visible, settingsShell.Visibility);
@@ -355,7 +359,9 @@ public sealed class WpfSmokeTests
             Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsThemeButton.Tag);
+            Assert.Equal("SettingsSelectedButton", settingsEnglishButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
+            Assert.Equal("SettingsSelectedButton", settingsNormalButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsHardButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsTogglePathHintsButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleAutoSaveButton.Tag);
@@ -368,6 +374,7 @@ public sealed class WpfSmokeTests
             Assert.Same(shell.Game.ToggleAutoSaveCommand, settingsToggleAutoSaveButton.Command);
             Assert.Null(settingsThemeButton.Command);
             Assert.Same(shell.SetLanguageCommand, settingsChineseButton.Command);
+            Assert.Same(shell.SetLanguageCommand, settingsEnglishButton.Command);
             Assert.Same(shell.Game.SetDifficultyCommand, settingsHardButton.Command);
             Assert.Same(shell.CloseSettingsCommand, backToMenuButton.Command);
             window.Close();
