@@ -193,6 +193,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public string ThemeOptionText => IsChinese ? "温馨棋盘" : Game.SelectedThemeName;
 
+    public string ThemeUnavailableText => IsChinese ? "更多主题稍后加入。" : "More themes will be added later.";
+
     public string ReadyToPlayText => IsChinese ? "准备开始" : "Ready to play";
 
     public string MenuTaglineText => IsChinese ? "连成五只猫咪，清空棋盘，刷新最高分。" : "Match five cats. Clear the board. Chase your best score.";
@@ -566,6 +568,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(ThemeText));
         OnPropertyChanged(nameof(ThemeCurrentText));
         OnPropertyChanged(nameof(ThemeOptionText));
+        OnPropertyChanged(nameof(ThemeUnavailableText));
         OnPropertyChanged(nameof(ReadyToPlayText));
         OnPropertyChanged(nameof(MenuTaglineText));
         OnPropertyChanged(nameof(ScoreText));

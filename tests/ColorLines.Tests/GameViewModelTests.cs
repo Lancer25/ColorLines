@@ -685,6 +685,7 @@ public sealed class GameViewModelTests
         Assert.Equal("Auto Save", shell.AutoSaveText);
         Assert.Equal("Status: True", shell.AutoSaveStatusText);
         Assert.Equal("Turn Auto Save Off", shell.ToggleAutoSaveText);
+        Assert.Equal("More themes will be added later.", shell.ThemeUnavailableText);
 
         shell.Game.ToggleAutoSaveCommand.Execute(null);
 
@@ -730,6 +731,7 @@ public sealed class GameViewModelTests
         Assert.Equal("最高：0", shell.BestText);
         Assert.Equal("下批猫咪", shell.NextCatsText);
         Assert.Equal("主题：温馨棋盘", shell.ThemeSummaryText);
+        Assert.Equal("更多主题稍后加入。", shell.ThemeUnavailableText);
         Assert.Equal("动效：完整", shell.AnimationSummaryText);
         Assert.Equal("声音：开", shell.SoundSummaryText);
         Assert.Equal("关闭声音", shell.ToggleSoundText);

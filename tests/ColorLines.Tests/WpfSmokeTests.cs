@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -195,6 +196,9 @@ public sealed class WpfSmokeTests
             Assert.True(continueButton.Height >= 52);
             Assert.True(menuNewGameButton.Height >= 44);
             Assert.True(menuSettingsButton.Height >= 44);
+            Assert.Equal(shell.ContinueText, AutomationProperties.GetName(continueButton));
+            Assert.Equal(shell.NewGameText, AutomationProperties.GetName(menuNewGameButton));
+            Assert.Equal(shell.SettingsText, AutomationProperties.GetName(menuSettingsButton));
             Assert.Equal(TextWrapping.Wrap, menuSaveSummary.TextWrapping);
             Assert.Equal(TextTrimming.CharacterEllipsis, menuSaveSummary.TextTrimming);
             Assert.Equal(TextTrimming.CharacterEllipsis, menuNoticeText.TextTrimming);
@@ -366,7 +370,7 @@ public sealed class WpfSmokeTests
             Assert.Equal("MenuSecondaryButton", settingsThemeButton.Tag);
             Assert.False(settingsThemeButton.IsEnabled);
             Assert.True(ToolTipService.GetShowOnDisabled(settingsThemeButton));
-            Assert.NotNull(settingsThemeButton.ToolTip);
+            Assert.Equal(shell.ThemeUnavailableText, settingsThemeButton.ToolTip);
             Assert.Equal("SettingsSelectedButton", settingsEnglishButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
             Assert.Equal("SettingsSelectedButton", settingsNormalButton.Tag);
@@ -752,6 +756,21 @@ public sealed class WpfSmokeTests
         Assert.Contains("PathPreviewFlowStoryboard", previewMarkup, StringComparison.Ordinal);
         Assert.Contains("RepeatBehavior=\"Forever\"", previewMarkup, StringComparison.Ordinal);
         Assert.Contains("AutoReverse=\"True\"", previewMarkup, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void SettingsTabsExposeKeyboardFocusVisualState()
+    {
+        var document = LoadMainWindowXaml();
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var settingsTabStyle = document.Descendants()
+            .First(element => element.Name.LocalName == "Style"
+                && element.Attribute(x + "Key")?.Value == "SettingsTabItem");
+
+        var styleMarkup = settingsTabStyle.ToString(SaveOptions.DisableFormatting);
+
+        Assert.Contains("IsKeyboardFocusWithin", styleMarkup, StringComparison.Ordinal);
+        Assert.Contains("MenuPrimaryButtonHoverBrush", styleMarkup, StringComparison.Ordinal);
     }
 
     [Fact]

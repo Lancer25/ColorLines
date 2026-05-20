@@ -192,6 +192,10 @@
                                 <Setter TargetName="TabFrame" Property="BorderBrush" Value="{StaticResource MenuPrimaryButtonHoverBrush}" />
                                 <Setter Property="Foreground" Value="#FFFFFB" />
                             </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="TabFrame" Property="BorderBrush" Value="{StaticResource MenuPrimaryButtonHoverBrush}" />
+                                <Setter TargetName="TabFrame" Property="BorderThickness" Value="2" />
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -392,18 +396,21 @@
                     </StackPanel>
                     <Button x:Name="ContinueButton"
                             Content="{Binding ContinueText}"
+                            AutomationProperties.Name="{Binding ContinueText}"
                             Command="{Binding ContinueCommand}"
                             Style="{StaticResource MenuPrimaryButton}"
                             Margin="0,26,0,0"
                             />
                     <Button x:Name="MenuNewGameButton"
                             Content="{Binding NewGameText}"
+                            AutomationProperties.Name="{Binding NewGameText}"
                             Command="{Binding NewGameCommand}"
                             Style="{StaticResource MenuSecondaryButton}"
                             Margin="0,10,0,0"
                             />
                     <Button x:Name="MenuSettingsButton"
                             Content="{Binding SettingsText}"
+                            AutomationProperties.Name="{Binding SettingsText}"
                             Command="{Binding OpenSettingsCommand}"
                             Style="{StaticResource MenuSecondaryButton}"
                             Margin="0,10,0,0"
@@ -1463,7 +1470,7 @@
                                                     Grid.Column="1"
                                                     Content="{Binding ThemeOptionText}"
                                                     IsEnabled="False"
-                                                    ToolTip="More themes will be added later."
+                                                    ToolTip="{Binding ThemeUnavailableText}"
                                                     ToolTipService.ShowOnDisabled="True"
                                                     Style="{StaticResource GameplayCompactButton}"
                                                     VerticalAlignment="Center" />
