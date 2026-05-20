@@ -45,6 +45,18 @@ public sealed class LocalSaveService
         }
 
         var json = JsonSerializer.Serialize(data, JsonOptions);
-        File.WriteAllText(path, json);
+        var tempPath = $"{path}.tmp";
+        try
+        {
+            File.WriteAllText(tempPath, json);
+            File.Move(tempPath, path, true);
+        }
+        finally
+        {
+            if (File.Exists(tempPath))
+            {
+                File.Delete(tempPath);
+            }
+        }
     }
 }

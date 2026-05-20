@@ -167,6 +167,8 @@ public sealed class WpfSmokeTests
                 .First(panel => panel.Name == "MenuStatusStrip");
             var menuSaveSummary = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "MenuSaveSummary");
+            var menuNoticeText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "MenuNoticeText");
             var previewImages = FindVisualChildren<Image>(menuHeroBoard)
                 .Where(image => image.Name.StartsWith("MenuPreviewCat", StringComparison.Ordinal))
                 .ToArray();
@@ -193,6 +195,9 @@ public sealed class WpfSmokeTests
             Assert.True(continueButton.Height >= 52);
             Assert.True(menuNewGameButton.Height >= 44);
             Assert.True(menuSettingsButton.Height >= 44);
+            Assert.Equal(TextWrapping.Wrap, menuSaveSummary.TextWrapping);
+            Assert.Equal(TextTrimming.CharacterEllipsis, menuSaveSummary.TextTrimming);
+            Assert.Equal(TextTrimming.CharacterEllipsis, menuNoticeText.TextTrimming);
             Assert.Equal("MenuPrimaryButton", continueButton.Tag);
             Assert.Same(shell.ContinueCommand, continueButton.Command);
             Assert.Equal("MenuSecondaryButton", menuNewGameButton.Tag);
@@ -359,6 +364,9 @@ public sealed class WpfSmokeTests
             Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsThemeButton.Tag);
+            Assert.False(settingsThemeButton.IsEnabled);
+            Assert.True(ToolTipService.GetShowOnDisabled(settingsThemeButton));
+            Assert.NotNull(settingsThemeButton.ToolTip);
             Assert.Equal("SettingsSelectedButton", settingsEnglishButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
             Assert.Equal("SettingsSelectedButton", settingsNormalButton.Tag);

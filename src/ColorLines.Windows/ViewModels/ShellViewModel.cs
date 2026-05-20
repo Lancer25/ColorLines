@@ -11,6 +11,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private ShellScreen settingsReturnScreen;
     private string pauseSaveStatusText;
     private string menuNoticeText;
+    private SaveStatus lastSaveStatus;
     private bool isReturnToMenuConfirmVisible;
     private bool isEndGameConfirmVisible;
 
@@ -22,6 +23,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         settingsReturnScreen = ShellScreen.MainMenu;
         pauseSaveStatusText = string.Empty;
         menuNoticeText = string.Empty;
+        lastSaveStatus = SaveStatus.None;
         ContinueCommand = new RelayCommand(_ => ReturnToGame(), _ => CanContinueGame);
         NewGameCommand = new RelayCommand(_ => StartNewGame());
         OpenPauseMenuCommand = new RelayCommand(_ => CurrentScreen = ShellScreen.PauseMenu, _ => CanOpenPauseMenu);
@@ -375,9 +377,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         IsEndGameConfirmVisible = false;
         var args = new SaveRequestedEventArgs();
         SaveRequested?.Invoke(this, args);
-        PauseSaveStatusText = args.WasSuccessful
-            ? (Language == "zh" ? "游戏已保存。" : "Game saved.")
-            : (Language == "zh" ? "保存失败，请重试。" : "Save failed. Please try again.");
+        lastSaveStatus = args.WasSuccessful ? SaveStatus.Success : SaveStatus.Failure;
+        RefreshPauseSaveStatusText();
     }
 
     public void SetMenuNotice(string message)
@@ -391,10 +392,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(Language));
         OnPropertyChanged(nameof(SaveSummaryText));
         OnLocalizedTextChanged();
-        if (!string.IsNullOrEmpty(PauseSaveStatusText))
-        {
-            PauseSaveStatusText = Language == "zh" ? "游戏已保存。" : "Game saved.";
-        }
+        RefreshPauseSaveStatusText();
     }
 
     private void RequestBackToMenu()
@@ -620,8 +618,25 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         }
     }
 
+    private void RefreshPauseSaveStatusText()
+    {
+        PauseSaveStatusText = lastSaveStatus switch
+        {
+            SaveStatus.Success => Language == "zh" ? "游戏已保存。" : "Game saved.",
+            SaveStatus.Failure => Language == "zh" ? "保存失败，请重试。" : "Save failed. Please try again.",
+            _ => string.Empty
+        };
+    }
+
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private enum SaveStatus
+    {
+        None,
+        Success,
+        Failure
     }
 }

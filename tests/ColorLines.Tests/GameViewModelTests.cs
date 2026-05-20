@@ -648,6 +648,17 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void CreateFromSaveNormalizesUnknownAnimationIntensity()
+    {
+        var save = new LocalSaveData(1, 0, true, "Extreme", "CozyBoard", null, new WindowPlacementData(800, 600));
+
+        var viewModel = GameViewModel.CreateFromSave(save);
+
+        Assert.Equal("Full", viewModel.AnimationIntensity);
+        Assert.True(viewModel.IsFullAnimation);
+    }
+
+    [Fact]
     public void CreateSaveDataExportsCurrentSettings()
     {
         var viewModel = GameViewModel.CreateForNewGame();
@@ -867,6 +878,19 @@ public sealed class GameViewModelTests
         shell.SaveGameCommand.Execute(null);
 
         Assert.Equal("Save failed. Please try again.", shell.PauseSaveStatusText);
+    }
+
+    [Fact]
+    public void SaveFailureStatusStaysFailedAfterLanguageSwitch()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+        shell.SaveRequested += (_, args) => args.MarkFailed("disk full");
+
+        shell.SaveGameCommand.Execute(null);
+        shell.SetLanguageCommand.Execute("zh");
+
+        Assert.NotEqual("Game saved.", shell.PauseSaveStatusText);
+        Assert.Contains("失败", shell.PauseSaveStatusText, StringComparison.Ordinal);
     }
 
     [Fact]

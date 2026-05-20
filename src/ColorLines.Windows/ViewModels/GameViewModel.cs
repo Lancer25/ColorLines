@@ -273,7 +273,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         if (save is not null)
         {
             viewModel.isSoundEnabled = save.IsSoundEnabled;
-            viewModel.animationIntensity = save.AnimationIntensity;
+            viewModel.animationIntensity = NormalizeAnimationIntensity(save.AnimationIntensity);
             viewModel.isPathHintsEnabled = save.IsPathHintsEnabled;
             viewModel.isAutoSaveEnabled = save.IsAutoSaveEnabled;
             viewModel.RefreshFromState();
@@ -385,6 +385,11 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         AnimationIntensity = IsFullAnimation ? "Reduced" : "Full";
         RefreshFromState();
+    }
+
+    private static string NormalizeAnimationIntensity(string? value)
+    {
+        return value is "Full" or "Reduced" ? value : "Full";
     }
 
     private void SetDifficulty(object? parameter)

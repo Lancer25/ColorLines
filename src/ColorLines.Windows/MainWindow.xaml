@@ -366,6 +366,8 @@
                                    Margin="0,8,0,0"
                                    FontSize="13"
                                    FontWeight="SemiBold"
+                                   TextWrapping="Wrap"
+                                   TextTrimming="CharacterEllipsis"
                                    Foreground="{StaticResource TextMutedBrush}" />
                         <TextBlock x:Name="MenuNoticeText"
                                    Text="{Binding MenuNoticeText}"
@@ -373,6 +375,7 @@
                                    FontSize="13"
                                    FontWeight="SemiBold"
                                    TextWrapping="Wrap"
+                                   TextTrimming="CharacterEllipsis"
                                    Foreground="{StaticResource TextMutedBrush}" />
                         <TextBlock Text="{Binding ThemeSummaryText}"
                                    Margin="0,8,0,0"
@@ -1460,6 +1463,8 @@
                                                     Grid.Column="1"
                                                     Content="{Binding ThemeOptionText}"
                                                     IsEnabled="False"
+                                                    ToolTip="More themes will be added later."
+                                                    ToolTipService.ShowOnDisabled="True"
                                                     Style="{StaticResource GameplayCompactButton}"
                                                     VerticalAlignment="Center" />
                                         </Grid>
