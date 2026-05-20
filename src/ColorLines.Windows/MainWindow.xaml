@@ -151,11 +151,45 @@
         </Style>
 
         <Style x:Key="SettingsTabItem" TargetType="TabItem">
+            <Setter Property="Tag" Value="SettingsTabItem" />
+            <Setter Property="MinHeight" Value="40" />
             <Setter Property="Padding" Value="18,8" />
             <Setter Property="Margin" Value="0,0,8,0" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+            <Setter Property="Background" Value="{StaticResource MenuSecondaryButtonBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabFrame"
+                                MinHeight="{TemplateBinding MinHeight}"
+                                Margin="{TemplateBinding Margin}"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="999">
+                            <ContentPresenter ContentSource="Header"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabFrame" Property="Background" Value="{StaticResource MenuSecondaryButtonHoverBrush}" />
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabFrame" Property="Background" Value="{StaticResource MenuPrimaryButtonBrush}" />
+                                <Setter TargetName="TabFrame" Property="BorderBrush" Value="{StaticResource MenuPrimaryButtonHoverBrush}" />
+                                <Setter Property="Foreground" Value="#FFFFFB" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="BoardCellButton" TargetType="Button">
@@ -1279,6 +1313,38 @@
                                                     Grid.Column="1"
                                                     Content="{Binding TogglePathHintsText}"
                                                     Command="{Binding Game.TogglePathHintsCommand}"
+                                                    Style="{StaticResource GameplayCompactButton}"
+                                                    VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+
+                                    <Border x:Name="AutoSaveSettingRow"
+                                            MinHeight="84"
+                                            Margin="0,12,0,0"
+                                            Background="{StaticResource SettingsRowBrush}"
+                                            BorderBrush="{StaticResource PanelBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Padding="18,14">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="160" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding AutoSaveText}"
+                                                           FontSize="18"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                <TextBlock Text="{Binding AutoSaveStatusText}"
+                                                           Margin="0,5,0,0"
+                                                           FontSize="14"
+                                                           Foreground="{StaticResource TextMutedBrush}" />
+                                            </StackPanel>
+                                            <Button x:Name="SettingsToggleAutoSaveButton"
+                                                    Grid.Column="1"
+                                                    Content="{Binding ToggleAutoSaveText}"
+                                                    Command="{Binding Game.ToggleAutoSaveCommand}"
                                                     Style="{StaticResource GameplayCompactButton}"
                                                     VerticalAlignment="Center" />
                                         </Grid>

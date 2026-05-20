@@ -105,6 +105,29 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void MainWindowDoesNotSaveOnCloseWhenAutoSaveIsDisabled()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-no-autosave-{Guid.NewGuid():N}.json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+            window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            shell.Game.ToggleAutoSaveCommand.Execute(null);
+            window.Close();
+
+            Assert.False(File.Exists(savePath));
+        });
+    }
+
+    [Fact]
     public void MainMenuShowsActionsBeforeGameplay()
     {
         RunOnWpfThread(() =>
@@ -276,6 +299,10 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "PathHintsSettingRow");
             var settingsTogglePathHintsButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsTogglePathHintsButton");
+            var autoSaveSettingRow = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "AutoSaveSettingRow");
+            var settingsToggleAutoSaveButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsToggleAutoSaveButton");
 
             settingsTabs.SelectedItem = audioSettingsTab;
             window.UpdateLayout();
@@ -310,12 +337,17 @@ public sealed class WpfSmokeTests
             Assert.NotNull(gameplaySettingsTab.Header);
             Assert.NotNull(audioSettingsTab.Header);
             Assert.NotNull(displaySettingsTab.Header);
+            Assert.Equal("SettingsTabItem", gameplaySettingsTab.Tag);
+            Assert.Equal("SettingsTabItem", audioSettingsTab.Tag);
+            Assert.Equal("SettingsTabItem", displaySettingsTab.Tag);
+            Assert.True(gameplaySettingsTab.MinHeight >= 40);
             Assert.True(animationSettingRow.MinHeight >= 82);
             Assert.True(soundSettingRow.MinHeight >= 82);
             Assert.True(themeSettingRow.MinHeight >= 82);
             Assert.True(languageSettingRow.MinHeight >= 82);
             Assert.True(difficultySettingRow.MinHeight >= 82);
             Assert.True(pathHintsSettingRow.MinHeight >= 82);
+            Assert.True(autoSaveSettingRow.MinHeight >= 82);
             Assert.Single(settingsActionBar.Children);
             Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
@@ -323,12 +355,14 @@ public sealed class WpfSmokeTests
             Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsHardButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsTogglePathHintsButton.Tag);
+            Assert.Equal("MenuSecondaryButton", settingsToggleAutoSaveButton.Tag);
             Assert.Equal("MenuSecondaryButton", backToMenuButton.Tag);
             Assert.Null(gameplaySettingsPanel);
             Assert.Null(settingsNewGameButton);
             Assert.Same(shell.Game.ToggleAnimationCommand, settingsToggleAnimationButton.Command);
             Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
             Assert.Same(shell.Game.TogglePathHintsCommand, settingsTogglePathHintsButton.Command);
+            Assert.Same(shell.Game.ToggleAutoSaveCommand, settingsToggleAutoSaveButton.Command);
             Assert.Null(settingsThemeButton.Command);
             Assert.Same(shell.SetLanguageCommand, settingsChineseButton.Command);
             Assert.Same(shell.Game.SetDifficultyCommand, settingsHardButton.Command);

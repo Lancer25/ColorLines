@@ -18,4 +18,6 @@ public sealed record LocalSaveData(
     public string Language { get; init; } = "en";
 
     public bool IsPathHintsEnabled { get; init; } = true;
+
+    public bool IsAutoSaveEnabled { get; init; } = true;
 }

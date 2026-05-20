@@ -25,6 +25,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private TurnFeedback feedback;
     private bool isSoundEnabled;
     private bool isPathHintsEnabled;
+    private bool isAutoSaveEnabled;
     private string animationIntensity;
     private string difficulty;
     private HashSet<BoardPosition> movedPositions;
@@ -47,6 +48,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         feedback = TurnFeedback.Neutral;
         isSoundEnabled = true;
         isPathHintsEnabled = true;
+        isAutoSaveEnabled = true;
         animationIntensity = "Full";
         this.difficulty = DifficultyCatalog.Normalize(difficulty);
         movedPositions = new HashSet<BoardPosition>();
@@ -62,6 +64,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         EndGameCommand = new RelayCommand(_ => EndGame());
         ToggleSoundCommand = new RelayCommand(_ => IsSoundEnabled = !IsSoundEnabled);
         TogglePathHintsCommand = new RelayCommand(_ => TogglePathHints());
+        ToggleAutoSaveCommand = new RelayCommand(_ => IsAutoSaveEnabled = !IsAutoSaveEnabled);
         ToggleAnimationCommand = new RelayCommand(_ => ToggleAnimation());
         SetDifficultyCommand = new RelayCommand(SetDifficulty);
         SetLanguageCommand = new RelayCommand(SetLanguage);
@@ -85,6 +88,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public ICommand ToggleSoundCommand { get; }
 
     public ICommand TogglePathHintsCommand { get; }
+
+    public ICommand ToggleAutoSaveCommand { get; }
 
     public ICommand ToggleAnimationCommand { get; }
 
@@ -202,6 +207,19 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool IsAutoSaveEnabled
+    {
+        get => isAutoSaveEnabled;
+        private set
+        {
+            if (isAutoSaveEnabled != value)
+            {
+                isAutoSaveEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public string AnimationIntensity
     {
         get => animationIntensity;
@@ -257,6 +275,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             viewModel.isSoundEnabled = save.IsSoundEnabled;
             viewModel.animationIntensity = save.AnimationIntensity;
             viewModel.isPathHintsEnabled = save.IsPathHintsEnabled;
+            viewModel.isAutoSaveEnabled = save.IsAutoSaveEnabled;
             viewModel.RefreshFromState();
         }
 
@@ -276,7 +295,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
         {
             Difficulty = Difficulty,
             Language = Language,
-            IsPathHintsEnabled = IsPathHintsEnabled
+            IsPathHintsEnabled = IsPathHintsEnabled,
+            IsAutoSaveEnabled = IsAutoSaveEnabled
         };
     }
 

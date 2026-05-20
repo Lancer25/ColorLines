@@ -59,7 +59,11 @@ public partial class MainWindow : Window
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
-        SaveCurrentGame();
+        if (shellViewModel.Game.IsAutoSaveEnabled)
+        {
+            SaveCurrentGame();
+        }
+
         base.OnClosing(e);
     }
 

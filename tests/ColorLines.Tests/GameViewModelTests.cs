@@ -631,7 +631,8 @@ public sealed class GameViewModelTests
         {
             Difficulty = "Hard",
             Language = "zh",
-            IsPathHintsEnabled = false
+            IsPathHintsEnabled = false,
+            IsAutoSaveEnabled = false
         };
 
         var viewModel = GameViewModel.CreateFromSave(save);
@@ -642,6 +643,7 @@ public sealed class GameViewModelTests
         Assert.Equal("Hard", viewModel.Difficulty);
         Assert.Equal(11, viewModel.BoardSize);
         Assert.False(viewModel.IsPathHintsEnabled);
+        Assert.False(viewModel.IsAutoSaveEnabled);
         Assert.False(viewModel.IsFullAnimation);
     }
 
@@ -659,7 +661,25 @@ public sealed class GameViewModelTests
         Assert.Equal("en", save.Language);
         Assert.Equal("CozyBoard", save.ThemeId);
         Assert.True(save.IsPathHintsEnabled);
+        Assert.True(save.IsAutoSaveEnabled);
         Assert.NotNull(save.Game);
+    }
+
+    [Fact]
+    public void AutoSaveSettingTogglesAndUpdatesShellText()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        Assert.True(shell.Game.IsAutoSaveEnabled);
+        Assert.Equal("Auto Save", shell.AutoSaveText);
+        Assert.Equal("Status: True", shell.AutoSaveStatusText);
+        Assert.Equal("Turn Auto Save Off", shell.ToggleAutoSaveText);
+
+        shell.Game.ToggleAutoSaveCommand.Execute(null);
+
+        Assert.False(shell.Game.IsAutoSaveEnabled);
+        Assert.Equal("Status: False", shell.AutoSaveStatusText);
+        Assert.Equal("Turn Auto Save On", shell.ToggleAutoSaveText);
     }
 
     [Fact]

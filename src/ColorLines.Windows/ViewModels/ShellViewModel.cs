@@ -173,6 +173,14 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         ? (IsChinese ? "关闭提示" : "Turn Hints Off")
         : (IsChinese ? "开启提示" : "Turn Hints On");
 
+    public string AutoSaveText => IsChinese ? "自动保存" : "Auto Save";
+
+    public string AutoSaveStatusText => IsChinese ? $"状态：{DisplayAutoSaveEnabled}" : $"Status: {Game.IsAutoSaveEnabled}";
+
+    public string ToggleAutoSaveText => Game.IsAutoSaveEnabled
+        ? (IsChinese ? "关闭自动保存" : "Turn Auto Save Off")
+        : (IsChinese ? "开启自动保存" : "Turn Auto Save On");
+
     public string LanguageText => IsChinese ? "语言" : "Language";
 
     public string DifficultyText => IsChinese ? "难度" : "Difficulty";
@@ -250,6 +258,10 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         : (IsChinese ? "关" : "False");
 
     private string DisplayPathHintsEnabled => Game.IsPathHintsEnabled
+        ? (IsChinese ? "开" : "True")
+        : (IsChinese ? "关" : "False");
+
+    private string DisplayAutoSaveEnabled => Game.IsAutoSaveEnabled
         ? (IsChinese ? "开" : "True")
         : (IsChinese ? "关" : "False");
 
@@ -476,6 +488,12 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(TogglePathHintsText));
         }
 
+        if (e.PropertyName is nameof(GameViewModel.IsAutoSaveEnabled))
+        {
+            OnPropertyChanged(nameof(AutoSaveStatusText));
+            OnPropertyChanged(nameof(ToggleAutoSaveText));
+        }
+
         if (e.PropertyName is nameof(GameViewModel.Difficulty))
         {
             OnPropertyChanged(nameof(DifficultySummaryText));
@@ -530,6 +548,9 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(PathHintsText));
         OnPropertyChanged(nameof(PathHintsStatusText));
         OnPropertyChanged(nameof(TogglePathHintsText));
+        OnPropertyChanged(nameof(AutoSaveText));
+        OnPropertyChanged(nameof(AutoSaveStatusText));
+        OnPropertyChanged(nameof(ToggleAutoSaveText));
         OnPropertyChanged(nameof(LanguageText));
         OnPropertyChanged(nameof(DifficultyText));
         OnPropertyChanged(nameof(ThemeText));
