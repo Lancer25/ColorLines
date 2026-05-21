@@ -498,6 +498,12 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "GameplayScoreBlock");
             var gameplayNextCatsBlock = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "GameplayNextCatsBlock");
+            var gameplayBoardPressureBlock = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "GameplayBoardPressureBlock");
+            var boardPressureText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "BoardPressureText");
+            var boardSpaceText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "BoardSpaceText");
             var gameplayActionBar = FindVisualChildren<StackPanel>(window)
                 .First(panel => panel.Name == "GameplayActionBar");
             var pauseMenuView = FindVisualChildren<Grid>(window)
@@ -596,6 +602,9 @@ public sealed class WpfSmokeTests
             Assert.True(gameplayStatusBanner.MinHeight >= 58);
             Assert.True(gameplayScoreBlock.Padding.Left >= 16);
             Assert.True(gameplayNextCatsBlock.Padding.Left >= 16);
+            Assert.True(gameplayBoardPressureBlock.Padding.Left >= 16);
+            Assert.Equal(shell.BoardPressureText, boardPressureText.Text);
+            Assert.Equal(shell.BoardSpaceText, boardSpaceText.Text);
             Assert.Single(gameplayActionBar.Children);
             Assert.NotNull(pauseMenuView);
             Assert.Equal(Visibility.Hidden, pauseMenuView.Visibility);

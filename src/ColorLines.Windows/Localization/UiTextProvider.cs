@@ -55,9 +55,21 @@ public sealed class UiTextProvider
             : $"Selected {piece}. Choose an empty cell.";
     }
 
+    public string SelectedPieceWithClearOpportunities(string piece, int count)
+    {
+        return IsChinese
+            ? $"已选择 {piece}。{count} 个可消除落点。"
+            : $"Selected {piece}. {count} clear {(count == 1 ? "opportunity" : "opportunities")}.";
+    }
+
     public string Points(int scoreDelta)
     {
         return IsChinese ? $"+{scoreDelta} 分！" : $"+{scoreDelta} points!";
+    }
+
+    public string SpawnedLinePoints(int scoreDelta)
+    {
+        return IsChinese ? $"新猫咪连成一线。+{scoreDelta} 分！" : $"New cats made a line. +{scoreDelta} points!";
     }
 
     public string FinalScore(int score)

@@ -59,10 +59,28 @@ public sealed class GameViewModelTests
 
         Assert.Equal(9, viewModel.BoardSize);
         Assert.Equal(81, viewModel.Cells.Count);
+        Assert.Equal(5, viewModel.OccupiedCellCount);
+        Assert.Equal(76, viewModel.EmptyCellCount);
+        Assert.Equal(81, viewModel.TotalCellCount);
         Assert.Equal(0, viewModel.Score);
         Assert.Equal(3, viewModel.NextPieces.Count);
         Assert.All(viewModel.NextPieces, piece => Assert.Equal("=^.^=", piece.FaceText));
         Assert.Equal("Select a cat to move.", viewModel.StatusText);
+    }
+
+    [Fact]
+    public void GameViewModelReportsBoardPressure()
+    {
+        var board = GameBoard.CreateEmpty(5);
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(4, 4), PieceKind.Gray);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+
+        Assert.Equal(2, viewModel.OccupiedCellCount);
+        Assert.Equal(23, viewModel.EmptyCellCount);
+        Assert.Equal(25, viewModel.TotalCellCount);
+        Assert.Equal(8, viewModel.BoardFillPercent);
     }
 
     [Theory]
@@ -186,6 +204,24 @@ public sealed class GameViewModelTests
 
         Assert.Contains(viewModel.Cells, cell => cell.Row == 2 && cell.Column == 4 && cell.IsClearOpportunity);
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsOccupied && cell.IsClearOpportunity);
+    }
+
+    [Fact]
+    public void SelectingPieceSummarizesClearOpportunities()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 1), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 3), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+
+        viewModel.SelectCellCommand.Execute(source);
+
+        Assert.Equal("Selected Orange. 1 clear opportunity.", viewModel.StatusText);
     }
 
     [Fact]
@@ -524,6 +560,26 @@ public sealed class GameViewModelTests
         Assert.True(viewModel.ShowScoreDelta);
         Assert.Equal(viewModel.ScoreDeltaText, viewModel.ScoreDeltaBadgeText);
         Assert.StartsWith("+", viewModel.ScoreDeltaBadgeText);
+    }
+
+    [Fact]
+    public void SpawnedLineUsesSpecificStatusText()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 1), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 3), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 4), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(8, 8), PieceKind.Gray);
+        var state = new GameState(board, new[] { PieceKind.Orange }, 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 8 && cell.Column == 8);
+        var target = viewModel.Cells.Single(cell => cell.Row == 8 && cell.Column == 7);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+
+        Assert.Equal("New cats made a line. +10 points!", viewModel.StatusText);
     }
 
     [Fact]
@@ -968,6 +1024,31 @@ public sealed class GameViewModelTests
         shell.Game.SelectCellCommand.Execute(target);
 
         Assert.Equal("Continue available: Score 10 | Best 10", shell.SaveSummaryText);
+    }
+
+    [Fact]
+    public void BoardPressureSummaryUpdatesWhenBoardChanges()
+    {
+        var board = GameBoard.CreateEmpty(5);
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 1), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 3), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 4), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var shell = new ShellViewModel(new GameViewModel(new GameEngine(new SequenceRandomSource()), state));
+        var changes = new List<string?>();
+        shell.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+
+        var source = shell.Game.Cells.Single(cell => cell.Row == 2 && cell.Column == 4);
+        var target = shell.Game.Cells.Single(cell => cell.Row == 0 && cell.Column == 4);
+        shell.Game.SelectCellCommand.Execute(source);
+        shell.Game.SelectCellCommand.Execute(target);
+
+        Assert.Equal("Board: 0/25 filled", shell.BoardPressureText);
+        Assert.Equal("Space: 25 empty", shell.BoardSpaceText);
+        Assert.Contains(nameof(ShellViewModel.BoardPressureText), changes);
+        Assert.Contains(nameof(ShellViewModel.BoardSpaceText), changes);
     }
 
     [Fact]

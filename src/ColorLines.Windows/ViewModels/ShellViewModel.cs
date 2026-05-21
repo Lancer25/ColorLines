@@ -64,6 +64,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
                 game.PropertyChanged += GamePropertyChanged;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(SaveSummaryText));
+                OnPropertyChanged(nameof(BoardPressureText));
+                OnPropertyChanged(nameof(BoardSpaceText));
             }
         }
     }
@@ -230,6 +232,14 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     public string BestScoreSummaryText => IsChinese ? $"最高分：{Game.HighScore}" : $"Best Score: {Game.HighScore}";
 
     public string NextCatsText => IsChinese ? "下批猫咪" : "Next Cats";
+
+    public string BoardPressureText => IsChinese
+        ? $"棋盘：{Game.OccupiedCellCount}/{Game.TotalCellCount} 已占用"
+        : $"Board: {Game.OccupiedCellCount}/{Game.TotalCellCount} filled";
+
+    public string BoardSpaceText => IsChinese
+        ? $"空间：{Game.EmptyCellCount} 格可用"
+        : $"Space: {Game.EmptyCellCount} empty";
 
     public string ThemeSummaryText => IsChinese ? "主题：温馨棋盘" : $"Theme: {Game.SelectedThemeName}";
 
@@ -537,6 +547,14 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(BestScoreSummaryText));
         }
 
+        if (e.PropertyName is nameof(GameViewModel.OccupiedCellCount)
+            or nameof(GameViewModel.EmptyCellCount)
+            or nameof(GameViewModel.TotalCellCount))
+        {
+            OnPropertyChanged(nameof(BoardPressureText));
+            OnPropertyChanged(nameof(BoardSpaceText));
+        }
+
         if (e.PropertyName is nameof(GameViewModel.AnimationIntensity))
         {
             OnPropertyChanged(nameof(AnimationSummaryText));
@@ -636,6 +654,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(BestText));
         OnPropertyChanged(nameof(BestScoreSummaryText));
         OnPropertyChanged(nameof(NextCatsText));
+        OnPropertyChanged(nameof(BoardPressureText));
+        OnPropertyChanged(nameof(BoardSpaceText));
         OnPropertyChanged(nameof(ThemeSummaryText));
         OnPropertyChanged(nameof(AnimationSummaryText));
         OnPropertyChanged(nameof(SoundSummaryText));

@@ -255,6 +255,16 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     public int BoardSize => state.Board.Size;
 
+    public int TotalCellCount => BoardSize * BoardSize;
+
+    public int OccupiedCellCount => state.Board.Cells().Count(cell => cell.Piece is not null);
+
+    public int EmptyCellCount => TotalCellCount - OccupiedCellCount;
+
+    public int BoardFillPercent => TotalCellCount == 0
+        ? 0
+        : (int)Math.Round(OccupiedCellCount * 100.0 / TotalCellCount, MidpointRounding.AwayFromZero);
+
     public string Language => text.Language;
 
     public static GameViewModel CreateForNewGame()
@@ -317,7 +327,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             pathPreviewTargetPosition = null;
             Feedback = TurnFeedback.Neutral;
             selectedPosition = position;
-            StatusText = text.SelectedPiece(piece.Value.ToString());
+            StatusText = BuildSelectedStatusText(piece.Value);
             PlaySound(SoundCue.Select);
             RefreshFromState();
             return;
@@ -496,6 +506,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
 
         RefreshNextPieces();
+        NotifyBoardMetricsChanged();
     }
 
     private void EnsureCellsInitialized()
@@ -641,6 +652,15 @@ public sealed class GameViewModel : INotifyPropertyChanged
         return opportunities;
     }
 
+    private string BuildSelectedStatusText(PieceKind piece)
+    {
+        var reachableTargets = GetReachableTargets();
+        var clearOpportunityCount = GetClearOpportunities(reachableTargets).Count;
+        return clearOpportunityCount == 0
+            ? text.SelectedPiece(piece.ToString())
+            : text.SelectedPieceWithClearOpportunities(piece.ToString(), clearOpportunityCount);
+    }
+
     private string BuildStatusText(GameTurnResult result)
     {
         if (result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.MoveRejected))
@@ -656,10 +676,35 @@ public sealed class GameViewModel : INotifyPropertyChanged
         var scoreEvent = result.Events.LastOrDefault(gameEvent => gameEvent.Kind == GameEventKind.ScoreChanged);
         if (scoreEvent is not null && scoreEvent.ScoreDelta > 0)
         {
+            if (DidSpawnedPiecesCreateLine(result.Events))
+            {
+                return text.SpawnedLinePoints(scoreEvent.ScoreDelta);
+            }
+
             return text.Points(scoreEvent.ScoreDelta);
         }
 
         return text.SelectCatToMove;
+    }
+
+    private static bool DidSpawnedPiecesCreateLine(IReadOnlyList<GameEvent> events)
+    {
+        var spawnIndex = -1;
+        var clearIndex = -1;
+        for (var index = 0; index < events.Count; index++)
+        {
+            if (events[index].Kind == GameEventKind.PiecesSpawned && spawnIndex < 0)
+            {
+                spawnIndex = index;
+            }
+
+            if (events[index].Kind == GameEventKind.LinesCleared && clearIndex < 0)
+            {
+                clearIndex = index;
+            }
+        }
+
+        return spawnIndex >= 0 && clearIndex > spawnIndex;
     }
 
     private static TurnFeedback BuildFeedback(GameTurnResult result)
@@ -718,5 +763,13 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void NotifyBoardMetricsChanged()
+    {
+        OnPropertyChanged(nameof(TotalCellCount));
+        OnPropertyChanged(nameof(OccupiedCellCount));
+        OnPropertyChanged(nameof(EmptyCellCount));
+        OnPropertyChanged(nameof(BoardFillPercent));
     }
 }

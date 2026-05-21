@@ -962,6 +962,8 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="14" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <Border x:Name="GameplayStatusBanner"
@@ -1089,8 +1091,30 @@
                             </StackPanel>
                         </Border>
 
+                        <Border x:Name="GameplayBoardPressureBlock"
+                                Grid.Row="6"
+                                Background="{StaticResource PanelBackgroundBrush}"
+                                BorderBrush="{StaticResource PanelBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Padding="18,14">
+                            <StackPanel>
+                                <TextBlock x:Name="BoardPressureText"
+                                           Text="{Binding BoardPressureText}"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock x:Name="BoardSpaceText"
+                                           Text="{Binding BoardSpaceText}"
+                                           Margin="0,4,0,0"
+                                           FontSize="13"
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource TextMutedBrush}" />
+                            </StackPanel>
+                        </Border>
+
                         <StackPanel x:Name="GameplayActionBar"
-                                    Grid.Row="6">
+                                    Grid.Row="8">
                             <Button x:Name="GameplayMenuButton"
                                     Content="{Binding MenuText}"
                                     Command="{Binding OpenPauseMenuCommand}"
