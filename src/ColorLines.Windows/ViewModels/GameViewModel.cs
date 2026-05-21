@@ -467,6 +467,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         EnsureCellsInitialized();
         var reachableTargets = GetReachableTargets();
+        var clearOpportunities = GetClearOpportunities(reachableTargets);
         foreach (var cell in state.Board.Cells())
         {
             var isSelected = selectedPosition == cell.Position;
@@ -476,6 +477,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             var wasCleared = IsFullAnimation && clearedPositions.Contains(cell.Position);
             var wasRejectedTarget = IsFullAnimation && rejectedPositions.Contains(cell.Position);
             var isReachableTarget = reachableTargets.Contains(cell.Position);
+            var isClearOpportunity = clearOpportunities.Contains(cell.Position);
             var isPathPreview = pathPreviewPositions.Contains(cell.Position);
             var isPathPreviewTarget = pathPreviewTargetPosition == cell.Position;
             var cellViewModel = Cells[(cell.Position.Row * state.Board.Size) + cell.Position.Column];
@@ -488,6 +490,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
                 wasCleared,
                 wasRejectedTarget,
                 isReachableTarget,
+                isClearOpportunity,
                 isPathPreview,
                 isPathPreviewTarget);
         }
@@ -608,6 +611,34 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
 
         return reachable;
+    }
+
+    private HashSet<BoardPosition> GetClearOpportunities(IReadOnlySet<BoardPosition> reachableTargets)
+    {
+        if (!IsPathHintsEnabled || selectedPosition is null || reachableTargets.Count == 0)
+        {
+            return new HashSet<BoardPosition>();
+        }
+
+        var source = selectedPosition.Value;
+        var selectedPiece = state.Board.GetPiece(source);
+        if (selectedPiece is null)
+        {
+            return new HashSet<BoardPosition>();
+        }
+
+        var opportunities = new HashSet<BoardPosition>();
+        foreach (var target in reachableTargets)
+        {
+            var previewBoard = state.Board.Clone();
+            previewBoard.MovePiece(source, target);
+            if (LineDetector.FindLines(previewBoard, new[] { target }).Count > 0)
+            {
+                opportunities.Add(target);
+            }
+        }
+
+        return opportunities;
     }
 
     private string BuildStatusText(GameTurnResult result)

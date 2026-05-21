@@ -548,6 +548,24 @@
                                             </Style>
                                         </Border.Style>
                                     </Border>
+                                    <Border x:Name="ClearOpportunityGlow"
+                                            Margin="8"
+                                            CornerRadius="17"
+                                            BorderBrush="#FFFFB65A"
+                                            BorderThickness="2"
+                                            Background="#33FFB65A"
+                                            IsHitTestVisible="False">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Opacity" Value="0" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsClearOpportunity}" Value="True">
+                                                        <Setter Property="Opacity" Value="0.78" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
                                     <Border x:Name="PathPreviewTargetGlow"
                                             Margin="7"
                                             CornerRadius="17"

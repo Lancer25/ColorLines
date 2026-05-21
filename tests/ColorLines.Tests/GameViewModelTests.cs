@@ -170,6 +170,25 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SelectingPieceMarksReachableClearOpportunities()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 1), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 3), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+
+        viewModel.SelectCellCommand.Execute(source);
+
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 2 && cell.Column == 4 && cell.IsClearOpportunity);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsOccupied && cell.IsClearOpportunity);
+    }
+
+    [Fact]
     public void DisabledPathHintsHideReachableTargetsAndPreviewPath()
     {
         var board = GameBoard.CreateEmpty();
@@ -185,6 +204,7 @@ public sealed class GameViewModelTests
 
         Assert.False(viewModel.IsPathHintsEnabled);
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsReachableTarget);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsClearOpportunity);
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreview);
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreviewTarget);
     }

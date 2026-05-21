@@ -769,6 +769,21 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void ClearOpportunityGlowUsesDedicatedVisualLayer()
+    {
+        var document = LoadMainWindowXaml();
+        var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
+        var glow = document.Descendants()
+            .First(element => element.Name.LocalName == "Border"
+                && element.Attribute(x + "Name")?.Value == "ClearOpportunityGlow");
+
+        var markup = glow.ToString(SaveOptions.DisableFormatting);
+
+        Assert.Contains("IsClearOpportunity", markup, StringComparison.Ordinal);
+        Assert.Contains("#FFFFB65A", markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void SettingsTabsExposeKeyboardFocusVisualState()
     {
         var document = LoadMainWindowXaml();

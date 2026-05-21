@@ -17,6 +17,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
     private bool wasCleared;
     private bool wasRejectedTarget;
     private bool isReachableTarget;
+    private bool isClearOpportunity;
     private bool isPathPreview;
     private bool isPathPreviewTarget;
 
@@ -34,6 +35,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool wasCleared,
         bool wasRejectedTarget,
         bool isReachableTarget,
+        bool isClearOpportunity,
         bool isPathPreview,
         bool isPathPreviewTarget)
     {
@@ -50,6 +52,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         this.wasCleared = wasCleared;
         this.wasRejectedTarget = wasRejectedTarget;
         this.isReachableTarget = isReachableTarget;
+        this.isClearOpportunity = isClearOpportunity;
         this.isPathPreview = isPathPreview;
         this.isPathPreviewTarget = isPathPreviewTarget;
     }
@@ -126,6 +129,12 @@ public sealed class CellViewModel : INotifyPropertyChanged
         private set => SetProperty(ref isReachableTarget, value);
     }
 
+    public bool IsClearOpportunity
+    {
+        get => isClearOpportunity;
+        private set => SetProperty(ref isClearOpportunity, value);
+    }
+
     public bool IsPathPreview
     {
         get => isPathPreview;
@@ -154,6 +163,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool wasCleared = false,
         bool wasRejectedTarget = false,
         bool isReachableTarget = false,
+        bool isClearOpportunity = false,
         bool isPathPreview = false,
         bool isPathPreviewTarget = false)
     {
@@ -171,6 +181,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
             wasCleared,
             wasRejectedTarget,
             isReachableTarget,
+            isClearOpportunity,
             isPathPreview,
             isPathPreviewTarget);
     }
@@ -185,6 +196,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool wasSpawned = false,
         bool wasCleared = false,
         bool wasRejectedTarget = false,
+        bool isClearOpportunity = false,
         bool isPathPreview = false,
         bool isPathPreviewTarget = false)
     {
@@ -203,6 +215,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
             wasCleared,
             wasRejectedTarget,
             false,
+            isClearOpportunity,
             isPathPreview,
             isPathPreviewTarget);
     }
@@ -222,6 +235,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool wasCleared,
         bool wasRejectedTarget,
         bool isReachableTarget,
+        bool isClearOpportunity,
         bool isPathPreview,
         bool isPathPreviewTarget)
     {
@@ -237,6 +251,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         WasCleared = wasCleared;
         WasRejectedTarget = wasRejectedTarget;
         IsReachableTarget = pieceKind is null && isReachableTarget;
+        IsClearOpportunity = pieceKind is null && isClearOpportunity;
         IsPathPreview = isPathPreview;
         IsPathPreviewTarget = pieceKind is null && isPathPreviewTarget;
     }
