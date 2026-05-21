@@ -385,8 +385,10 @@ public sealed class WpfSmokeTests
                 .First(button => button.Name == "SettingsToggleAnimationButton");
             var themeSettingRow = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "ThemeSettingRow");
-            var settingsThemeButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsThemeButton");
+            var settingsCozyBoardThemeButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsCozyBoardThemeButton");
+            var settingsThreeDCatTokensThemeButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsThreeDCatTokensThemeButton");
             var languageSettingRow = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "LanguageSettingRow");
             var settingsChineseButton = FindVisualChildren<Button>(window)
@@ -420,9 +422,12 @@ public sealed class WpfSmokeTests
             Assert.Single(settingsActionBar.Children);
             Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
-            Assert.Equal("MenuSecondaryButton", settingsThemeButton.Tag);
-            Assert.True(settingsThemeButton.IsEnabled);
-            Assert.Equal(shell.ThemeUnavailableText, settingsThemeButton.ToolTip);
+            Assert.Equal("SettingsSelectedButton", settingsCozyBoardThemeButton.Tag);
+            Assert.Equal("MenuSecondaryButton", settingsThreeDCatTokensThemeButton.Tag);
+            Assert.True(settingsCozyBoardThemeButton.IsEnabled);
+            Assert.True(settingsThreeDCatTokensThemeButton.IsEnabled);
+            Assert.Equal(shell.ThemeUnavailableText, settingsCozyBoardThemeButton.ToolTip);
+            Assert.Equal(shell.ThemeUnavailableText, settingsThreeDCatTokensThemeButton.ToolTip);
             Assert.Equal("SettingsSelectedButton", settingsEnglishButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
             Assert.Equal("SettingsSelectedButton", settingsNormalButton.Tag);
@@ -437,8 +442,10 @@ public sealed class WpfSmokeTests
             Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
             Assert.Same(shell.Game.TogglePathHintsCommand, settingsTogglePathHintsButton.Command);
             Assert.Same(shell.Game.ToggleAutoSaveCommand, settingsToggleAutoSaveButton.Command);
-            Assert.Same(shell.Game.SetThemeCommand, settingsThemeButton.Command);
-            Assert.Equal("3DCatTokens", settingsThemeButton.CommandParameter);
+            Assert.Same(shell.Game.SetThemeCommand, settingsCozyBoardThemeButton.Command);
+            Assert.Same(shell.Game.SetThemeCommand, settingsThreeDCatTokensThemeButton.Command);
+            Assert.Equal("CozyBoard", settingsCozyBoardThemeButton.CommandParameter);
+            Assert.Equal("3DCatTokens", settingsThreeDCatTokensThemeButton.CommandParameter);
             Assert.Same(shell.SetLanguageCommand, settingsChineseButton.Command);
             Assert.Same(shell.SetLanguageCommand, settingsEnglishButton.Command);
             Assert.Same(shell.Game.SetDifficultyCommand, settingsHardButton.Command);
@@ -495,16 +502,60 @@ public sealed class WpfSmokeTests
             window.UpdateLayout();
             var settingsChineseButton = FindVisualChildren<Button>(window)
                 .First(button => button.Name == "SettingsChineseButton");
-            var settingsThemeButton = FindVisualChildren<Button>(window)
-                .First(button => button.Name == "SettingsThemeButton");
+            var settingsThreeDCatTokensThemeButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsThreeDCatTokensThemeButton");
 
             Assert.Equal("准备开始", readyText.Text);
             Assert.Equal("分数", scoreLabel.Text);
             Assert.Equal("下批猫咪", nextCatsLabel.Text);
             Assert.Equal("关闭声音", settingsToggleSoundButton.Content);
-            Assert.Equal("立体彩猫", settingsThemeButton.Content);
+            Assert.Equal("立体彩猫", settingsThreeDCatTokensThemeButton.Content);
             Assert.Equal("中文", settingsChineseButton.Content);
             Assert.Equal(shell.DifficultySummaryText, difficultySummary.Text);
+            window.Close();
+        });
+    }
+
+    [Fact]
+    public void SettingsThemeRowUpdatesAfterThemeSwitch()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-window-{Guid.NewGuid():N}.json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+            window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            shell.OpenSettingsCommand.Execute(null);
+            var settingsTabs = FindVisualChildren<TabControl>(window)
+                .First(tabControl => tabControl.Name == "SettingsTabs");
+            settingsTabs.SelectedItem = FindVisualChildren<TabItem>(window)
+                .First(tab => tab.Name == "DisplaySettingsTab");
+            window.UpdateLayout();
+
+            var currentThemeText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Text == shell.ThemeCurrentText);
+            var settingsCozyBoardThemeButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsCozyBoardThemeButton");
+            var settingsThreeDCatTokensThemeButton = FindVisualChildren<Button>(window)
+                .First(button => button.Name == "SettingsThreeDCatTokensThemeButton");
+
+            Assert.Equal("Current: Cozy Board", currentThemeText.Text);
+            Assert.Equal("SettingsSelectedButton", settingsCozyBoardThemeButton.Tag);
+            Assert.Equal("MenuSecondaryButton", settingsThreeDCatTokensThemeButton.Tag);
+
+            settingsThreeDCatTokensThemeButton.Command.Execute(settingsThreeDCatTokensThemeButton.CommandParameter);
+            window.UpdateLayout();
+
+            Assert.Equal("Current: 3D Cat Tokens", currentThemeText.Text);
+            Assert.Equal("MenuSecondaryButton", settingsCozyBoardThemeButton.Tag);
+            Assert.Equal("SettingsSelectedButton", settingsThreeDCatTokensThemeButton.Tag);
             window.Close();
         });
     }

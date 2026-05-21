@@ -270,6 +270,22 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public string ThemeButtonParameter => Game.NextThemeId;
 
+    public string CozyBoardThemeText => IsChinese
+        ? ColorLines.Windows.Themes.ThemeCatalog.DefaultTheme.ChineseDisplayName
+        : ColorLines.Windows.Themes.ThemeCatalog.DefaultTheme.DisplayName;
+
+    public string ThreeDCatTokensThemeText => IsChinese
+        ? ColorLines.Windows.Themes.ThemeCatalog.ThreeDCatTokens.ChineseDisplayName
+        : ColorLines.Windows.Themes.ThemeCatalog.ThreeDCatTokens.DisplayName;
+
+    public string CozyBoardThemeButtonTag => Game.ThemeId == ColorLines.Windows.Themes.ThemeCatalog.DefaultTheme.Id
+        ? "SettingsSelectedButton"
+        : "MenuSecondaryButton";
+
+    public string ThreeDCatTokensThemeButtonTag => Game.ThemeId == ColorLines.Windows.Themes.ThemeCatalog.ThreeDCatTokens.Id
+        ? "SettingsSelectedButton"
+        : "MenuSecondaryButton";
+
     public string MenuPreviewOrangeAssetPath => PieceViewModel.FromPiece(PieceKind.Orange, Game.ThemeId).AssetPath;
 
     public string MenuPreviewBlueGrayAssetPath => PieceViewModel.FromPiece(PieceKind.BlueGray, Game.ThemeId).AssetPath;
@@ -654,6 +670,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(ThemeOptionText));
             OnPropertyChanged(nameof(ThemeSummaryText));
             OnPropertyChanged(nameof(ThemeButtonParameter));
+            OnThemeSelectionChanged();
             OnThemeAssetsChanged();
         }
 
@@ -722,6 +739,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(ThemeOptionText));
         OnPropertyChanged(nameof(ThemeUnavailableText));
         OnPropertyChanged(nameof(ThemeButtonParameter));
+        OnPropertyChanged(nameof(CozyBoardThemeText));
+        OnPropertyChanged(nameof(ThreeDCatTokensThemeText));
         OnPropertyChanged(nameof(ReadyToPlayText));
         OnPropertyChanged(nameof(MenuTaglineText));
         OnPropertyChanged(nameof(ScoreText));
@@ -772,6 +791,12 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(MenuPreviewCalicoAssetPath));
         OnPropertyChanged(nameof(MenuPreviewWhiteAssetPath));
         OnPropertyChanged(nameof(MenuPreviewGrayAssetPath));
+    }
+
+    private void OnThemeSelectionChanged()
+    {
+        OnPropertyChanged(nameof(CozyBoardThemeButtonTag));
+        OnPropertyChanged(nameof(ThreeDCatTokensThemeButtonTag));
     }
 
     private void OnDifficultySelectionChanged()

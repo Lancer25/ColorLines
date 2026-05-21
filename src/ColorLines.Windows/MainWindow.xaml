@@ -1536,7 +1536,7 @@
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="160" />
+                                                <ColumnDefinition Width="260" />
                                             </Grid.ColumnDefinitions>
                                             <StackPanel VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding PathHintsText}"
@@ -1686,14 +1686,27 @@
                                                            FontSize="14"
                                                            Foreground="{StaticResource TextMutedBrush}" />
                                             </StackPanel>
-                                            <Button x:Name="SettingsThemeButton"
-                                                    Grid.Column="1"
-                                                    Content="{Binding ThemeOptionText}"
-                                                    Command="{Binding Game.SetThemeCommand}"
-                                                    CommandParameter="{Binding ThemeButtonParameter}"
-                                                    ToolTip="{Binding ThemeUnavailableText}"
-                                                    Style="{StaticResource GameplayCompactButton}"
-                                                    VerticalAlignment="Center" />
+                                            <UniformGrid Grid.Column="1"
+                                                         Rows="1"
+                                                         Columns="2"
+                                                         VerticalAlignment="Center">
+                                                <Button x:Name="SettingsCozyBoardThemeButton"
+                                                        Content="{Binding CozyBoardThemeText}"
+                                                        Command="{Binding Game.SetThemeCommand}"
+                                                        CommandParameter="CozyBoard"
+                                                        ToolTip="{Binding ThemeUnavailableText}"
+                                                        Tag="{Binding CozyBoardThemeButtonTag}"
+                                                        Style="{StaticResource GameplayCompactButton}"
+                                                        Margin="0,0,6,0" />
+                                                <Button x:Name="SettingsThreeDCatTokensThemeButton"
+                                                        Content="{Binding ThreeDCatTokensThemeText}"
+                                                        Command="{Binding Game.SetThemeCommand}"
+                                                        CommandParameter="3DCatTokens"
+                                                        ToolTip="{Binding ThemeUnavailableText}"
+                                                        Tag="{Binding ThreeDCatTokensThemeButtonTag}"
+                                                        Style="{StaticResource GameplayCompactButton}"
+                                                        Margin="6,0,0,0" />
+                                            </UniformGrid>
                                         </Grid>
                                     </Border>
 

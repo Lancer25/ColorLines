@@ -453,7 +453,9 @@ public sealed class GameViewModel : INotifyPropertyChanged
             return;
         }
 
-        var result = engine.Move(state, selectedPosition.Value, position);
+        var sourcePosition = selectedPosition.Value;
+        var wasSelectedMoveAttempt = true;
+        var result = engine.Move(state, sourcePosition, position);
         state = result.State;
         selectedPosition = null;
         pathPreviewPositions.Clear();
@@ -463,7 +465,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         Feedback = BuildFeedback(result);
         StoreCellFeedback(result);
         OnPropertyChanged(nameof(IsGameOver));
-        StatusText = BuildStatusText(result);
+        StatusText = BuildStatusText(result, wasSelectedMoveAttempt);
         PlayTurnSound(Feedback);
         RefreshFromState();
     }
@@ -827,11 +829,11 @@ public sealed class GameViewModel : INotifyPropertyChanged
         SelectedClearOpportunityCount = clearOpportunityCount;
     }
 
-    private string BuildStatusText(GameTurnResult result)
+    private string BuildStatusText(GameTurnResult result, bool wasSelectedMoveAttempt)
     {
         if (result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.MoveRejected))
         {
-            return text.CannotMoveThere;
+            return wasSelectedMoveAttempt ? text.PathBlockedTarget : text.CannotMoveThere;
         }
 
         if (result.Events.Any(gameEvent => gameEvent.Kind == GameEventKind.GameOver))

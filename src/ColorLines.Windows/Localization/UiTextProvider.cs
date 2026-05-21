@@ -22,6 +22,8 @@ public sealed class UiTextProvider
 
     public string CannotMoveThere => IsChinese ? "这只猫咪不能移动到那里。" : "That cat cannot move there.";
 
+    public string PathBlockedTarget => IsChinese ? "路径被挡住了。请选择高亮格子。" : "Path blocked. Choose a highlighted cell.";
+
     public string GameSaved => IsChinese ? "游戏已保存。" : "Game saved.";
 
     public string GameOverStatus => IsChinese ? "游戏结束。开始新游戏？" : "Game over. Start a new game?";

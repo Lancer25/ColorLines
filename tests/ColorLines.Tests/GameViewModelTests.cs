@@ -433,6 +433,26 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void BlockedSelectedMoveExplainsPathIsBlocked()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 1), PieceKind.Gray);
+        board.SetPiece(new BoardPosition(1, 0), PieceKind.Tuxedo);
+        board.SetPiece(new BoardPosition(1, 1), PieceKind.White);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+
+        Assert.True(viewModel.Feedback.WasRejected);
+        Assert.Equal("Path blocked. Choose a highlighted cell.", viewModel.StatusText);
+    }
+
+    [Fact]
     public void ReducedAnimationSuppressesRejectFeedback()
     {
         var viewModel = GameViewModel.CreateForNewGame();
@@ -1099,24 +1119,29 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
-    public void ThemeSettingsExposeCurrentSingleThemeOption()
+    public void ThemeSettingsExposeThemeChoicesAndSelection()
     {
         var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
 
         Assert.Equal("Theme", shell.ThemeText);
         Assert.Equal("Current: Cozy Board", shell.ThemeCurrentText);
-        Assert.Equal("3D Cat Tokens", shell.ThemeOptionText);
+        Assert.Equal("Cozy Board", shell.CozyBoardThemeText);
+        Assert.Equal("3D Cat Tokens", shell.ThreeDCatTokensThemeText);
+        Assert.Equal("SettingsSelectedButton", shell.CozyBoardThemeButtonTag);
+        Assert.Equal("MenuSecondaryButton", shell.ThreeDCatTokensThemeButtonTag);
 
         shell.Game.SetThemeCommand.Execute("3DCatTokens");
 
         Assert.Equal("Current: 3D Cat Tokens", shell.ThemeCurrentText);
-        Assert.Equal("Cozy Board", shell.ThemeOptionText);
+        Assert.Equal("MenuSecondaryButton", shell.CozyBoardThemeButtonTag);
+        Assert.Equal("SettingsSelectedButton", shell.ThreeDCatTokensThemeButtonTag);
 
         shell.SetLanguageCommand.Execute("zh");
 
         Assert.Equal("主题", shell.ThemeText);
         Assert.Equal("当前：立体彩猫", shell.ThemeCurrentText);
-        Assert.Equal("温馨棋盘", shell.ThemeOptionText);
+        Assert.Equal("温馨棋盘", shell.CozyBoardThemeText);
+        Assert.Equal("立体彩猫", shell.ThreeDCatTokensThemeText);
     }
 
     [Fact]
