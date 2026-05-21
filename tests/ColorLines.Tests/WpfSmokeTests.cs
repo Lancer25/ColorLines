@@ -500,6 +500,8 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "GameplayNextCatsBlock");
             var gameplayBoardPressureBlock = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "GameplayBoardPressureBlock");
+            var boardPressureBadge = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "BoardPressureBadge");
             var boardPressureText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "BoardPressureText");
             var boardSpaceText = FindVisualChildren<TextBlock>(window)
@@ -508,6 +510,8 @@ public sealed class WpfSmokeTests
                 .First(textBlock => textBlock.Name == "BoardPressureLevelText");
             var projectedBoardPressureText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "ProjectedBoardPressureText");
+            var boardPressureAdviceText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "BoardPressureAdviceText");
             var hintLegendText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "HintLegendText");
             var reachableLegendSwatch = FindVisualChildren<Border>(window)
@@ -621,10 +625,12 @@ public sealed class WpfSmokeTests
             Assert.True(gameplayScoreBlock.Padding.Left >= 16);
             Assert.True(gameplayNextCatsBlock.Padding.Left >= 16);
             Assert.True(gameplayBoardPressureBlock.Padding.Left >= 16);
+            Assert.True(boardPressureBadge.CornerRadius.TopLeft >= 8);
             Assert.Equal(shell.BoardPressureText, boardPressureText.Text);
             Assert.Equal(shell.BoardSpaceText, boardSpaceText.Text);
             Assert.Equal(shell.BoardPressureLevelText, boardPressureLevelText.Text);
             Assert.Equal(shell.ProjectedBoardPressureText, projectedBoardPressureText.Text);
+            Assert.Equal(shell.BoardPressureAdviceText, boardPressureAdviceText.Text);
             Assert.Equal(shell.HintLegendText, hintLegendText.Text);
             Assert.NotNull(reachableLegendSwatch.Background);
             Assert.NotNull(clearLegendSwatch.BorderBrush);
@@ -831,6 +837,7 @@ public sealed class WpfSmokeTests
 
         Assert.Contains("BoardPressureLevel", markup, StringComparison.Ordinal);
         Assert.Contains("ProjectedBoardPressureLevel", markup, StringComparison.Ordinal);
+        Assert.Contains("BoardPressureBadge", markup, StringComparison.Ordinal);
         Assert.Contains("Critical", markup, StringComparison.Ordinal);
         Assert.Contains("#FFFFB65A", markup, StringComparison.Ordinal);
     }

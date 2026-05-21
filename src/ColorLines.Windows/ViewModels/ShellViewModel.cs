@@ -68,6 +68,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(BoardSpaceText));
                 OnPropertyChanged(nameof(BoardPressureLevelText));
                 OnPropertyChanged(nameof(ProjectedBoardPressureText));
+                OnPropertyChanged(nameof(BoardPressureAdviceText));
             }
         }
     }
@@ -252,8 +253,15 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         : $"Pressure: {Game.BoardPressureLevel}";
 
     public string ProjectedBoardPressureText => IsChinese
-        ? $"下批后：{Game.ProjectedOccupiedCellCount}/{Game.TotalCellCount} 已占用"
-        : $"After next: {Game.ProjectedOccupiedCellCount}/{Game.TotalCellCount} filled";
+        ? $"若未消除：+{Game.IncomingPieceCount} 只，{Game.ProjectedOccupiedCellCount}/{Game.TotalCellCount} 已占用"
+        : $"If no clear: +{Game.IncomingPieceCount} cats, {Game.ProjectedOccupiedCellCount}/{Game.TotalCellCount} filled";
+
+    public string BoardPressureAdviceText => Game.ProjectedBoardPressureLevel switch
+    {
+        "Critical" => IsChinese ? "优先消除，保留通路。" : "Clear first. Keep paths open.",
+        "Tight" => IsChinese ? "尽快制造消除机会。" : "Look for a clear before it gets crowded.",
+        _ => IsChinese ? "继续组织五连。" : "Keep building a five-cat line."
+    };
 
     public string HintLegendText => IsChinese ? "提示：可走 | 可消除 | 路径" : "Hints: move | clear | path";
 
@@ -582,6 +590,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(BoardSpaceText));
             OnPropertyChanged(nameof(BoardPressureLevelText));
             OnPropertyChanged(nameof(ProjectedBoardPressureText));
+            OnPropertyChanged(nameof(BoardPressureAdviceText));
         }
 
         if (e.PropertyName is nameof(GameViewModel.AnimationIntensity))
@@ -688,6 +697,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(BoardSpaceText));
         OnPropertyChanged(nameof(BoardPressureLevelText));
         OnPropertyChanged(nameof(ProjectedBoardPressureText));
+        OnPropertyChanged(nameof(BoardPressureAdviceText));
         OnPropertyChanged(nameof(HintLegendText));
         OnPropertyChanged(nameof(ThemeSummaryText));
         OnPropertyChanged(nameof(AnimationSummaryText));

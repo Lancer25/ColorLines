@@ -140,6 +140,24 @@ public sealed class GameViewModelTests
         Assert.Equal("Critical", viewModel.ProjectedBoardPressureLevel);
     }
 
+    [Fact]
+    public void ShellAdviceTextFollowsProjectedBoardPressure()
+    {
+        var calmShell = new ShellViewModel(GameViewModel.CreateForNewGame());
+        Assert.Equal("Keep building a five-cat line.", calmShell.BoardPressureAdviceText);
+
+        var board = GameBoard.CreateEmpty(5);
+        foreach (var position in board.AllPositions().Take(17))
+        {
+            board.SetPiece(position, PieceKind.Orange);
+        }
+
+        var criticalState = new GameState(board, new[] { PieceKind.Gray, PieceKind.Tuxedo, PieceKind.White }, 0, GameStatus.Playing);
+        var criticalShell = new ShellViewModel(new GameViewModel(new GameEngine(new SequenceRandomSource()), criticalState));
+
+        Assert.Equal("Clear first. Keep paths open.", criticalShell.BoardPressureAdviceText);
+    }
+
     [Theory]
     [InlineData("Easy", 7)]
     [InlineData("Normal", 9)]
@@ -1124,13 +1142,15 @@ public sealed class GameViewModelTests
         Assert.Equal("Board: 0/25 filled", shell.BoardPressureText);
         Assert.Equal("Space: 25 empty", shell.BoardSpaceText);
         Assert.Equal("Pressure: Calm", shell.BoardPressureLevelText);
-        Assert.Equal("After next: 0/25 filled", shell.ProjectedBoardPressureText);
+        Assert.Equal("If no clear: +0 cats, 0/25 filled", shell.ProjectedBoardPressureText);
         Assert.Equal("Hints: move | clear | path", shell.HintLegendText);
+        Assert.Equal("Keep building a five-cat line.", shell.BoardPressureAdviceText);
         Assert.Equal("Score 10 | Best 10", shell.PauseRunSummaryText);
         Assert.Contains(nameof(ShellViewModel.BoardPressureText), changes);
         Assert.Contains(nameof(ShellViewModel.BoardSpaceText), changes);
         Assert.Contains(nameof(ShellViewModel.BoardPressureLevelText), changes);
         Assert.Contains(nameof(ShellViewModel.ProjectedBoardPressureText), changes);
+        Assert.Contains(nameof(ShellViewModel.BoardPressureAdviceText), changes);
     }
 
     [Fact]
