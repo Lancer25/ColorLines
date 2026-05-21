@@ -639,6 +639,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         if (path.Count == 0)
         {
             ClearPreviewPath();
+            MovePreviewText = "No path to this cell.";
             return;
         }
 
@@ -656,7 +657,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private void ClearPreviewPath()
     {
-        if (pathPreviewPositions.Count == 0 && pathPreviewTargetPosition is null)
+        if (pathPreviewPositions.Count == 0 && pathPreviewTargetPosition is null && string.IsNullOrEmpty(MovePreviewText))
         {
             return;
         }

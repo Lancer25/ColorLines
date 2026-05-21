@@ -1748,7 +1748,7 @@
                         <StackPanel x:Name="SettingsActionBar"
                                     Grid.Row="2">
                             <Button x:Name="SettingsBackToMenuButton"
-                                    Content="{Binding BackText}"
+                                    Content="{Binding SettingsBackText}"
                                     Command="{Binding CloseSettingsCommand}"
                                     Style="{StaticResource GameplayCompactButton}"
                                     Margin="0" />

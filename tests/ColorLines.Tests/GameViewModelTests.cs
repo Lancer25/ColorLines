@@ -622,6 +622,31 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void PreviewPathCommandExplainsBlockedTarget()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 1), PieceKind.Gray);
+        board.SetPiece(new BoardPosition(1, 0), PieceKind.Tuxedo);
+        board.SetPiece(new BoardPosition(1, 1), PieceKind.White);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.PreviewPathCommand.Execute(target);
+
+        Assert.Equal("No path to this cell.", viewModel.MovePreviewText);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreview);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreviewTarget);
+
+        viewModel.ClearPreviewPathCommand.Execute(null);
+
+        Assert.Equal(string.Empty, viewModel.MovePreviewText);
+    }
+
+    [Fact]
     public void ReducedAnimationKeepsPlanningFeedback()
     {
         var board = GameBoard.CreateEmpty();
@@ -1106,6 +1131,27 @@ public sealed class GameViewModelTests
 
         Assert.Equal(ShellScreen.PauseMenu, shell.CurrentScreen);
         Assert.True(shell.IsPauseMenuVisible);
+    }
+
+    [Fact]
+    public void SettingsBackTextFollowsSettingsReturnScreen()
+    {
+        var shell = new ShellViewModel(GameViewModel.CreateForNewGame());
+
+        shell.OpenSettingsCommand.Execute(null);
+
+        Assert.Equal("Back to Main Menu", shell.SettingsBackText);
+
+        shell.CloseSettingsCommand.Execute(null);
+        shell.ContinueCommand.Execute(null);
+        shell.OpenPauseMenuCommand.Execute(null);
+        shell.OpenSettingsCommand.Execute(null);
+
+        Assert.Equal("Back to Game Menu", shell.SettingsBackText);
+
+        shell.SetLanguageCommand.Execute("zh");
+
+        Assert.Equal("\u8fd4\u56de\u6e38\u620f\u83dc\u5355", shell.SettingsBackText);
     }
 
     [Fact]

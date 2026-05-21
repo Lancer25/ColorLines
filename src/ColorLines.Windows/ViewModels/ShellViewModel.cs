@@ -359,6 +359,10 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public bool CanOpenPauseMenu => CurrentScreen == ShellScreen.Playing && !Game.IsGameOver;
 
+    public string SettingsBackText => settingsReturnScreen == ShellScreen.PauseMenu
+        ? (IsChinese ? "返回游戏菜单" : "Back to Game Menu")
+        : (IsChinese ? "返回主菜单" : "Back to Main Menu");
+
     public bool IsReturnToMenuConfirmVisible
     {
         get => isReturnToMenuConfirmVisible;
@@ -444,6 +448,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         settingsReturnScreen = CurrentScreen == ShellScreen.PauseMenu
             ? ShellScreen.PauseMenu
             : ShellScreen.MainMenu;
+        OnPropertyChanged(nameof(SettingsBackText));
         CurrentScreen = ShellScreen.Settings;
     }
 
@@ -665,6 +670,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(EndGameText));
         OnPropertyChanged(nameof(ReturnToMainMenuText));
         OnPropertyChanged(nameof(BackText));
+        OnPropertyChanged(nameof(SettingsBackText));
         OnPropertyChanged(nameof(GameMenuTitle));
         OnPropertyChanged(nameof(PauseSubtitle));
         OnPropertyChanged(nameof(SettingsTitle));

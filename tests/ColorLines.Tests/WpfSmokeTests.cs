@@ -388,6 +388,7 @@ public sealed class WpfSmokeTests
             Assert.Equal("MenuSecondaryButton", settingsTogglePathHintsButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleAutoSaveButton.Tag);
             Assert.Equal("MenuSecondaryButton", backToMenuButton.Tag);
+            Assert.Equal(shell.SettingsBackText, backToMenuButton.Content);
             Assert.Null(gameplaySettingsPanel);
             Assert.Null(settingsNewGameButton);
             Assert.Same(shell.Game.ToggleAnimationCommand, settingsToggleAnimationButton.Command);
