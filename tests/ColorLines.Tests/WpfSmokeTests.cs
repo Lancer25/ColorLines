@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using ColorLines.Windows;
@@ -44,6 +45,19 @@ public sealed class WpfSmokeTests
             Assert.NotEmpty(cozy);
             Assert.NotEmpty(threeD);
             Assert.NotEqual(cozy, threeD);
+        });
+    }
+
+    [Fact]
+    public void ThreeDCatTokenAssetUsesFullModelSilhouette()
+    {
+        RunOnWpfThread(() =>
+        {
+            var threeD = ReadResourceBytes("/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/orange.png");
+            var bounds = GetAlphaBounds(threeD);
+
+            Assert.True(bounds.Width >= 190);
+            Assert.True(bounds.Height >= 200);
         });
     }
 
@@ -1184,6 +1198,40 @@ public sealed class WpfSmokeTests
         using var memory = new MemoryStream();
         streamInfo.Stream.CopyTo(memory);
         return memory.ToArray();
+    }
+
+    private static Int32Rect GetAlphaBounds(byte[] png)
+    {
+        using var stream = new MemoryStream(png);
+        var bitmap = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad).Frames[0];
+        var converted = new FormatConvertedBitmap(bitmap, PixelFormats.Bgra32, null, 0);
+        var stride = converted.PixelWidth * 4;
+        var pixels = new byte[stride * converted.PixelHeight];
+        converted.CopyPixels(pixels, stride, 0);
+        var minX = converted.PixelWidth;
+        var minY = converted.PixelHeight;
+        var maxX = -1;
+        var maxY = -1;
+
+        for (var y = 0; y < converted.PixelHeight; y++)
+        {
+            for (var x = 0; x < converted.PixelWidth; x++)
+            {
+                if (pixels[(y * stride) + (x * 4) + 3] <= 20)
+                {
+                    continue;
+                }
+
+                minX = Math.Min(minX, x);
+                minY = Math.Min(minY, y);
+                maxX = Math.Max(maxX, x);
+                maxY = Math.Max(maxY, y);
+            }
+        }
+
+        return maxX < 0
+            ? new Int32Rect(0, 0, 0, 0)
+            : new Int32Rect(minX, minY, maxX - minX + 1, maxY - minY + 1);
     }
 
     private static void RunOnWpfThread(Action action)
