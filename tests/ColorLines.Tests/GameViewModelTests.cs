@@ -107,6 +107,39 @@ public sealed class GameViewModelTests
         Assert.Equal("Critical", viewModel.BoardPressureLevel);
     }
 
+    [Fact]
+    public void ProjectedBoardPressureIncludesNextCats()
+    {
+        var board = GameBoard.CreateEmpty(5);
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 1), PieceKind.Gray);
+        var state = new GameState(board, new[] { PieceKind.Orange, PieceKind.Gray, PieceKind.Tuxedo }, 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+
+        Assert.Equal(3, viewModel.IncomingPieceCount);
+        Assert.Equal(5, viewModel.ProjectedOccupiedCellCount);
+        Assert.Equal(20, viewModel.ProjectedBoardFillPercent);
+        Assert.Equal("Calm", viewModel.ProjectedBoardPressureLevel);
+    }
+
+    [Fact]
+    public void ProjectedBoardPressureCapsAtAvailableSpace()
+    {
+        var board = GameBoard.CreateEmpty(5);
+        foreach (var position in board.AllPositions().Take(24))
+        {
+            board.SetPiece(position, PieceKind.Orange);
+        }
+
+        var state = new GameState(board, new[] { PieceKind.Orange, PieceKind.Gray, PieceKind.Tuxedo }, 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+
+        Assert.Equal(1, viewModel.IncomingPieceCount);
+        Assert.Equal(25, viewModel.ProjectedOccupiedCellCount);
+        Assert.Equal(100, viewModel.ProjectedBoardFillPercent);
+        Assert.Equal("Critical", viewModel.ProjectedBoardPressureLevel);
+    }
+
     [Theory]
     [InlineData("Easy", 7)]
     [InlineData("Normal", 9)]
@@ -1072,9 +1105,11 @@ public sealed class GameViewModelTests
         Assert.Equal("Board: 0/25 filled", shell.BoardPressureText);
         Assert.Equal("Space: 25 empty", shell.BoardSpaceText);
         Assert.Equal("Pressure: Calm", shell.BoardPressureLevelText);
+        Assert.Equal("After next: 0/25 filled", shell.ProjectedBoardPressureText);
         Assert.Contains(nameof(ShellViewModel.BoardPressureText), changes);
         Assert.Contains(nameof(ShellViewModel.BoardSpaceText), changes);
         Assert.Contains(nameof(ShellViewModel.BoardPressureLevelText), changes);
+        Assert.Contains(nameof(ShellViewModel.ProjectedBoardPressureText), changes);
     }
 
     [Fact]

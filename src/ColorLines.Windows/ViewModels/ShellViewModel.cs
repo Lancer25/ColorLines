@@ -67,6 +67,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(BoardPressureText));
                 OnPropertyChanged(nameof(BoardSpaceText));
                 OnPropertyChanged(nameof(BoardPressureLevelText));
+                OnPropertyChanged(nameof(ProjectedBoardPressureText));
             }
         }
     }
@@ -245,6 +246,10 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     public string BoardPressureLevelText => IsChinese
         ? $"压力：{DisplayBoardPressureLevel}"
         : $"Pressure: {Game.BoardPressureLevel}";
+
+    public string ProjectedBoardPressureText => IsChinese
+        ? $"下批后：{Game.ProjectedOccupiedCellCount}/{Game.TotalCellCount} 已占用"
+        : $"After next: {Game.ProjectedOccupiedCellCount}/{Game.TotalCellCount} filled";
 
     public string ThemeSummaryText => IsChinese ? "主题：温馨棋盘" : $"Theme: {Game.SelectedThemeName}";
 
@@ -562,11 +567,14 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         if (e.PropertyName is nameof(GameViewModel.OccupiedCellCount)
             or nameof(GameViewModel.EmptyCellCount)
             or nameof(GameViewModel.TotalCellCount)
-            or nameof(GameViewModel.BoardPressureLevel))
+            or nameof(GameViewModel.BoardPressureLevel)
+            or nameof(GameViewModel.ProjectedOccupiedCellCount)
+            or nameof(GameViewModel.ProjectedBoardPressureLevel))
         {
             OnPropertyChanged(nameof(BoardPressureText));
             OnPropertyChanged(nameof(BoardSpaceText));
             OnPropertyChanged(nameof(BoardPressureLevelText));
+            OnPropertyChanged(nameof(ProjectedBoardPressureText));
         }
 
         if (e.PropertyName is nameof(GameViewModel.AnimationIntensity))
@@ -671,6 +679,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(BoardPressureText));
         OnPropertyChanged(nameof(BoardSpaceText));
         OnPropertyChanged(nameof(BoardPressureLevelText));
+        OnPropertyChanged(nameof(ProjectedBoardPressureText));
         OnPropertyChanged(nameof(ThemeSummaryText));
         OnPropertyChanged(nameof(AnimationSummaryText));
         OnPropertyChanged(nameof(SoundSummaryText));

@@ -1129,6 +1129,12 @@
                                            FontSize="13"
                                            TextWrapping="Wrap"
                                            Foreground="{StaticResource TextMutedBrush}" />
+                                <TextBlock x:Name="ProjectedBoardPressureText"
+                                           Text="{Binding ProjectedBoardPressureText}"
+                                           Margin="0,4,0,0"
+                                           FontSize="13"
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource TextMutedBrush}" />
                             </StackPanel>
                         </Border>
 

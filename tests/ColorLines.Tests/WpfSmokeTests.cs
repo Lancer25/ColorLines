@@ -506,6 +506,8 @@ public sealed class WpfSmokeTests
                 .First(textBlock => textBlock.Name == "BoardSpaceText");
             var boardPressureLevelText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "BoardPressureLevelText");
+            var projectedBoardPressureText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "ProjectedBoardPressureText");
             var gameplayActionBar = FindVisualChildren<StackPanel>(window)
                 .First(panel => panel.Name == "GameplayActionBar");
             var pauseMenuView = FindVisualChildren<Grid>(window)
@@ -608,6 +610,7 @@ public sealed class WpfSmokeTests
             Assert.Equal(shell.BoardPressureText, boardPressureText.Text);
             Assert.Equal(shell.BoardSpaceText, boardSpaceText.Text);
             Assert.Equal(shell.BoardPressureLevelText, boardPressureLevelText.Text);
+            Assert.Equal(shell.ProjectedBoardPressureText, projectedBoardPressureText.Text);
             Assert.Single(gameplayActionBar.Children);
             Assert.NotNull(pauseMenuView);
             Assert.Equal(Visibility.Hidden, pauseMenuView.Visibility);

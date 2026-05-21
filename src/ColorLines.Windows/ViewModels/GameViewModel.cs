@@ -272,6 +272,21 @@ public sealed class GameViewModel : INotifyPropertyChanged
         _ => "Calm"
     };
 
+    public int IncomingPieceCount => Math.Min(state.NextPieces.Count, EmptyCellCount);
+
+    public int ProjectedOccupiedCellCount => OccupiedCellCount + IncomingPieceCount;
+
+    public int ProjectedBoardFillPercent => TotalCellCount == 0
+        ? 0
+        : (int)Math.Round(ProjectedOccupiedCellCount * 100.0 / TotalCellCount, MidpointRounding.AwayFromZero);
+
+    public string ProjectedBoardPressureLevel => ProjectedBoardFillPercent switch
+    {
+        >= 75 => "Critical",
+        >= 50 => "Tight",
+        _ => "Calm"
+    };
+
     public string Language => text.Language;
 
     public static GameViewModel CreateForNewGame()
@@ -779,5 +794,9 @@ public sealed class GameViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(EmptyCellCount));
         OnPropertyChanged(nameof(BoardFillPercent));
         OnPropertyChanged(nameof(BoardPressureLevel));
+        OnPropertyChanged(nameof(IncomingPieceCount));
+        OnPropertyChanged(nameof(ProjectedOccupiedCellCount));
+        OnPropertyChanged(nameof(ProjectedBoardFillPercent));
+        OnPropertyChanged(nameof(ProjectedBoardPressureLevel));
     }
 }
