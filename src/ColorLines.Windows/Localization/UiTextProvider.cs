@@ -62,6 +62,11 @@ public sealed class UiTextProvider
             : $"Selected {piece}. {count} clear {(count == 1 ? "opportunity" : "opportunities")}.";
     }
 
+    public string SelectedPieceWithNoReachableTargets(string piece)
+    {
+        return IsChinese ? $"已选择 {piece}。没有可到达的空格。" : $"Selected {piece}. No reachable cells.";
+    }
+
     public string Points(int scoreDelta)
     {
         return IsChinese ? $"+{scoreDelta} 分！" : $"+{scoreDelta} points!";

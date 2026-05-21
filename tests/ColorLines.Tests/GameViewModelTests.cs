@@ -282,6 +282,25 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SelectingTrappedPieceExplainsNoReachableTargets()
+    {
+        var board = GameBoard.CreateEmpty(5);
+        board.SetPiece(new BoardPosition(2, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(1, 2), PieceKind.Gray);
+        board.SetPiece(new BoardPosition(2, 1), PieceKind.Gray);
+        board.SetPiece(new BoardPosition(2, 3), PieceKind.Gray);
+        board.SetPiece(new BoardPosition(3, 2), PieceKind.Gray);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 2 && cell.Column == 2);
+
+        viewModel.SelectCellCommand.Execute(source);
+
+        Assert.Equal("Selected Orange. No reachable cells.", viewModel.StatusText);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsReachableTarget);
+    }
+
+    [Fact]
     public void DisabledPathHintsHideReachableTargetsAndPreviewPath()
     {
         var board = GameBoard.CreateEmpty();

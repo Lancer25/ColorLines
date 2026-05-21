@@ -677,6 +677,11 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private string BuildSelectedStatusText(PieceKind piece)
     {
         var reachableTargets = GetReachableTargets();
+        if (reachableTargets.Count == 0)
+        {
+            return text.SelectedPieceWithNoReachableTargets(piece.ToString());
+        }
+
         var clearOpportunityCount = GetClearOpportunities(reachableTargets).Count;
         return clearOpportunityCount == 0
             ? text.SelectedPiece(piece.ToString())

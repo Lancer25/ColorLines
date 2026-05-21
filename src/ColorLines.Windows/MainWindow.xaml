@@ -130,6 +130,11 @@
                             <Trigger Property="IsKeyboardFocused" Value="True">
                                 <Setter TargetName="ButtonFrame" Property="BorderBrush" Value="{StaticResource MenuPrimaryButtonHoverBrush}" />
                             </Trigger>
+                            <Trigger Property="Tag" Value="SettingsSelectedButton">
+                                <Setter TargetName="ButtonFrame" Property="Background" Value="{StaticResource MenuPrimaryButtonBrush}" />
+                                <Setter TargetName="ButtonFrame" Property="BorderBrush" Value="{StaticResource MenuPrimaryButtonHoverBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -1105,6 +1110,13 @@
                                             <Setter Property="BorderBrush" Value="#99FFB65A" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Game.BoardPressureLevel}" Value="Critical">
+                                            <Setter Property="BorderBrush" Value="#FFFFB65A" />
+                                            <Setter Property="BorderThickness" Value="2" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Game.ProjectedBoardPressureLevel}" Value="Tight">
+                                            <Setter Property="BorderBrush" Value="#99FFB65A" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Game.ProjectedBoardPressureLevel}" Value="Critical">
                                             <Setter Property="BorderBrush" Value="#FFFFB65A" />
                                             <Setter Property="BorderThickness" Value="2" />
                                         </DataTrigger>

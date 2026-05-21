@@ -809,6 +809,7 @@ public sealed class WpfSmokeTests
         var markup = block.ToString(SaveOptions.DisableFormatting);
 
         Assert.Contains("BoardPressureLevel", markup, StringComparison.Ordinal);
+        Assert.Contains("ProjectedBoardPressureLevel", markup, StringComparison.Ordinal);
         Assert.Contains("Critical", markup, StringComparison.Ordinal);
         Assert.Contains("#FFFFB65A", markup, StringComparison.Ordinal);
     }
@@ -826,6 +827,20 @@ public sealed class WpfSmokeTests
 
         Assert.Contains("IsKeyboardFocusWithin", styleMarkup, StringComparison.Ordinal);
         Assert.Contains("MenuPrimaryButtonHoverBrush", styleMarkup, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void SecondaryButtonsExposeSettingsSelectedVisualState()
+    {
+        var document = LoadMainWindowXaml();
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var secondaryButtonStyle = document.Descendants()
+            .First(element => element.Name.LocalName == "Style"
+                && element.Attribute(x + "Key")?.Value == "MenuSecondaryButton");
+        var styleMarkup = secondaryButtonStyle.ToString(SaveOptions.DisableFormatting);
+
+        Assert.Contains("SettingsSelectedButton", styleMarkup, StringComparison.Ordinal);
+        Assert.Contains("MenuPrimaryButtonBrush", styleMarkup, StringComparison.Ordinal);
     }
 
     [Fact]
