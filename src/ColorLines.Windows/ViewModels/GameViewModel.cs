@@ -14,6 +14,7 @@ namespace ColorLines.Windows.ViewModels;
 
 public sealed class GameViewModel : INotifyPropertyChanged
 {
+    private const double BoardPressureMeterMaxWidth = 280;
     private GameEngine engine;
     private readonly ISoundPlayer soundPlayer;
     private readonly UiTextProvider text;
@@ -28,6 +29,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private bool isAutoSaveEnabled;
     private string animationIntensity;
     private string difficulty;
+    private string movePreviewText;
     private int selectedReachableCellCount;
     private int selectedClearOpportunityCount;
     private HashSet<BoardPosition> movedPositions;
@@ -53,6 +55,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         isAutoSaveEnabled = true;
         animationIntensity = "Full";
         this.difficulty = DifficultyCatalog.Normalize(difficulty);
+        movePreviewText = string.Empty;
         selectedReachableCellCount = 0;
         selectedClearOpportunityCount = 0;
         movedPositions = new HashSet<BoardPosition>();
@@ -291,6 +294,10 @@ public sealed class GameViewModel : INotifyPropertyChanged
         _ => "Calm"
     };
 
+    public double BoardPressureMeterWidth => Math.Round(BoardPressureMeterMaxWidth * BoardFillPercent / 100.0, MidpointRounding.AwayFromZero);
+
+    public double ProjectedBoardPressureMeterWidth => Math.Round(BoardPressureMeterMaxWidth * ProjectedBoardFillPercent / 100.0, MidpointRounding.AwayFromZero);
+
     public int SelectedReachableCellCount
     {
         get => selectedReachableCellCount;
@@ -322,6 +329,19 @@ public sealed class GameViewModel : INotifyPropertyChanged
     public string SelectedActionSummaryText => selectedPosition is null
         ? string.Empty
         : $"Reachable: {SelectedReachableCellCount} | Clears: {SelectedClearOpportunityCount}";
+
+    public string MovePreviewText
+    {
+        get => movePreviewText;
+        private set
+        {
+            if (movePreviewText != value)
+            {
+                movePreviewText = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public string Language => text.Language;
 
@@ -383,6 +403,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             ClearCellFeedback();
             pathPreviewPositions.Clear();
             pathPreviewTargetPosition = null;
+            MovePreviewText = string.Empty;
             Feedback = TurnFeedback.Neutral;
             selectedPosition = position;
             StatusText = BuildSelectedStatusText(piece.Value);
@@ -396,6 +417,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             ClearCellFeedback();
             pathPreviewPositions.Clear();
             pathPreviewTargetPosition = null;
+            MovePreviewText = string.Empty;
             rejectedPositions.Add(position);
             Feedback = new TurnFeedback(false, true, false, false, false, 0);
             StatusText = text.SelectCatBeforeTarget;
@@ -409,6 +431,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         selectedPosition = null;
         pathPreviewPositions.Clear();
         pathPreviewTargetPosition = null;
+        MovePreviewText = string.Empty;
         Score = state.Score;
         Feedback = BuildFeedback(result);
         StoreCellFeedback(result);
@@ -425,6 +448,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         selectedPosition = null;
         pathPreviewPositions.Clear();
         pathPreviewTargetPosition = null;
+        MovePreviewText = string.Empty;
         ClearCellFeedback();
         Score = state.Score;
         Feedback = TurnFeedback.Neutral;
@@ -441,6 +465,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         selectedPosition = null;
         pathPreviewPositions.Clear();
         pathPreviewTargetPosition = null;
+        MovePreviewText = string.Empty;
         ClearCellFeedback();
         Feedback = new TurnFeedback(false, false, false, false, true, 0);
         OnPropertyChanged(nameof(IsGameOver));
@@ -625,6 +650,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
         pathPreviewPositions = nextPreview;
         pathPreviewTargetPosition = target;
+        MovePreviewText = BuildMovePreviewText(target);
         ApplyPathPreview();
     }
 
@@ -637,6 +663,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
         pathPreviewPositions.Clear();
         pathPreviewTargetPosition = null;
+        MovePreviewText = string.Empty;
         ApplyPathPreview();
     }
 
@@ -725,6 +752,27 @@ public sealed class GameViewModel : INotifyPropertyChanged
         return clearOpportunityCount == 0
             ? text.SelectedPiece(piece.ToString())
             : text.SelectedPieceWithClearOpportunities(piece.ToString(), clearOpportunityCount);
+    }
+
+    private string BuildMovePreviewText(BoardPosition target)
+    {
+        if (selectedPosition is null)
+        {
+            return string.Empty;
+        }
+
+        var previewBoard = state.Board.Clone();
+        previewBoard.MovePiece(selectedPosition.Value, target);
+        var lines = LineDetector.FindLines(previewBoard, new[] { target });
+        if (lines.Count > 0)
+        {
+            var clearPositions = LineDetector.UniquePositions(lines);
+            var scoreDelta = ScoreCalculator.Calculate(lines.Count, clearPositions.Count);
+            return $"This move clears +{scoreDelta} and skips new cats.";
+        }
+
+        var spawnCount = Math.Min(state.NextPieces.Count, previewBoard.EmptyPositions().Count());
+        return $"No clear: {spawnCount} cats will spawn.";
     }
 
     private void UpdateSelectedActionSummary(int reachableCount, int clearOpportunityCount)
@@ -852,9 +900,11 @@ public sealed class GameViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(EmptyCellCount));
         OnPropertyChanged(nameof(BoardFillPercent));
         OnPropertyChanged(nameof(BoardPressureLevel));
+        OnPropertyChanged(nameof(BoardPressureMeterWidth));
         OnPropertyChanged(nameof(IncomingPieceCount));
         OnPropertyChanged(nameof(ProjectedOccupiedCellCount));
         OnPropertyChanged(nameof(ProjectedBoardFillPercent));
         OnPropertyChanged(nameof(ProjectedBoardPressureLevel));
+        OnPropertyChanged(nameof(ProjectedBoardPressureMeterWidth));
     }
 }

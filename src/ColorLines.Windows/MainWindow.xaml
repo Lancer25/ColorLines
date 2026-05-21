@@ -990,6 +990,13 @@
                                            FontWeight="SemiBold"
                                            TextWrapping="Wrap"
                                            Foreground="{StaticResource TextMutedBrush}" />
+                                <TextBlock x:Name="MovePreviewText"
+                                           Text="{Binding Game.MovePreviewText}"
+                                           Margin="0,5,0,0"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource ScoreAccentBrush}" />
                             </StackPanel>
                         </Border>
 
@@ -1172,12 +1179,18 @@
                                            TextWrapping="Wrap"
                                            Foreground="{StaticResource TextPrimaryBrush}" />
                                 <Grid x:Name="BoardPressureMeter"
+                                      Width="280"
                                       Height="8"
                                       Margin="0,9,0,0">
                                     <Border Background="{StaticResource GameplayHudAccentBrush}"
                                             CornerRadius="4" />
+                                    <Border x:Name="ProjectedBoardPressureMeterFill"
+                                            Width="{Binding Game.ProjectedBoardPressureMeterWidth}"
+                                            HorizontalAlignment="Left"
+                                            Background="#44FFB65A"
+                                            CornerRadius="4" />
                                     <Border x:Name="BoardPressureMeterFill"
-                                            Width="92"
+                                            Width="{Binding Game.BoardPressureMeterWidth}"
                                             HorizontalAlignment="Left"
                                             Background="{StaticResource ScoreAccentBrush}"
                                             CornerRadius="4" />

@@ -496,6 +496,8 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "GameplayStatusBanner");
             var selectedActionSummaryText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "SelectedActionSummaryText");
+            var movePreviewText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "MovePreviewText");
             var gameplayScoreBlock = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "GameplayScoreBlock");
             var gameplayNextCatsBlock = FindVisualChildren<Border>(window)
@@ -506,6 +508,8 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "BoardPressureBadge");
             var boardPressureMeter = FindVisualChildren<Grid>(window)
                 .First(grid => grid.Name == "BoardPressureMeter");
+            var projectedBoardPressureMeterFill = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "ProjectedBoardPressureMeterFill");
             var boardPressureMeterFill = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "BoardPressureMeterFill");
             var boardPressureText = FindVisualChildren<TextBlock>(window)
@@ -629,11 +633,14 @@ public sealed class WpfSmokeTests
             Assert.True(gameplayHudPanel.MaxWidth <= 340);
             Assert.True(gameplayStatusBanner.MinHeight >= 58);
             Assert.Equal(shell.Game.SelectedActionSummaryText, selectedActionSummaryText.Text);
+            Assert.Equal(shell.Game.MovePreviewText, movePreviewText.Text);
             Assert.True(gameplayScoreBlock.Padding.Left >= 16);
             Assert.True(gameplayNextCatsBlock.Padding.Left >= 16);
             Assert.True(gameplayBoardPressureBlock.Padding.Left >= 16);
             Assert.True(boardPressureBadge.CornerRadius.TopLeft >= 8);
             Assert.True(boardPressureMeter.Height >= 8);
+            Assert.Equal(shell.Game.ProjectedBoardPressureMeterWidth, projectedBoardPressureMeterFill.Width);
+            Assert.Equal(shell.Game.BoardPressureMeterWidth, boardPressureMeterFill.Width);
             Assert.NotNull(boardPressureMeterFill.Background);
             Assert.Equal(shell.BoardPressureText, boardPressureText.Text);
             Assert.Equal(shell.BoardSpaceText, boardSpaceText.Text);
