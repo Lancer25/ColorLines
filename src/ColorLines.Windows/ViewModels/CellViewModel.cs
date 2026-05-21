@@ -191,6 +191,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         int column,
         PieceKind piece,
         bool isSelected,
+        string? themeId = null,
         bool wasMovedTo = false,
         bool wasMovePath = false,
         bool wasSpawned = false,
@@ -200,7 +201,7 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool isPathPreview = false,
         bool isPathPreviewTarget = false)
     {
-        var viewModel = PieceViewModel.FromPiece(piece);
+        var viewModel = PieceViewModel.FromPiece(piece, themeId);
         return new CellViewModel(
             row,
             column,
@@ -237,9 +238,10 @@ public sealed class CellViewModel : INotifyPropertyChanged
         bool isReachableTarget,
         bool isClearOpportunity,
         bool isPathPreview,
-        bool isPathPreviewTarget)
+        bool isPathPreviewTarget,
+        string? themeId = null)
     {
-        var nextPiece = pieceKind is null ? null : PieceViewModel.FromPiece(pieceKind.Value);
+        var nextPiece = pieceKind is null ? null : PieceViewModel.FromPiece(pieceKind.Value, themeId);
         IsOccupied = pieceKind is not null;
         IsSelected = pieceKind is not null && isSelected;
         PieceLabel = nextPiece?.Label ?? string.Empty;

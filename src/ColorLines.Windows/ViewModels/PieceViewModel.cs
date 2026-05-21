@@ -5,6 +5,7 @@ namespace ColorLines.Windows.ViewModels;
 
 public sealed record PieceViewModel(
     PieceKind Kind,
+    string ThemeId,
     string Name,
     string Label,
     string FaceText,
@@ -16,8 +17,9 @@ public sealed record PieceViewModel(
     Brush InnerEarBrush,
     string AssetPath)
 {
-    public static PieceViewModel FromPiece(PieceKind piece)
+    public static PieceViewModel FromPiece(PieceKind piece, string? themeId = null)
     {
+        var normalizedThemeId = ColorLines.Windows.Themes.ThemeCatalog.Normalize(themeId);
         var bodyBrush = ToBodyBrush(piece);
         var faceBrush = piece is PieceKind.Black or PieceKind.Tuxedo or PieceKind.BlueGray
             ? Brushes.White
@@ -25,6 +27,7 @@ public sealed record PieceViewModel(
 
         return new PieceViewModel(
             piece,
+            normalizedThemeId,
             piece.ToString(),
             ToLabel(piece),
             "=^.^=",
@@ -34,7 +37,7 @@ public sealed record PieceViewModel(
             Brushes.White,
             new SolidColorBrush(Color.FromArgb(80, 74, 45, 35)),
             Brushes.LightPink,
-            ToAssetPath(piece));
+            ToAssetPath(piece, normalizedThemeId));
     }
 
     private static string ToLabel(PieceKind piece)
@@ -67,7 +70,7 @@ public sealed record PieceViewModel(
         };
     }
 
-    private static string ToAssetPath(PieceKind piece)
+    private static string ToAssetPath(PieceKind piece, string themeId)
     {
         var fileName = piece switch
         {
@@ -81,6 +84,6 @@ public sealed record PieceViewModel(
             _ => string.Empty
         };
 
-        return $"/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/{fileName}.png";
+        return $"/ColorLines.Windows;component/Assets/Themes/{themeId}/pieces/{fileName}.png";
     }
 }

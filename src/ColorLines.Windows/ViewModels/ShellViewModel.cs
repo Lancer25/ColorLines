@@ -222,11 +222,11 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public string ThemeText => IsChinese ? "主题" : "Theme";
 
-    public string ThemeCurrentText => IsChinese ? "当前：温馨棋盘" : $"Current: {Game.SelectedThemeName}";
+    public string ThemeCurrentText => IsChinese ? $"当前：{CurrentThemeDisplayName}" : $"Current: {Game.SelectedThemeName}";
 
-    public string ThemeOptionText => IsChinese ? "温馨棋盘" : Game.SelectedThemeName;
+    public string ThemeOptionText => IsChinese ? NextThemeDisplayName : Game.NextThemeName;
 
-    public string ThemeUnavailableText => IsChinese ? "更多主题稍后加入。" : "More themes will be added later.";
+    public string ThemeUnavailableText => IsChinese ? "切换棋子主题。" : "Switch piece theme.";
 
     public string ReadyToPlayText => IsChinese ? "准备开始" : "Ready to play";
 
@@ -265,7 +265,9 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
     public string HintLegendText => IsChinese ? "提示：可走 | 可消除 | 路径" : "Hints: move | clear | path";
 
-    public string ThemeSummaryText => IsChinese ? "主题：温馨棋盘" : $"Theme: {Game.SelectedThemeName}";
+    public string ThemeSummaryText => IsChinese ? $"主题：{CurrentThemeDisplayName}" : $"Theme: {Game.SelectedThemeName}";
+
+    public string ThemeButtonParameter => Game.NextThemeId;
 
     public string AnimationSummaryText => IsChinese ? $"动效：{DisplayAnimationIntensity}" : $"Animation: {Game.AnimationIntensity}";
 
@@ -347,6 +349,10 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         DifficultyCatalog.Hard => IsChinese ? "困难" : "Hard",
         _ => IsChinese ? "普通" : "Normal"
     };
+
+    private string CurrentThemeDisplayName => ColorLines.Windows.Themes.ThemeCatalog.GetTheme(Game.ThemeId).ChineseDisplayName;
+
+    private string NextThemeDisplayName => ColorLines.Windows.Themes.ThemeCatalog.GetNextTheme(Game.ThemeId).ChineseDisplayName;
 
     private string DisplayBoardPressureLevel => Game.BoardPressureLevel switch
     {
@@ -629,6 +635,14 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             OnDifficultySelectionChanged();
         }
 
+        if (e.PropertyName is nameof(GameViewModel.ThemeId))
+        {
+            OnPropertyChanged(nameof(ThemeCurrentText));
+            OnPropertyChanged(nameof(ThemeOptionText));
+            OnPropertyChanged(nameof(ThemeSummaryText));
+            OnPropertyChanged(nameof(ThemeButtonParameter));
+        }
+
         if (e.PropertyName is nameof(GameViewModel.Language))
         {
             OnPropertyChanged(nameof(Language));
@@ -693,6 +707,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(ThemeCurrentText));
         OnPropertyChanged(nameof(ThemeOptionText));
         OnPropertyChanged(nameof(ThemeUnavailableText));
+        OnPropertyChanged(nameof(ThemeButtonParameter));
         OnPropertyChanged(nameof(ReadyToPlayText));
         OnPropertyChanged(nameof(MenuTaglineText));
         OnPropertyChanged(nameof(ScoreText));

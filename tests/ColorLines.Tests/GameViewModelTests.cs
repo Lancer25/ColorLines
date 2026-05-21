@@ -904,7 +904,7 @@ public sealed class GameViewModelTests
     [Fact]
     public void CreateFromSaveRestoresHighScoreAndSettings()
     {
-        var save = new LocalSaveData(1, 99, false, "Reduced", "CozyBoard", null, new WindowPlacementData(800, 600))
+        var save = new LocalSaveData(1, 99, false, "Reduced", "3DCatTokens", null, new WindowPlacementData(800, 600))
         {
             Difficulty = "Hard",
             Language = "zh",
@@ -922,6 +922,8 @@ public sealed class GameViewModelTests
         Assert.False(viewModel.IsPathHintsEnabled);
         Assert.False(viewModel.IsAutoSaveEnabled);
         Assert.False(viewModel.IsFullAnimation);
+        Assert.Equal("3DCatTokens", viewModel.ThemeId);
+        Assert.Equal("3D Cat Tokens", viewModel.SelectedThemeName);
     }
 
     [Fact]
@@ -940,6 +942,7 @@ public sealed class GameViewModelTests
     {
         var viewModel = GameViewModel.CreateForNewGame();
         viewModel.ToggleSoundCommand.Execute(null);
+        viewModel.SetThemeCommand.Execute("3DCatTokens");
 
         var save = viewModel.CreateSaveData(new WindowPlacementData(1000, 720));
 
@@ -947,10 +950,26 @@ public sealed class GameViewModelTests
         Assert.Equal("Full", save.AnimationIntensity);
         Assert.Equal("Normal", save.Difficulty);
         Assert.Equal("en", save.Language);
-        Assert.Equal("CozyBoard", save.ThemeId);
+        Assert.Equal("3DCatTokens", save.ThemeId);
         Assert.True(save.IsPathHintsEnabled);
         Assert.True(save.IsAutoSaveEnabled);
         Assert.NotNull(save.Game);
+    }
+
+    [Fact]
+    public void ThemeCommandRefreshesPieceAssetPaths()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, new[] { PieceKind.Gray }, 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var occupied = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+
+        viewModel.SetThemeCommand.Execute("3DCatTokens");
+
+        Assert.Equal("3DCatTokens", viewModel.ThemeId);
+        Assert.Contains("/Assets/Themes/3DCatTokens/pieces/orange.png", occupied.Piece!.AssetPath, StringComparison.Ordinal);
+        Assert.Contains("/Assets/Themes/3DCatTokens/pieces/gray.png", viewModel.NextPieces.Single().AssetPath, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -962,7 +981,7 @@ public sealed class GameViewModelTests
         Assert.Equal("Auto Save", shell.AutoSaveText);
         Assert.Equal("Status: True", shell.AutoSaveStatusText);
         Assert.Equal("Turn Auto Save Off", shell.ToggleAutoSaveText);
-        Assert.Equal("More themes will be added later.", shell.ThemeUnavailableText);
+        Assert.Equal("Switch piece theme.", shell.ThemeUnavailableText);
 
         shell.Game.ToggleAutoSaveCommand.Execute(null);
 
@@ -1010,7 +1029,7 @@ public sealed class GameViewModelTests
         Assert.Equal("最高：0", shell.BestText);
         Assert.Equal("下批猫咪", shell.NextCatsText);
         Assert.Equal("主题：温馨棋盘", shell.ThemeSummaryText);
-        Assert.Equal("更多主题稍后加入。", shell.ThemeUnavailableText);
+        Assert.Equal("切换棋子主题。", shell.ThemeUnavailableText);
         Assert.Equal("动效：完整", shell.AnimationSummaryText);
         Assert.Equal("声音：开", shell.SoundSummaryText);
         Assert.Equal("关闭声音", shell.ToggleSoundText);
@@ -1039,12 +1058,17 @@ public sealed class GameViewModelTests
 
         Assert.Equal("Theme", shell.ThemeText);
         Assert.Equal("Current: Cozy Board", shell.ThemeCurrentText);
+        Assert.Equal("3D Cat Tokens", shell.ThemeOptionText);
+
+        shell.Game.SetThemeCommand.Execute("3DCatTokens");
+
+        Assert.Equal("Current: 3D Cat Tokens", shell.ThemeCurrentText);
         Assert.Equal("Cozy Board", shell.ThemeOptionText);
 
         shell.SetLanguageCommand.Execute("zh");
 
         Assert.Equal("主题", shell.ThemeText);
-        Assert.Equal("当前：温馨棋盘", shell.ThemeCurrentText);
+        Assert.Equal("当前：立体彩猫", shell.ThemeCurrentText);
         Assert.Equal("温馨棋盘", shell.ThemeOptionText);
     }
 

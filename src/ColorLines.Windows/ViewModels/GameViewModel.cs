@@ -29,6 +29,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private bool isAutoSaveEnabled;
     private string animationIntensity;
     private string difficulty;
+    private string themeId;
     private string movePreviewText;
     private int selectedReachableCellCount;
     private int selectedClearOpportunityCount;
@@ -40,7 +41,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private HashSet<BoardPosition> pathPreviewPositions;
     private BoardPosition? pathPreviewTargetPosition;
 
-    public GameViewModel(GameEngine engine, GameState state, int highScore = 0, ISoundPlayer? soundPlayer = null, string? difficulty = null, UiTextProvider? text = null)
+    public GameViewModel(GameEngine engine, GameState state, int highScore = 0, ISoundPlayer? soundPlayer = null, string? difficulty = null, UiTextProvider? text = null, string? themeId = null)
     {
         this.engine = engine;
         this.soundPlayer = soundPlayer ?? NullSoundPlayer.Instance;
@@ -55,6 +56,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         isAutoSaveEnabled = true;
         animationIntensity = "Full";
         this.difficulty = DifficultyCatalog.Normalize(difficulty);
+        this.themeId = ThemeCatalog.Normalize(themeId);
         movePreviewText = string.Empty;
         selectedReachableCellCount = 0;
         selectedClearOpportunityCount = 0;
@@ -75,6 +77,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         ToggleAnimationCommand = new RelayCommand(_ => ToggleAnimation());
         SetDifficultyCommand = new RelayCommand(SetDifficulty);
         SetLanguageCommand = new RelayCommand(SetLanguage);
+        SetThemeCommand = new RelayCommand(SetTheme);
         PreviewPathCommand = new RelayCommand(PreviewPath, parameter => parameter is CellViewModel);
         ClearPreviewPathCommand = new RelayCommand(_ => ClearPreviewPath());
         RefreshFromState();
@@ -104,11 +107,35 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     public ICommand SetLanguageCommand { get; }
 
+    public ICommand SetThemeCommand { get; }
+
     public ICommand PreviewPathCommand { get; }
 
     public ICommand ClearPreviewPathCommand { get; }
 
-    public string SelectedThemeName => ThemeCatalog.DefaultTheme.DisplayName;
+    public string ThemeId
+    {
+        get => themeId;
+        private set
+        {
+            var normalized = ThemeCatalog.Normalize(value);
+            if (themeId != normalized)
+            {
+                themeId = normalized;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedThemeName));
+                OnPropertyChanged(nameof(NextThemeId));
+                OnPropertyChanged(nameof(NextThemeName));
+                RefreshFromState();
+            }
+        }
+    }
+
+    public string SelectedThemeName => ThemeCatalog.GetTheme(ThemeId).DisplayName;
+
+    public string NextThemeId => ThemeCatalog.GetNextTheme(ThemeId).Id;
+
+    public string NextThemeName => ThemeCatalog.GetNextTheme(ThemeId).DisplayName;
 
     public int Score
     {
@@ -357,7 +384,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         var languageText = new UiTextProvider(save?.Language);
         var engine = new GameEngine(new SystemRandomSource(), new GameOptions(BoardSize: DifficultyCatalog.ToBoardSize(difficulty)));
         var state = save?.Game is null ? engine.NewGame() : GameSnapshotMapper.ToState(save.Game);
-        var viewModel = new GameViewModel(engine, state, save?.HighScore ?? 0, SystemSoundPlayer.Instance, difficulty, languageText);
+        var viewModel = new GameViewModel(engine, state, save?.HighScore ?? 0, SystemSoundPlayer.Instance, difficulty, languageText, save?.ThemeId);
         if (save is not null)
         {
             viewModel.isSoundEnabled = save.IsSoundEnabled;
@@ -377,7 +404,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             HighScore,
             IsSoundEnabled,
             AnimationIntensity,
-            ThemeCatalog.DefaultTheme.Id,
+            ThemeId,
             GameSnapshotMapper.FromState(state),
             window)
         {
@@ -510,6 +537,14 @@ public sealed class GameViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(AnimationToggleText));
     }
 
+    private void SetTheme(object? parameter)
+    {
+        if (parameter is string value)
+        {
+            ThemeId = value;
+        }
+    }
+
     private void PlayTurnSound(TurnFeedback turnFeedback)
     {
         if (turnFeedback.IsGameOver)
@@ -586,7 +621,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
                 isReachableTarget,
                 isClearOpportunity,
                 isPathPreview,
-                isPathPreviewTarget);
+                isPathPreviewTarget,
+                ThemeId);
         }
 
         RefreshNextPieces();
@@ -614,7 +650,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private void RefreshNextPieces()
     {
         if (NextPieces.Count == state.NextPieces.Count
-            && NextPieces.Select(piece => piece.Kind).SequenceEqual(state.NextPieces))
+            && NextPieces.Select(piece => piece.Kind).SequenceEqual(state.NextPieces)
+            && NextPieces.All(piece => piece.ThemeId == ThemeId))
         {
             return;
         }
@@ -622,7 +659,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         NextPieces.Clear();
         foreach (var piece in state.NextPieces)
         {
-            NextPieces.Add(PieceViewModel.FromPiece(piece));
+            NextPieces.Add(PieceViewModel.FromPiece(piece, ThemeId));
         }
     }
 

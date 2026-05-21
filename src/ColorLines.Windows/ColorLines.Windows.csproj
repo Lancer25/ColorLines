@@ -5,8 +5,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\Themes\CozyBoard\pieces\*.png" />
-    <Resource Include="Assets\Themes\CozyBoard\pieces\*.png" />
+    <None Remove="Assets\Themes\*\pieces\*.png" />
+    <Resource Include="Assets\Themes\*\pieces\*.png" />
   </ItemGroup>
 
   <PropertyGroup>

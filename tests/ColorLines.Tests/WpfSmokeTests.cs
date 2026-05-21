@@ -378,8 +378,7 @@ public sealed class WpfSmokeTests
             Assert.Equal("MenuSecondaryButton", settingsToggleAnimationButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsToggleSoundButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsThemeButton.Tag);
-            Assert.False(settingsThemeButton.IsEnabled);
-            Assert.True(ToolTipService.GetShowOnDisabled(settingsThemeButton));
+            Assert.True(settingsThemeButton.IsEnabled);
             Assert.Equal(shell.ThemeUnavailableText, settingsThemeButton.ToolTip);
             Assert.Equal("SettingsSelectedButton", settingsEnglishButton.Tag);
             Assert.Equal("MenuSecondaryButton", settingsChineseButton.Tag);
@@ -395,7 +394,8 @@ public sealed class WpfSmokeTests
             Assert.Same(shell.Game.ToggleSoundCommand, settingsToggleSoundButton.Command);
             Assert.Same(shell.Game.TogglePathHintsCommand, settingsTogglePathHintsButton.Command);
             Assert.Same(shell.Game.ToggleAutoSaveCommand, settingsToggleAutoSaveButton.Command);
-            Assert.Null(settingsThemeButton.Command);
+            Assert.Same(shell.Game.SetThemeCommand, settingsThemeButton.Command);
+            Assert.Equal("3DCatTokens", settingsThemeButton.CommandParameter);
             Assert.Same(shell.SetLanguageCommand, settingsChineseButton.Command);
             Assert.Same(shell.SetLanguageCommand, settingsEnglishButton.Command);
             Assert.Same(shell.Game.SetDifficultyCommand, settingsHardButton.Command);
@@ -459,7 +459,7 @@ public sealed class WpfSmokeTests
             Assert.Equal("分数", scoreLabel.Text);
             Assert.Equal("下批猫咪", nextCatsLabel.Text);
             Assert.Equal("关闭声音", settingsToggleSoundButton.Content);
-            Assert.Equal("温馨棋盘", settingsThemeButton.Content);
+            Assert.Equal("立体彩猫", settingsThemeButton.Content);
             Assert.Equal("中文", settingsChineseButton.Content);
             Assert.Equal(shell.DifficultySummaryText, difficultySummary.Text);
             window.Close();
