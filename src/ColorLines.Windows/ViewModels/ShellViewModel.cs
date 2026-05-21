@@ -66,6 +66,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(SaveSummaryText));
                 OnPropertyChanged(nameof(BoardPressureText));
                 OnPropertyChanged(nameof(BoardSpaceText));
+                OnPropertyChanged(nameof(BoardPressureLevelText));
             }
         }
     }
@@ -241,6 +242,10 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         ? $"空间：{Game.EmptyCellCount} 格可用"
         : $"Space: {Game.EmptyCellCount} empty";
 
+    public string BoardPressureLevelText => IsChinese
+        ? $"压力：{DisplayBoardPressureLevel}"
+        : $"Pressure: {Game.BoardPressureLevel}";
+
     public string ThemeSummaryText => IsChinese ? "主题：温馨棋盘" : $"Theme: {Game.SelectedThemeName}";
 
     public string AnimationSummaryText => IsChinese ? $"动效：{DisplayAnimationIntensity}" : $"Animation: {Game.AnimationIntensity}";
@@ -322,6 +327,13 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         DifficultyCatalog.Easy => IsChinese ? "简单" : "Easy",
         DifficultyCatalog.Hard => IsChinese ? "困难" : "Hard",
         _ => IsChinese ? "普通" : "Normal"
+    };
+
+    private string DisplayBoardPressureLevel => Game.BoardPressureLevel switch
+    {
+        "Critical" => "高",
+        "Tight" => "中",
+        _ => "低"
     };
 
     public bool CanContinueGame => !Game.IsGameOver;
@@ -549,10 +561,12 @@ public sealed class ShellViewModel : INotifyPropertyChanged
 
         if (e.PropertyName is nameof(GameViewModel.OccupiedCellCount)
             or nameof(GameViewModel.EmptyCellCount)
-            or nameof(GameViewModel.TotalCellCount))
+            or nameof(GameViewModel.TotalCellCount)
+            or nameof(GameViewModel.BoardPressureLevel))
         {
             OnPropertyChanged(nameof(BoardPressureText));
             OnPropertyChanged(nameof(BoardSpaceText));
+            OnPropertyChanged(nameof(BoardPressureLevelText));
         }
 
         if (e.PropertyName is nameof(GameViewModel.AnimationIntensity))
@@ -656,6 +670,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(NextCatsText));
         OnPropertyChanged(nameof(BoardPressureText));
         OnPropertyChanged(nameof(BoardSpaceText));
+        OnPropertyChanged(nameof(BoardPressureLevelText));
         OnPropertyChanged(nameof(ThemeSummaryText));
         OnPropertyChanged(nameof(AnimationSummaryText));
         OnPropertyChanged(nameof(SoundSummaryText));

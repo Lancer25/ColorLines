@@ -81,6 +81,30 @@ public sealed class GameViewModelTests
         Assert.Equal(23, viewModel.EmptyCellCount);
         Assert.Equal(25, viewModel.TotalCellCount);
         Assert.Equal(8, viewModel.BoardFillPercent);
+        Assert.Equal("Calm", viewModel.BoardPressureLevel);
+    }
+
+    [Fact]
+    public void BoardPressureLevelTracksCrowdedBoards()
+    {
+        var board = GameBoard.CreateEmpty(5);
+        var piecesPlaced = 0;
+        foreach (var position in board.AllPositions())
+        {
+            if (piecesPlaced == 20)
+            {
+                break;
+            }
+
+            board.SetPiece(position, PieceKind.Orange);
+            piecesPlaced++;
+        }
+
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+
+        Assert.Equal(80, viewModel.BoardFillPercent);
+        Assert.Equal("Critical", viewModel.BoardPressureLevel);
     }
 
     [Theory]
@@ -1047,8 +1071,10 @@ public sealed class GameViewModelTests
 
         Assert.Equal("Board: 0/25 filled", shell.BoardPressureText);
         Assert.Equal("Space: 25 empty", shell.BoardSpaceText);
+        Assert.Equal("Pressure: Calm", shell.BoardPressureLevelText);
         Assert.Contains(nameof(ShellViewModel.BoardPressureText), changes);
         Assert.Contains(nameof(ShellViewModel.BoardSpaceText), changes);
+        Assert.Contains(nameof(ShellViewModel.BoardPressureLevelText), changes);
     }
 
     [Fact]

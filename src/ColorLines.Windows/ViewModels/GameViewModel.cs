@@ -265,6 +265,13 @@ public sealed class GameViewModel : INotifyPropertyChanged
         ? 0
         : (int)Math.Round(OccupiedCellCount * 100.0 / TotalCellCount, MidpointRounding.AwayFromZero);
 
+    public string BoardPressureLevel => BoardFillPercent switch
+    {
+        >= 75 => "Critical",
+        >= 50 => "Tight",
+        _ => "Calm"
+    };
+
     public string Language => text.Language;
 
     public static GameViewModel CreateForNewGame()
@@ -771,5 +778,6 @@ public sealed class GameViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(OccupiedCellCount));
         OnPropertyChanged(nameof(EmptyCellCount));
         OnPropertyChanged(nameof(BoardFillPercent));
+        OnPropertyChanged(nameof(BoardPressureLevel));
     }
 }

@@ -504,6 +504,8 @@ public sealed class WpfSmokeTests
                 .First(textBlock => textBlock.Name == "BoardPressureText");
             var boardSpaceText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "BoardSpaceText");
+            var boardPressureLevelText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "BoardPressureLevelText");
             var gameplayActionBar = FindVisualChildren<StackPanel>(window)
                 .First(panel => panel.Name == "GameplayActionBar");
             var pauseMenuView = FindVisualChildren<Grid>(window)
@@ -605,6 +607,7 @@ public sealed class WpfSmokeTests
             Assert.True(gameplayBoardPressureBlock.Padding.Left >= 16);
             Assert.Equal(shell.BoardPressureText, boardPressureText.Text);
             Assert.Equal(shell.BoardSpaceText, boardSpaceText.Text);
+            Assert.Equal(shell.BoardPressureLevelText, boardPressureLevelText.Text);
             Assert.Single(gameplayActionBar.Children);
             Assert.NotNull(pauseMenuView);
             Assert.Equal(Visibility.Hidden, pauseMenuView.Visibility);
@@ -789,6 +792,21 @@ public sealed class WpfSmokeTests
         var markup = glow.ToString(SaveOptions.DisableFormatting);
 
         Assert.Contains("IsClearOpportunity", markup, StringComparison.Ordinal);
+        Assert.Contains("#FFFFB65A", markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void BoardPressureBlockHasRiskVisualStates()
+    {
+        var document = LoadMainWindowXaml();
+        var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
+        var block = document.Descendants()
+            .First(element => element.Name.LocalName == "Border"
+                && element.Attribute(x + "Name")?.Value == "GameplayBoardPressureBlock");
+        var markup = block.ToString(SaveOptions.DisableFormatting);
+
+        Assert.Contains("BoardPressureLevel", markup, StringComparison.Ordinal);
+        Assert.Contains("Critical", markup, StringComparison.Ordinal);
         Assert.Contains("#FFFFB65A", markup, StringComparison.Ordinal);
     }
 
