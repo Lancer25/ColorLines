@@ -34,6 +34,20 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void ThreeDCatTokenAssetIsPackagedAndDistinctFromCozyBoard()
+    {
+        RunOnWpfThread(() =>
+        {
+            var cozy = ReadResourceBytes("/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/orange.png");
+            var threeD = ReadResourceBytes("/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/orange.png");
+
+            Assert.NotEmpty(cozy);
+            Assert.NotEmpty(threeD);
+            Assert.NotEqual(cozy, threeD);
+        });
+    }
+
+    [Fact]
     public void CozyBoardThemeExposesVisualUpgradeBrushes()
     {
         RunOnWpfThread(() =>
@@ -1080,6 +1094,15 @@ public sealed class WpfSmokeTests
                     UriKind.Relative)
             });
         }
+    }
+
+    private static byte[] ReadResourceBytes(string path)
+    {
+        var streamInfo = Application.GetResourceStream(new Uri(path, UriKind.Relative));
+        Assert.NotNull(streamInfo);
+        using var memory = new MemoryStream();
+        streamInfo.Stream.CopyTo(memory);
+        return memory.ToArray();
     }
 
     private static void RunOnWpfThread(Action action)
