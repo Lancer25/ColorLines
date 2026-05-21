@@ -145,6 +145,10 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             ? $"开始新游戏：分数 {Game.Score} | 最高 {Game.HighScore}"
             : $"Start a new game: Score {Game.Score} | Best {Game.HighScore}");
 
+    public string PauseRunSummaryText => IsChinese
+        ? $"分数 {Game.Score} | 最高 {Game.HighScore}"
+        : $"Score {Game.Score} | Best {Game.HighScore}";
+
     public string Language => Game.Language;
 
     public string ContinueText => IsChinese ? "继续游戏" : "Continue";
@@ -250,6 +254,8 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     public string ProjectedBoardPressureText => IsChinese
         ? $"下批后：{Game.ProjectedOccupiedCellCount}/{Game.TotalCellCount} 已占用"
         : $"After next: {Game.ProjectedOccupiedCellCount}/{Game.TotalCellCount} filled";
+
+    public string HintLegendText => IsChinese ? "提示：可走 | 可消除 | 路径" : "Hints: move | clear | path";
 
     public string ThemeSummaryText => IsChinese ? "主题：温馨棋盘" : $"Theme: {Game.SelectedThemeName}";
 
@@ -560,6 +566,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         if (e.PropertyName is nameof(GameViewModel.Score) or nameof(GameViewModel.HighScore))
         {
             OnPropertyChanged(nameof(SaveSummaryText));
+            OnPropertyChanged(nameof(PauseRunSummaryText));
             OnPropertyChanged(nameof(BestText));
             OnPropertyChanged(nameof(BestScoreSummaryText));
         }
@@ -637,6 +644,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     private void OnLocalizedTextChanged()
     {
         OnPropertyChanged(nameof(ContinueText));
+        OnPropertyChanged(nameof(PauseRunSummaryText));
         OnPropertyChanged(nameof(NewGameText));
         OnPropertyChanged(nameof(NewGameConfirmTitle));
         OnPropertyChanged(nameof(NewGameConfirmBody));
@@ -680,6 +688,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(BoardSpaceText));
         OnPropertyChanged(nameof(BoardPressureLevelText));
         OnPropertyChanged(nameof(ProjectedBoardPressureText));
+        OnPropertyChanged(nameof(HintLegendText));
         OnPropertyChanged(nameof(ThemeSummaryText));
         OnPropertyChanged(nameof(AnimationSummaryText));
         OnPropertyChanged(nameof(SoundSummaryText));

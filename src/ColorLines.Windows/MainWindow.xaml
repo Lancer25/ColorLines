@@ -1147,6 +1147,41 @@
                                            FontSize="13"
                                            TextWrapping="Wrap"
                                            Foreground="{StaticResource TextMutedBrush}" />
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,10,0,0"
+                                            VerticalAlignment="Center">
+                                    <Border x:Name="ReachableLegendSwatch"
+                                            Width="13"
+                                            Height="13"
+                                            CornerRadius="6"
+                                            Background="#FFFFE1A8"
+                                            Opacity="0.55"
+                                            VerticalAlignment="Center" />
+                                    <Border x:Name="ClearLegendSwatch"
+                                            Width="13"
+                                            Height="13"
+                                            Margin="8,0,0,0"
+                                            CornerRadius="6"
+                                            BorderBrush="#FFFFB65A"
+                                            BorderThickness="2"
+                                            Background="#33FFB65A"
+                                            VerticalAlignment="Center" />
+                                    <Border x:Name="PathLegendSwatch"
+                                            Width="13"
+                                            Height="13"
+                                            Margin="8,0,8,0"
+                                            CornerRadius="6"
+                                            Background="#FF7AC7C4"
+                                            Opacity="0.75"
+                                            VerticalAlignment="Center" />
+                                    <TextBlock x:Name="HintLegendText"
+                                               Text="{Binding HintLegendText}"
+                                               FontSize="12"
+                                               TextWrapping="NoWrap"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{StaticResource TextMutedBrush}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
                             </StackPanel>
                         </Border>
 
@@ -1186,6 +1221,29 @@
                                FontSize="15"
                                Foreground="{StaticResource TextMutedBrush}"
                                HorizontalAlignment="Center" />
+                    <Border x:Name="PauseBoardSummaryPanel"
+                            Margin="0,0,0,18"
+                            Padding="14,12"
+                            Background="{StaticResource GameplayHudAccentBrush}"
+                            BorderBrush="{StaticResource PanelBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock x:Name="PauseRunSummaryText"
+                                       Text="{Binding PauseRunSummaryText}"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock x:Name="PauseBoardPressureText"
+                                       Text="{Binding BoardPressureText}"
+                                       Margin="0,5,0,0"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="{StaticResource TextMutedBrush}"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
                     <StackPanel x:Name="PauseMenuActionList">
                         <Button x:Name="PauseContinueButton"
                                 Content="{Binding ContinueText}"

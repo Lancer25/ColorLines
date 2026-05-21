@@ -1125,6 +1125,8 @@ public sealed class GameViewModelTests
         Assert.Equal("Space: 25 empty", shell.BoardSpaceText);
         Assert.Equal("Pressure: Calm", shell.BoardPressureLevelText);
         Assert.Equal("After next: 0/25 filled", shell.ProjectedBoardPressureText);
+        Assert.Equal("Hints: move | clear | path", shell.HintLegendText);
+        Assert.Equal("Score 10 | Best 10", shell.PauseRunSummaryText);
         Assert.Contains(nameof(ShellViewModel.BoardPressureText), changes);
         Assert.Contains(nameof(ShellViewModel.BoardSpaceText), changes);
         Assert.Contains(nameof(ShellViewModel.BoardPressureLevelText), changes);

@@ -508,12 +508,26 @@ public sealed class WpfSmokeTests
                 .First(textBlock => textBlock.Name == "BoardPressureLevelText");
             var projectedBoardPressureText = FindVisualChildren<TextBlock>(window)
                 .First(textBlock => textBlock.Name == "ProjectedBoardPressureText");
+            var hintLegendText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "HintLegendText");
+            var reachableLegendSwatch = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "ReachableLegendSwatch");
+            var clearLegendSwatch = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "ClearLegendSwatch");
+            var pathLegendSwatch = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "PathLegendSwatch");
             var gameplayActionBar = FindVisualChildren<StackPanel>(window)
                 .First(panel => panel.Name == "GameplayActionBar");
             var pauseMenuView = FindVisualChildren<Grid>(window)
                 .First(grid => grid.Name == "PauseMenuView");
             var pauseMenuPanel = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "PauseMenuPanel");
+            var pauseBoardSummaryPanel = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "PauseBoardSummaryPanel");
+            var pauseRunSummaryText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "PauseRunSummaryText");
+            var pauseBoardPressureText = FindVisualChildren<TextBlock>(window)
+                .First(textBlock => textBlock.Name == "PauseBoardPressureText");
             var pauseMenuActionList = FindVisualChildren<StackPanel>(window)
                 .First(panel => panel.Name == "PauseMenuActionList");
             var pauseContinueButton = FindVisualChildren<Button>(window)
@@ -611,10 +625,17 @@ public sealed class WpfSmokeTests
             Assert.Equal(shell.BoardSpaceText, boardSpaceText.Text);
             Assert.Equal(shell.BoardPressureLevelText, boardPressureLevelText.Text);
             Assert.Equal(shell.ProjectedBoardPressureText, projectedBoardPressureText.Text);
+            Assert.Equal(shell.HintLegendText, hintLegendText.Text);
+            Assert.NotNull(reachableLegendSwatch.Background);
+            Assert.NotNull(clearLegendSwatch.BorderBrush);
+            Assert.NotNull(pathLegendSwatch.Background);
             Assert.Single(gameplayActionBar.Children);
             Assert.NotNull(pauseMenuView);
             Assert.Equal(Visibility.Hidden, pauseMenuView.Visibility);
             Assert.True(pauseMenuPanel.Padding.Left >= 24);
+            Assert.True(pauseBoardSummaryPanel.Padding.Left >= 14);
+            Assert.Equal(shell.PauseRunSummaryText, pauseRunSummaryText.Text);
+            Assert.Equal(shell.BoardPressureText, pauseBoardPressureText.Text);
             Assert.True(pauseMenuActionList.Children.Count >= 5);
             Assert.True(mainBoardFrame.Padding.Left >= 18);
             Assert.Equal(shell.Game.BoardSize, boardGrid.Rows);
