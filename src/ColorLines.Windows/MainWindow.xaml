@@ -921,8 +921,8 @@
                                                 </Style>
                                             </Grid.Style>
                                             <Image x:Name="PieceImage"
-                                                   Width="40"
-                                                   Height="40"
+                                                   Width="48"
+                                                   Height="48"
                                                    Source="{Binding Piece.AssetPath}"
                                                    Stretch="Uniform"
                                                    RenderOptions.BitmapScalingMode="HighQuality">

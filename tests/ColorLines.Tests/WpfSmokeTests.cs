@@ -717,8 +717,9 @@ public sealed class WpfSmokeTests
             var scaleTransform = Assert.IsType<ScaleTransform>(pieceScaleActor.RenderTransform);
 
             Assert.True(pieceImage.Width > 0);
-            Assert.True(pieceImage.Width <= 44);
+            Assert.True(pieceImage.Width <= 52);
             Assert.Equal(pieceImage.Width, pieceImage.Height);
+            Assert.True(pieceImage.Width >= 48);
             Assert.Equal(Visibility.Visible, gameplayView.Visibility);
             AssertShellTransitionStyle(window, gameplayView);
             AssertShellTransitionStyle(window, pauseMenuView);
