@@ -297,6 +297,9 @@ public sealed class GameViewModelTests
         viewModel.SelectCellCommand.Execute(source);
 
         Assert.Equal("Selected Orange. 1 clear opportunity.", viewModel.StatusText);
+        Assert.Equal(76, viewModel.SelectedReachableCellCount);
+        Assert.Equal(1, viewModel.SelectedClearOpportunityCount);
+        Assert.Equal("Reachable: 76 | Clears: 1", viewModel.SelectedActionSummaryText);
     }
 
     [Fact]
@@ -316,6 +319,27 @@ public sealed class GameViewModelTests
 
         Assert.Equal("Selected Orange. No reachable cells.", viewModel.StatusText);
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsReachableTarget);
+        Assert.Equal(0, viewModel.SelectedReachableCellCount);
+        Assert.Equal(0, viewModel.SelectedClearOpportunityCount);
+        Assert.Equal("Reachable: 0 | Clears: 0", viewModel.SelectedActionSummaryText);
+    }
+
+    [Fact]
+    public void MovingPieceClearsSelectedActionSummary()
+    {
+        var board = GameBoard.CreateEmpty(5);
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 1);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SelectCellCommand.Execute(target);
+
+        Assert.Equal(0, viewModel.SelectedReachableCellCount);
+        Assert.Equal(0, viewModel.SelectedClearOpportunityCount);
+        Assert.Equal(string.Empty, viewModel.SelectedActionSummaryText);
     }
 
     [Fact]
@@ -337,6 +361,23 @@ public sealed class GameViewModelTests
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsClearOpportunity);
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreview);
         Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreviewTarget);
+    }
+
+    [Fact]
+    public void DisabledPathHintsDoNotHideSelectionReachabilitySummary()
+    {
+        var board = GameBoard.CreateEmpty(5);
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+
+        viewModel.TogglePathHintsCommand.Execute(null);
+        viewModel.SelectCellCommand.Execute(source);
+
+        Assert.Equal("Selected Orange. Choose an empty cell.", viewModel.StatusText);
+        Assert.Equal(24, viewModel.SelectedReachableCellCount);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsReachableTarget);
     }
 
     [Fact]

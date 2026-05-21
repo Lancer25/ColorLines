@@ -28,6 +28,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private bool isAutoSaveEnabled;
     private string animationIntensity;
     private string difficulty;
+    private int selectedReachableCellCount;
+    private int selectedClearOpportunityCount;
     private HashSet<BoardPosition> movedPositions;
     private HashSet<BoardPosition> movePathPositions;
     private HashSet<BoardPosition> spawnedPositions;
@@ -51,6 +53,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
         isAutoSaveEnabled = true;
         animationIntensity = "Full";
         this.difficulty = DifficultyCatalog.Normalize(difficulty);
+        selectedReachableCellCount = 0;
+        selectedClearOpportunityCount = 0;
         movedPositions = new HashSet<BoardPosition>();
         movePathPositions = new HashSet<BoardPosition>();
         spawnedPositions = new HashSet<BoardPosition>();
@@ -287,6 +291,38 @@ public sealed class GameViewModel : INotifyPropertyChanged
         _ => "Calm"
     };
 
+    public int SelectedReachableCellCount
+    {
+        get => selectedReachableCellCount;
+        private set
+        {
+            if (selectedReachableCellCount != value)
+            {
+                selectedReachableCellCount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedActionSummaryText));
+            }
+        }
+    }
+
+    public int SelectedClearOpportunityCount
+    {
+        get => selectedClearOpportunityCount;
+        private set
+        {
+            if (selectedClearOpportunityCount != value)
+            {
+                selectedClearOpportunityCount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(SelectedActionSummaryText));
+            }
+        }
+    }
+
+    public string SelectedActionSummaryText => selectedPosition is null
+        ? string.Empty
+        : $"Reachable: {SelectedReachableCellCount} | Clears: {SelectedClearOpportunityCount}";
+
     public string Language => text.Language;
 
     public static GameViewModel CreateForNewGame()
@@ -500,6 +536,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         EnsureCellsInitialized();
         var reachableTargets = GetReachableTargets();
         var clearOpportunities = GetClearOpportunities(reachableTargets);
+        UpdateSelectedActionSummary(reachableTargets.Count, clearOpportunities.Count);
         foreach (var cell in state.Board.Cells())
         {
             var isSelected = selectedPosition == cell.Position;
@@ -508,8 +545,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
             var wasSpawned = IsFullAnimation && spawnedPositions.Contains(cell.Position);
             var wasCleared = IsFullAnimation && clearedPositions.Contains(cell.Position);
             var wasRejectedTarget = IsFullAnimation && rejectedPositions.Contains(cell.Position);
-            var isReachableTarget = reachableTargets.Contains(cell.Position);
-            var isClearOpportunity = clearOpportunities.Contains(cell.Position);
+            var isReachableTarget = IsPathHintsEnabled && reachableTargets.Contains(cell.Position);
+            var isClearOpportunity = IsPathHintsEnabled && clearOpportunities.Contains(cell.Position);
             var isPathPreview = pathPreviewPositions.Contains(cell.Position);
             var isPathPreviewTarget = pathPreviewTargetPosition == cell.Position;
             var cellViewModel = Cells[(cell.Position.Row * state.Board.Size) + cell.Position.Column];
@@ -616,7 +653,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private HashSet<BoardPosition> GetReachableTargets()
     {
-        if (!IsPathHintsEnabled || selectedPosition is null)
+        if (selectedPosition is null)
         {
             return new HashSet<BoardPosition>();
         }
@@ -648,7 +685,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     private HashSet<BoardPosition> GetClearOpportunities(IReadOnlySet<BoardPosition> reachableTargets)
     {
-        if (!IsPathHintsEnabled || selectedPosition is null || reachableTargets.Count == 0)
+        if (selectedPosition is null || reachableTargets.Count == 0)
         {
             return new HashSet<BoardPosition>();
         }
@@ -677,15 +714,31 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private string BuildSelectedStatusText(PieceKind piece)
     {
         var reachableTargets = GetReachableTargets();
+        var clearOpportunities = GetClearOpportunities(reachableTargets);
+        UpdateSelectedActionSummary(reachableTargets.Count, clearOpportunities.Count);
         if (reachableTargets.Count == 0)
         {
             return text.SelectedPieceWithNoReachableTargets(piece.ToString());
         }
 
-        var clearOpportunityCount = GetClearOpportunities(reachableTargets).Count;
+        var clearOpportunityCount = clearOpportunities.Count;
         return clearOpportunityCount == 0
             ? text.SelectedPiece(piece.ToString())
             : text.SelectedPieceWithClearOpportunities(piece.ToString(), clearOpportunityCount);
+    }
+
+    private void UpdateSelectedActionSummary(int reachableCount, int clearOpportunityCount)
+    {
+        if (selectedPosition is null)
+        {
+            SelectedReachableCellCount = 0;
+            SelectedClearOpportunityCount = 0;
+            OnPropertyChanged(nameof(SelectedActionSummaryText));
+            return;
+        }
+
+        SelectedReachableCellCount = reachableCount;
+        SelectedClearOpportunityCount = clearOpportunityCount;
     }
 
     private string BuildStatusText(GameTurnResult result)
