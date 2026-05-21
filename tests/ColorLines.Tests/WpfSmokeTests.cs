@@ -242,6 +242,35 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void MainMenuPreviewCatsFollowSelectedTheme()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-window-{Guid.NewGuid():N}.json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+            window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            var orange = FindVisualChildren<Image>(window)
+                .First(image => image.Name == "MenuPreviewCatOrange");
+
+            Assert.Contains("/Assets/Themes/CozyBoard/pieces/orange.png", orange.Source.ToString(), StringComparison.Ordinal);
+
+            shell.Game.SetThemeCommand.Execute("3DCatTokens");
+            window.UpdateLayout();
+
+            Assert.Contains("/Assets/Themes/3DCatTokens/pieces/orange.png", orange.Source.ToString(), StringComparison.Ordinal);
+            window.Close();
+        });
+    }
+
+    [Fact]
     public void MainMenuDisablesContinueAfterGameOver()
     {
         RunOnWpfThread(() =>

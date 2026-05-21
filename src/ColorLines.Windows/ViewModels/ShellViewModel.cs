@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using ColorLines.Core.Game;
 
 namespace ColorLines.Windows.ViewModels;
 
@@ -268,6 +269,18 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     public string ThemeSummaryText => IsChinese ? $"主题：{CurrentThemeDisplayName}" : $"Theme: {Game.SelectedThemeName}";
 
     public string ThemeButtonParameter => Game.NextThemeId;
+
+    public string MenuPreviewOrangeAssetPath => PieceViewModel.FromPiece(PieceKind.Orange, Game.ThemeId).AssetPath;
+
+    public string MenuPreviewBlueGrayAssetPath => PieceViewModel.FromPiece(PieceKind.BlueGray, Game.ThemeId).AssetPath;
+
+    public string MenuPreviewTuxedoAssetPath => PieceViewModel.FromPiece(PieceKind.Tuxedo, Game.ThemeId).AssetPath;
+
+    public string MenuPreviewCalicoAssetPath => PieceViewModel.FromPiece(PieceKind.Calico, Game.ThemeId).AssetPath;
+
+    public string MenuPreviewWhiteAssetPath => PieceViewModel.FromPiece(PieceKind.White, Game.ThemeId).AssetPath;
+
+    public string MenuPreviewGrayAssetPath => PieceViewModel.FromPiece(PieceKind.Gray, Game.ThemeId).AssetPath;
 
     public string AnimationSummaryText => IsChinese ? $"动效：{DisplayAnimationIntensity}" : $"Animation: {Game.AnimationIntensity}";
 
@@ -641,6 +654,7 @@ public sealed class ShellViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(ThemeOptionText));
             OnPropertyChanged(nameof(ThemeSummaryText));
             OnPropertyChanged(nameof(ThemeButtonParameter));
+            OnThemeAssetsChanged();
         }
 
         if (e.PropertyName is nameof(GameViewModel.Language))
@@ -748,6 +762,16 @@ public sealed class ShellViewModel : INotifyPropertyChanged
     {
         OnPropertyChanged(nameof(EnglishLanguageButtonTag));
         OnPropertyChanged(nameof(ChineseLanguageButtonTag));
+    }
+
+    private void OnThemeAssetsChanged()
+    {
+        OnPropertyChanged(nameof(MenuPreviewOrangeAssetPath));
+        OnPropertyChanged(nameof(MenuPreviewBlueGrayAssetPath));
+        OnPropertyChanged(nameof(MenuPreviewTuxedoAssetPath));
+        OnPropertyChanged(nameof(MenuPreviewCalicoAssetPath));
+        OnPropertyChanged(nameof(MenuPreviewWhiteAssetPath));
+        OnPropertyChanged(nameof(MenuPreviewGrayAssetPath));
     }
 
     private void OnDifficultySelectionChanged()

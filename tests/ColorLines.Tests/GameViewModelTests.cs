@@ -647,6 +647,53 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void PreviewPathCommandUsesSelectedLanguage()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 1), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 3), PieceKind.Orange);
+        var state = new GameState(board, new[] { PieceKind.Gray, PieceKind.Tuxedo, PieceKind.White }, 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        viewModel.SetLanguageCommand.Execute("zh");
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var clearingTarget = viewModel.Cells.Single(cell => cell.Row == 2 && cell.Column == 4);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.PreviewPathCommand.Execute(clearingTarget);
+
+        Assert.Equal("\u8fd9\u4e00\u6b65\u53ef\u6d88\u9664 +10\uff0c\u4e0d\u4f1a\u751f\u6210\u65b0\u732b\u54aa\u3002", viewModel.MovePreviewText);
+
+        var quietTarget = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+
+        viewModel.PreviewPathCommand.Execute(quietTarget);
+
+        Assert.Equal("\u4e0d\u4f1a\u6d88\u9664\uff1a\u5c06\u751f\u6210 3 \u53ea\u732b\u54aa\u3002", viewModel.MovePreviewText);
+    }
+
+    [Fact]
+    public void PreviewPathCommandUsesSelectedLanguageForBlockedTarget()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(0, 1), PieceKind.Gray);
+        board.SetPiece(new BoardPosition(1, 0), PieceKind.Tuxedo);
+        board.SetPiece(new BoardPosition(1, 1), PieceKind.White);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        viewModel.SetLanguageCommand.Execute("zh");
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        var target = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 2);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.PreviewPathCommand.Execute(target);
+
+        Assert.Equal("\u65e0\u6cd5\u5230\u8fbe\u8fd9\u4e2a\u683c\u5b50\u3002", viewModel.MovePreviewText);
+    }
+
+    [Fact]
     public void ReducedAnimationKeepsPlanningFeedback()
     {
         var board = GameBoard.CreateEmpty();

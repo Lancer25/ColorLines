@@ -676,7 +676,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         if (path.Count == 0)
         {
             ClearPreviewPath();
-            MovePreviewText = "No path to this cell.";
+            MovePreviewText = text.MoveBlockedPreview;
             return;
         }
 
@@ -806,11 +806,11 @@ public sealed class GameViewModel : INotifyPropertyChanged
         {
             var clearPositions = LineDetector.UniquePositions(lines);
             var scoreDelta = ScoreCalculator.Calculate(lines.Count, clearPositions.Count);
-            return $"This move clears +{scoreDelta} and skips new cats.";
+            return text.MoveClearsPreview(scoreDelta);
         }
 
         var spawnCount = Math.Min(state.NextPieces.Count, previewBoard.EmptyPositions().Count());
-        return $"No clear: {spawnCount} cats will spawn.";
+        return text.MoveSpawnsPreview(spawnCount);
     }
 
     private void UpdateSelectedActionSummary(int reachableCount, int clearOpportunityCount)

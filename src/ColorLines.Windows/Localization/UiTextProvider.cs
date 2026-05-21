@@ -77,6 +77,22 @@ public sealed class UiTextProvider
         return IsChinese ? $"新猫咪连成一线。+{scoreDelta} 分！" : $"New cats made a line. +{scoreDelta} points!";
     }
 
+    public string MoveClearsPreview(int scoreDelta)
+    {
+        return IsChinese
+            ? $"这一步可消除 +{scoreDelta}，不会生成新猫咪。"
+            : $"This move clears +{scoreDelta} and skips new cats.";
+    }
+
+    public string MoveSpawnsPreview(int spawnCount)
+    {
+        return IsChinese
+            ? $"不会消除：将生成 {spawnCount} 只猫咪。"
+            : $"No clear: {spawnCount} cats will spawn.";
+    }
+
+    public string MoveBlockedPreview => IsChinese ? "无法到达这个格子。" : "No path to this cell.";
+
     public string FinalScore(int score)
     {
         return IsChinese ? $"最终分数：{score}" : $"Final Score: {score}";

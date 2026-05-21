@@ -282,7 +282,7 @@
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatOrange"
-                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/orange.png"
+                                       Source="{Binding MenuPreviewOrangeAssetPath}"
                                        Width="56"
                                        Height="56"
                                        Stretch="Uniform"
@@ -292,7 +292,7 @@
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatBlueGray"
-                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/bluegray.png"
+                                       Source="{Binding MenuPreviewBlueGrayAssetPath}"
                                        Width="56"
                                        Height="56"
                                        Stretch="Uniform"
@@ -303,7 +303,7 @@
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatTuxedo"
-                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/tuxedo.png"
+                                       Source="{Binding MenuPreviewTuxedoAssetPath}"
                                        Width="56"
                                        Height="56"
                                        Stretch="Uniform"
@@ -312,7 +312,7 @@
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatCalico"
-                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/calico.png"
+                                       Source="{Binding MenuPreviewCalicoAssetPath}"
                                        Width="56"
                                        Height="56"
                                        Stretch="Uniform"
@@ -325,7 +325,7 @@
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatWhite"
-                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/white.png"
+                                       Source="{Binding MenuPreviewWhiteAssetPath}"
                                        Width="56"
                                        Height="56"
                                        Stretch="Uniform"
@@ -337,7 +337,7 @@
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatGray"
-                                       Source="/ColorLines.Windows;component/Assets/Themes/CozyBoard/pieces/gray.png"
+                                       Source="{Binding MenuPreviewGrayAssetPath}"
                                        Width="56"
                                        Height="56"
                                        Stretch="Uniform"
