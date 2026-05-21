@@ -214,6 +214,7 @@ public sealed class WpfSmokeTests
             Assert.Equal("MenuSecondaryButton", menuSettingsButton.Tag);
             Assert.Same(shell.NewGameCommand, menuNewGameButton.Command);
             Assert.Equal(Visibility.Collapsed, menuNewGameConfirmPanel.Visibility);
+            Assert.Same(menuNewGameCancelButton, FocusManager.GetFocusedElement(menuNewGameConfirmPanel));
             Assert.Same(shell.ConfirmNewGameCommand, menuNewGameConfirmButton.Command);
             Assert.Same(shell.CancelNewGameCommand, menuNewGameCancelButton.Command);
             Assert.True(menuHeroBoard.Width >= 430);

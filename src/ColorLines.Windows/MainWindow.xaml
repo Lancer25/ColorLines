@@ -415,6 +415,7 @@
                             BorderBrush="{StaticResource PanelBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="10"
+                            FocusManager.FocusedElement="{Binding ElementName=MenuNewGameCancelButton}"
                             Visibility="{Binding IsNewGameConfirmVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel>
                             <TextBlock Text="{Binding NewGameConfirmTitle}"
