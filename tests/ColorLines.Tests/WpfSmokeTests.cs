@@ -56,8 +56,27 @@ public sealed class WpfSmokeTests
             var threeD = ReadResourceBytes("/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/orange.png");
             var bounds = GetAlphaBounds(threeD);
 
-            Assert.True(bounds.Width >= 190);
+            Assert.True(bounds.Width >= 150);
             Assert.True(bounds.Height >= 200);
+        });
+    }
+
+    [Fact]
+    public void ThreeDCatTokenAssetsUseVariedPlushSilhouettes()
+    {
+        RunOnWpfThread(() =>
+        {
+            var pieces = new[] { "orange", "gray", "tuxedo", "calico", "black", "white", "bluegray" };
+            var silhouetteAreas = pieces
+                .Select(piece =>
+                {
+                    var asset = ReadResourceBytes($"/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/{piece}.png");
+                    return CountOpaquePixels(asset);
+                })
+                .Distinct()
+                .Count();
+
+            Assert.True(silhouetteAreas >= 5, $"Expected varied plush cat silhouettes, got {silhouetteAreas} distinct alpha areas.");
         });
     }
 
@@ -590,6 +609,7 @@ public sealed class WpfSmokeTests
             window.UpdateLayout();
 
             var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            shell.Game.SetThemeCommand.Execute("3DCatTokens");
             shell.ContinueCommand.Execute(null);
             window.UpdateLayout();
 
@@ -734,6 +754,9 @@ public sealed class WpfSmokeTests
             Assert.True(pieceImage.Width <= 52);
             Assert.Equal(pieceImage.Width, pieceImage.Height);
             Assert.True(pieceImage.Width >= 48);
+            Assert.True(occupiedButton.DataContext is CellViewModel { Piece.UsesEmbeddedShadow: true });
+            Assert.True(pieceShadow.Opacity <= 0.5);
+            Assert.True(pieceBase.Opacity <= 0.5);
             Assert.Equal(Visibility.Visible, gameplayView.Visibility);
             AssertShellTransitionStyle(window, gameplayView);
             AssertShellTransitionStyle(window, pauseMenuView);
@@ -806,7 +829,7 @@ public sealed class WpfSmokeTests
             Assert.True(pieceBase.Width >= 40);
             Assert.True(pieceBase.Opacity > 0);
             Assert.True(pieceShadow.Width >= 36);
-            Assert.Equal(1, pieceShadow.Opacity);
+            Assert.True(pieceShadow.Opacity <= 0.5);
             Assert.Equal(0, moveFeedbackGlow.Opacity);
             Assert.Equal(0, movePathPulseGlow.Opacity);
             Assert.Equal(0, reachableTargetGlow.Opacity);
@@ -1232,6 +1255,30 @@ public sealed class WpfSmokeTests
         return maxX < 0
             ? new Int32Rect(0, 0, 0, 0)
             : new Int32Rect(minX, minY, maxX - minX + 1, maxY - minY + 1);
+    }
+
+    private static int CountOpaquePixels(byte[] png)
+    {
+        using var stream = new MemoryStream(png);
+        var bitmap = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad).Frames[0];
+        var converted = new FormatConvertedBitmap(bitmap, PixelFormats.Bgra32, null, 0);
+        var stride = converted.PixelWidth * 4;
+        var pixels = new byte[stride * converted.PixelHeight];
+        converted.CopyPixels(pixels, stride, 0);
+        var opaquePixels = 0;
+
+        for (var y = 0; y < converted.PixelHeight; y++)
+        {
+            for (var x = 0; x < converted.PixelWidth; x++)
+            {
+                if (pixels[(y * stride) + (x * 4) + 3] > 20)
+                {
+                    opaquePixels++;
+                }
+            }
+        }
+
+        return opaquePixels;
     }
 
     private static void RunOnWpfThread(Action action)

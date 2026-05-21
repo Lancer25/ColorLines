@@ -825,6 +825,13 @@
                                                     <DataTrigger Binding="{Binding IsOccupied}" Value="True">
                                                         <Setter Property="Opacity" Value="1" />
                                                     </DataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsOccupied}" Value="True" />
+                                                            <Condition Binding="{Binding Piece.UsesEmbeddedShadow}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Opacity" Value="0.28" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Ellipse.Style>
@@ -842,6 +849,13 @@
                                                     <DataTrigger Binding="{Binding IsOccupied}" Value="True">
                                                         <Setter Property="Opacity" Value="1" />
                                                     </DataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsOccupied}" Value="True" />
+                                                            <Condition Binding="{Binding Piece.UsesEmbeddedShadow}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Opacity" Value="0.2" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Ellipse.Style>

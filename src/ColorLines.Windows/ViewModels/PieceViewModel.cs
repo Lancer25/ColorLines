@@ -15,6 +15,7 @@ public sealed record PieceViewModel(
     Brush HighlightBrush,
     Brush ShadowBrush,
     Brush InnerEarBrush,
+    bool UsesEmbeddedShadow,
     string AssetPath)
 {
     public static PieceViewModel FromPiece(PieceKind piece, string? themeId = null)
@@ -37,6 +38,7 @@ public sealed record PieceViewModel(
             Brushes.White,
             new SolidColorBrush(Color.FromArgb(80, 74, 45, 35)),
             Brushes.LightPink,
+            normalizedThemeId == ColorLines.Windows.Themes.ThemeCatalog.ThreeDCatTokens.Id,
             ToAssetPath(piece, normalizedThemeId));
     }
 
