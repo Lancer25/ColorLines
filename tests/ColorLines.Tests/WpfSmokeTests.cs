@@ -49,34 +49,36 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
-    public void ThreeDCatTokenAssetUsesFullModelSilhouette()
+    public void ThreeDCatTokenAssetUsesCompactCatHeadTokenSilhouette()
     {
         RunOnWpfThread(() =>
         {
             var threeD = ReadResourceBytes("/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/orange.png");
             var bounds = GetAlphaBounds(threeD);
 
-            Assert.True(bounds.Width >= 150);
-            Assert.True(bounds.Height >= 200);
+            Assert.True(bounds.Width >= 160);
+            Assert.True(bounds.Height >= 150);
+            Assert.True(bounds.Height <= 200);
+            Assert.InRange((double)bounds.Width / bounds.Height, 0.8, 1.25);
         });
     }
 
     [Fact]
-    public void ThreeDCatTokenAssetsUseVariedPlushSilhouettes()
+    public void ThreeDCatTokenAssetsUseDistinctCatHeadPalettes()
     {
         RunOnWpfThread(() =>
         {
             var pieces = new[] { "orange", "gray", "tuxedo", "calico", "black", "white", "bluegray" };
-            var silhouetteAreas = pieces
+            var paletteSamples = pieces
                 .Select(piece =>
                 {
                     var asset = ReadResourceBytes($"/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/{piece}.png");
-                    return CountOpaquePixels(asset);
+                    return SampleAverageOpaqueColor(asset);
                 })
                 .Distinct()
                 .Count();
 
-            Assert.True(silhouetteAreas >= 5, $"Expected varied plush cat silhouettes, got {silhouetteAreas} distinct alpha areas.");
+            Assert.True(paletteSamples >= 7, $"Expected distinct cat head palettes, got {paletteSamples} distinct samples.");
         });
     }
 
@@ -1257,7 +1259,7 @@ public sealed class WpfSmokeTests
             : new Int32Rect(minX, minY, maxX - minX + 1, maxY - minY + 1);
     }
 
-    private static int CountOpaquePixels(byte[] png)
+    private static (int Red, int Green, int Blue) SampleAverageOpaqueColor(byte[] png)
     {
         using var stream = new MemoryStream(png);
         var bitmap = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad).Frames[0];
@@ -1266,19 +1268,28 @@ public sealed class WpfSmokeTests
         var pixels = new byte[stride * converted.PixelHeight];
         converted.CopyPixels(pixels, stride, 0);
         var opaquePixels = 0;
+        long red = 0;
+        long green = 0;
+        long blue = 0;
 
         for (var y = 0; y < converted.PixelHeight; y++)
         {
             for (var x = 0; x < converted.PixelWidth; x++)
             {
-                if (pixels[(y * stride) + (x * 4) + 3] > 20)
+                var offset = (y * stride) + (x * 4);
+                if (pixels[offset + 3] > 180)
                 {
                     opaquePixels++;
+                    blue += pixels[offset];
+                    green += pixels[offset + 1];
+                    red += pixels[offset + 2];
                 }
             }
         }
 
-        return opaquePixels;
+        return opaquePixels == 0
+            ? (0, 0, 0)
+            : ((int)(red / opaquePixels / 8), (int)(green / opaquePixels / 8), (int)(blue / opaquePixels / 8));
     }
 
     private static void RunOnWpfThread(Action action)
