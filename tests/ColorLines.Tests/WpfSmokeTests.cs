@@ -1102,6 +1102,24 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void PieceScaleActorUsesPopInMotionForMovedAndSpawnedCats()
+    {
+        var document = LoadMainWindowXaml();
+        var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
+        var pieceScaleActor = document.Descendants()
+            .First(element => element.Name.LocalName == "Grid"
+                && element.Attribute(x + "Name")?.Value == "PieceScaleActor");
+        var markup = pieceScaleActor.ToString(SaveOptions.DisableFormatting);
+
+        Assert.Contains("ScaleX", markup, StringComparison.Ordinal);
+        Assert.Contains("ScaleY", markup, StringComparison.Ordinal);
+        Assert.Contains("From=\"0.88\"", markup, StringComparison.Ordinal);
+        Assert.Contains("From=\"0.72\"", markup, StringComparison.Ordinal);
+        Assert.Contains("To=\"1\"", markup, StringComparison.Ordinal);
+        Assert.Contains("Game.IsFullAnimation", markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ClearOpportunityGlowUsesDedicatedVisualLayer()
     {
         var document = LoadMainWindowXaml();

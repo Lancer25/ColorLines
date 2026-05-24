@@ -954,6 +954,14 @@
                                                                                          From="0.35"
                                                                                          To="1"
                                                                                          Duration="0:0:0.16" />
+                                                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                                                         From="0.88"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.16" />
+                                                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                                                         From="0.88"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.16" />
                                                                     </Storyboard>
                                                                 </BeginStoryboard>
                                                             </MultiDataTrigger.EnterActions>
@@ -968,6 +976,14 @@
                                                                     <Storyboard>
                                                                         <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                                          From="0.05"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.18" />
+                                                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                                                         From="0.72"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.18" />
+                                                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                                                         From="0.72"
                                                                                          To="1"
                                                                                          Duration="0:0:0.18" />
                                                                     </Storyboard>
