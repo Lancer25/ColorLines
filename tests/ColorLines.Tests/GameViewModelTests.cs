@@ -180,6 +180,22 @@ public sealed class GameViewModelTests
         Assert.Equal(expectedSize - 1, viewModel.Cells.Max(cell => cell.Column));
     }
 
+    [Theory]
+    [InlineData("Easy", 50, 48)]
+    [InlineData("Normal", 46, 44)]
+    [InlineData("Hard", 42, 40)]
+    public void DifficultyControlsBoardVisualDensity(string difficulty, int expectedCellVisualSize, int expectedPieceVisualSize)
+    {
+        var viewModel = GameViewModel.CreateForNewGame();
+
+        viewModel.SetDifficultyCommand.Execute(difficulty);
+        viewModel.NewGameCommand.Execute(null);
+
+        Assert.Equal(expectedCellVisualSize, viewModel.BoardCellVisualSize);
+        Assert.Equal(expectedPieceVisualSize, viewModel.BoardPieceImageSize);
+        Assert.True(viewModel.BoardPieceImageSize < viewModel.BoardCellVisualSize);
+    }
+
     [Fact]
     public void SelectingOccupiedCellMarksItSelected()
     {

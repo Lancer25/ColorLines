@@ -827,6 +827,8 @@ public sealed class WpfSmokeTests
                 .First(border => border.Name == "ScoreDeltaBadge");
             var pieceImage = FindVisualChildren<Image>(occupiedButton)
                 .First(image => image.Name == "PieceImage");
+            var boardCellContent = FindVisualChildren<Grid>(occupiedButton)
+                .First(grid => grid.Name == "BoardCellContent");
             var clearPulseGlow = FindVisualChildren<Border>(occupiedButton)
                 .First(border => border.Name == "ClearPulseGlow");
             var pieceActor = FindVisualChildren<Grid>(occupiedButton)
@@ -852,9 +854,9 @@ public sealed class WpfSmokeTests
             var actorTransform = Assert.IsType<TranslateTransform>(pieceActor.RenderTransform);
             var scaleTransform = Assert.IsType<ScaleTransform>(pieceScaleActor.RenderTransform);
 
-            Assert.True(pieceImage.Width > 0);
-            Assert.True(pieceImage.Width >= 48);
-            Assert.True(pieceImage.Width <= 50);
+            Assert.Equal(shell.Game.BoardCellVisualSize, boardCellContent.Width);
+            Assert.Equal(shell.Game.BoardCellVisualSize, boardCellContent.Height);
+            Assert.Equal(shell.Game.BoardPieceImageSize, pieceImage.Width);
             Assert.Equal(pieceImage.Width, pieceImage.Height);
             Assert.True(occupiedButton.DataContext is CellViewModel { Piece.UsesEmbeddedShadow: true });
             Assert.True(pieceShadow.Opacity <= 0.5);

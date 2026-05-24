@@ -289,6 +289,20 @@ public sealed class GameViewModel : INotifyPropertyChanged
 
     public int BoardSize => state.Board.Size;
 
+    public int BoardCellVisualSize => BoardSize switch
+    {
+        <= 7 => 50,
+        >= 11 => 42,
+        _ => 46
+    };
+
+    public int BoardPieceImageSize => BoardSize switch
+    {
+        <= 7 => 48,
+        >= 11 => 40,
+        _ => 44
+    };
+
     public int TotalCellCount => BoardSize * BoardSize;
 
     public int OccupiedCellCount => state.Board.Cells().Count(cell => cell.Piece is not null);
@@ -483,6 +497,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
         Feedback = TurnFeedback.Neutral;
         OnPropertyChanged(nameof(IsGameOver));
         OnPropertyChanged(nameof(BoardSize));
+        OnPropertyChanged(nameof(BoardCellVisualSize));
+        OnPropertyChanged(nameof(BoardPieceImageSize));
         StatusText = text.SelectCatToMove;
         PlaySound(SoundCue.NewGame);
         RefreshFromState();

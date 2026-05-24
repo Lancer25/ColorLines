@@ -506,7 +506,9 @@
                                     CommandParameter="{Binding}"
                                     MouseEnter="BoardCellPointerEntered"
                                     MouseLeave="BoardCellPointerLeft">
-                                <Grid Width="44" Height="44">
+                                <Grid x:Name="BoardCellContent"
+                                      Width="{Binding DataContext.Game.BoardCellVisualSize, RelativeSource={RelativeSource AncestorType=Window}}"
+                                      Height="{Binding DataContext.Game.BoardCellVisualSize, RelativeSource={RelativeSource AncestorType=Window}}">
                                     <Border x:Name="ReachableTargetGlow"
                                             Margin="13"
                                             CornerRadius="16"
@@ -999,21 +1001,13 @@
                                                    RenderOptions.BitmapScalingMode="HighQuality">
                                                 <Image.Style>
                                                     <Style TargetType="Image">
-                                                        <Setter Property="Width" Value="48" />
-                                                        <Setter Property="Height" Value="48" />
+                                                        <Setter Property="Width" Value="{Binding DataContext.Game.BoardPieceImageSize, RelativeSource={RelativeSource AncestorType=Window}}" />
+                                                        <Setter Property="Height" Value="{Binding DataContext.Game.BoardPieceImageSize, RelativeSource={RelativeSource AncestorType=Window}}" />
                                                         <Setter Property="Opacity" Value="0" />
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsOccupied}" Value="True">
                                                                 <Setter Property="Opacity" Value="1" />
                                                             </DataTrigger>
-                                                            <MultiDataTrigger>
-                                                                <MultiDataTrigger.Conditions>
-                                                                    <Condition Binding="{Binding IsOccupied}" Value="True" />
-                                                                    <Condition Binding="{Binding Piece.UsesEmbeddedShadow}" Value="True" />
-                                                                </MultiDataTrigger.Conditions>
-                                                                <Setter Property="Width" Value="48" />
-                                                                <Setter Property="Height" Value="48" />
-                                                            </MultiDataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Image.Style>
