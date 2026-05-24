@@ -858,8 +858,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         var lines = LineDetector.FindLines(previewBoard, new[] { target });
         if (lines.Count > 0)
         {
-            var clearPositions = LineDetector.UniquePositions(lines);
-            var scoreDelta = ScoreCalculator.Calculate(lines.Count, clearPositions.Count);
+            var scoreDelta = CalculateMoveScoreDelta(target);
             return text.MoveClearsPreview(scoreDelta);
         }
 
@@ -878,15 +877,31 @@ public sealed class GameViewModel : INotifyPropertyChanged
             .Select(target => new
             {
                 Target = target,
-                PathLength = PathFinder.FindPath(state.Board, selectedPosition.Value, target).Count
+                PathLength = PathFinder.FindPath(state.Board, selectedPosition.Value, target).Count,
+                ScoreDelta = CalculateMoveScoreDelta(target)
             })
             .Where(candidate => candidate.PathLength > 0)
-            .OrderBy(candidate => candidate.PathLength)
+            .OrderByDescending(candidate => candidate.ScoreDelta)
+            .ThenBy(candidate => candidate.PathLength)
             .ThenBy(candidate => candidate.Target.Row)
             .ThenBy(candidate => candidate.Target.Column)
             .FirstOrDefault();
 
         return bestTarget?.Target;
+    }
+
+    private int CalculateMoveScoreDelta(BoardPosition target)
+    {
+        if (selectedPosition is null)
+        {
+            return 0;
+        }
+
+        var previewBoard = state.Board.Clone();
+        previewBoard.MovePiece(selectedPosition.Value, target);
+        var lines = LineDetector.FindLines(previewBoard, new[] { target });
+        var clearPositions = LineDetector.UniquePositions(lines);
+        return ScoreCalculator.Calculate(lines.Count, clearPositions.Count);
     }
 
     private void UpdateSelectedActionSummary(int reachableCount, int clearOpportunityCount, BoardPosition? recommendedClearTarget)
