@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Globalization;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Windows;
 using System.Windows.Automation;
@@ -19,6 +20,7 @@ namespace ColorLines.Tests;
 public sealed class WpfSmokeTests
 {
     private static readonly WpfTestThread WpfThread = new();
+    private static readonly string[] ThreeDCatTokenPieceNames = { "orange", "gray", "tuxedo", "calico", "black", "white", "bluegray" };
 
     [Fact]
     public void CatPieceAssetIsPackagedAsWpfResource()
@@ -53,13 +55,16 @@ public sealed class WpfSmokeTests
     {
         RunOnWpfThread(() =>
         {
-            var threeD = ReadResourceBytes("/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/orange.png");
-            var bounds = GetAlphaBounds(threeD);
+            foreach (var piece in ThreeDCatTokenPieceNames)
+            {
+                var threeD = ReadResourceBytes($"/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/{piece}.png");
+                var bounds = GetAlphaBounds(threeD);
 
-            Assert.True(bounds.Width >= 160);
-            Assert.True(bounds.Height >= 150);
-            Assert.True(bounds.Height <= 200);
-            Assert.InRange((double)bounds.Width / bounds.Height, 0.8, 1.25);
+                Assert.True(bounds.Width >= 210, $"{piece} should fill the token canvas width; width={bounds.Width}.");
+                Assert.True(bounds.Height >= 210, $"{piece} should fill the token canvas height; height={bounds.Height}.");
+                Assert.True(bounds.Height <= 230, $"{piece} should stay inside the token safe area; height={bounds.Height}.");
+                Assert.InRange((double)bounds.Width / bounds.Height, 0.9, 1.12);
+            }
         });
     }
 
@@ -79,6 +84,49 @@ public sealed class WpfSmokeTests
                 .Count();
 
             Assert.True(paletteSamples >= 7, $"Expected distinct cat head palettes, got {paletteSamples} distinct samples.");
+        });
+    }
+
+    [Fact]
+    public void ThreeDCatTokenAssetsDoNotUseRejectedPlaceholderArt()
+    {
+        RunOnWpfThread(() =>
+        {
+            var rejectedHashes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "AB8A7A7BEA4383BFE87E90FA0D4A96EDEA74B74E8E4A6097CA2C34536870D2B7",
+                "BF91684328943FF8D4F8D148FF208BEB4DCA7991CF7ED400C8F88100CA431DCD",
+                "3E0C29497491C10A9A6CCACC15E82F94C05378D942FAC9596692725CD61AE6DB",
+                "C78CF63537F591FF73DE649B136E7CC2727A747F20992D0534911D23C068C2F0",
+                "C3B815C2F9C80BD64D77B387E7E7B5B691CC92CE4C8319018786566E6D863DF8",
+                "3C62F06D76FC896CA24F3F5488D0E2E5A72C8A08D4F54BA88FFB2B1A1F758438",
+                "00FE53900D6132F6F22ADCF51B8D3876CE95CC27CF9C2E8D7A81F6EBACD24DFA"
+            };
+
+            foreach (var piece in ThreeDCatTokenPieceNames)
+            {
+                var asset = ReadResourceBytes($"/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/{piece}.png");
+                var hash = Convert.ToHexString(SHA256.HashData(asset));
+
+                Assert.DoesNotContain(hash, rejectedHashes);
+            }
+        });
+    }
+
+    [Fact]
+    public void ThreeDCatTokenAssetsHaveGeneratedArtComplexity()
+    {
+        RunOnWpfThread(() =>
+        {
+            foreach (var piece in ThreeDCatTokenPieceNames)
+            {
+                var asset = ReadResourceBytes($"/ColorLines.Windows;component/Assets/Themes/3DCatTokens/pieces/{piece}.png");
+                var complexity = MeasureVisualComplexity(asset);
+
+                Assert.True(asset.Length >= 50000, $"{piece} should be a high-detail generated asset; bytes={asset.Length}.");
+                Assert.True(complexity.UniqueOpaqueColors >= 1000, $"{piece} should have rich color detail; colors={complexity.UniqueOpaqueColors}.");
+                Assert.True(complexity.AlphaLevels >= 40, $"{piece} should have anti-aliased transparent edges; alpha levels={complexity.AlphaLevels}.");
+            }
         });
     }
 
@@ -1381,6 +1429,39 @@ public sealed class WpfSmokeTests
         return opaquePixels == 0
             ? (0, 0, 0)
             : ((int)(red / opaquePixels / 8), (int)(green / opaquePixels / 8), (int)(blue / opaquePixels / 8));
+    }
+
+    private static (int UniqueOpaqueColors, int AlphaLevels) MeasureVisualComplexity(byte[] png)
+    {
+        using var stream = new MemoryStream(png);
+        var bitmap = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad).Frames[0];
+        var converted = new FormatConvertedBitmap(bitmap, PixelFormats.Bgra32, null, 0);
+        var stride = converted.PixelWidth * 4;
+        var pixels = new byte[stride * converted.PixelHeight];
+        converted.CopyPixels(pixels, stride, 0);
+        var colors = new HashSet<int>();
+        var alphaLevels = new HashSet<byte>();
+
+        for (var y = 0; y < converted.PixelHeight; y++)
+        {
+            for (var x = 0; x < converted.PixelWidth; x++)
+            {
+                var offset = (y * stride) + (x * 4);
+                var alpha = pixels[offset + 3];
+                if (alpha <= 20)
+                {
+                    continue;
+                }
+
+                alphaLevels.Add(alpha);
+                if (alpha > 180)
+                {
+                    colors.Add((pixels[offset + 2] << 16) | (pixels[offset + 1] << 8) | pixels[offset]);
+                }
+            }
+        }
+
+        return (colors.Count, alphaLevels.Count);
     }
 
     private static void RunOnWpfThread(Action action)
