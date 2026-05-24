@@ -1137,6 +1137,21 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void RecommendedClearTargetGlowUsesDedicatedVisualLayer()
+    {
+        var document = LoadMainWindowXaml();
+        var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
+        var glow = document.Descendants()
+            .First(element => element.Name.LocalName == "Border"
+                && element.Attribute(x + "Name")?.Value == "RecommendedClearTargetGlow");
+
+        var markup = glow.ToString(SaveOptions.DisableFormatting);
+
+        Assert.Contains("IsRecommendedClearTarget", markup, StringComparison.Ordinal);
+        Assert.Contains("#FFFFB65A", markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void BoardPressureBlockHasRiskVisualStates()
     {
         var document = LoadMainWindowXaml();

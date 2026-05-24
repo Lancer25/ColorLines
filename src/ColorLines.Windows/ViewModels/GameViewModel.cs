@@ -639,6 +639,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             var wasRejectedTarget = IsFullAnimation && rejectedPositions.Contains(cell.Position);
             var isReachableTarget = IsPathHintsEnabled && reachableTargets.Contains(cell.Position);
             var isClearOpportunity = IsPathHintsEnabled && clearOpportunities.Contains(cell.Position);
+            var isRecommendedClearTarget = IsPathHintsEnabled && selectedRecommendedClearTarget == cell.Position;
             var isPathPreview = pathPreviewPositions.Contains(cell.Position);
             var isPathPreviewTarget = pathPreviewTargetPosition == cell.Position;
             var cellViewModel = Cells[(cell.Position.Row * state.Board.Size) + cell.Position.Column];
@@ -652,6 +653,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
                 wasRejectedTarget,
                 isReachableTarget,
                 isClearOpportunity,
+                isRecommendedClearTarget,
                 isPathPreview,
                 isPathPreviewTarget,
                 ThemeId);
