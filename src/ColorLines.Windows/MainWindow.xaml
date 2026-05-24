@@ -208,10 +208,10 @@
         </Style>
 
         <Style x:Key="BoardCellButton" TargetType="Button">
-            <Setter Property="Margin" Value="3" />
+            <Setter Property="Margin" Value="4" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Background" Value="{StaticResource CellBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="#D9D0A269" />
+            <Setter Property="BorderBrush" Value="{StaticResource CellBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -221,14 +221,14 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="10">
+                                CornerRadius="12">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="CellFrame" Property="Background" Value="{StaticResource CellHoverBrush}" />
-                                <Setter TargetName="CellFrame" Property="BorderBrush" Value="#D98B4A" />
+                                <Setter TargetName="CellFrame" Property="BorderBrush" Value="#99D7839A" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -483,14 +483,14 @@
                     </Grid.ColumnDefinitions>
 
                     <Border x:Name="MainBoardFrame"
-                            Background="{StaticResource BoardShadowBrush}"
+                            Background="{StaticResource BoardInnerBrush}"
                             BorderBrush="{StaticResource BoardBorderBrush}"
-                            BorderThickness="2"
-                            CornerRadius="16"
-                            Padding="20">
+                            BorderThickness="1"
+                            CornerRadius="24"
+                            Padding="16">
                         <Border Background="{StaticResource BoardInnerBrush}"
-                                CornerRadius="12"
-                                Padding="8">
+                                CornerRadius="20"
+                                Padding="10">
                             <Viewbox Stretch="Uniform">
                                 <ItemsControl ItemsSource="{Binding Game.Cells}" Width="560" Height="560">
                     <ItemsControl.ItemsPanel>
@@ -510,7 +510,7 @@
                                     <Border x:Name="ReachableTargetGlow"
                                             Margin="13"
                                             CornerRadius="16"
-                                            Background="#FFFFE1A8"
+                                            Background="#99FFF2D8"
                                             IsHitTestVisible="False">
                                         <Border.Style>
                                             <Style TargetType="Border">
@@ -536,7 +536,7 @@
                                     <Border x:Name="PathPreviewGlow"
                                             Margin="11"
                                             CornerRadius="14"
-                                            Background="#FF7AC7C4"
+                                            Background="#AA8FD8D1"
                                             IsHitTestVisible="False">
                                         <Border.Style>
                                             <Style TargetType="Border">
@@ -566,9 +566,9 @@
                                     <Border x:Name="ClearOpportunityGlow"
                                             Margin="8"
                                             CornerRadius="17"
-                                            BorderBrush="#FFFFB65A"
+                                            BorderBrush="#FFD7839A"
                                             BorderThickness="2"
-                                            Background="#33FFB65A"
+                                            Background="#33D7839A"
                                             IsHitTestVisible="False">
                                         <Border.Style>
                                             <Style TargetType="Border">
@@ -850,7 +850,7 @@
                                     </Ellipse>
                                     <Ellipse x:Name="PieceShadow"
                                              VerticalAlignment="Bottom"
-                                             Fill="#3A24170F"
+                                             Fill="#261F1712"
                                              IsHitTestVisible="False">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
@@ -878,7 +878,7 @@
                                              Width="44"
                                              Height="36"
                                              VerticalAlignment="Bottom"
-                                             Fill="#36FFF0A8"
+                                             Fill="#44FFD6E1"
                                              IsHitTestVisible="False">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">

@@ -102,6 +102,56 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void CozyBoardThemeUsesLightModernBoardPalette()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var resources = Application.Current!.Resources;
+
+            AssertColorLightness(resources, "BoardBackgroundColor", minimumAverage: 235);
+            AssertColorLightness(resources, "BoardInnerColor", minimumAverage: 235);
+            AssertColorLightness(resources, "BoardBorderColor", minimumAverage: 205);
+            AssertColorLightness(resources, "CellBackgroundColor", minimumAverage: 245);
+            AssertColorLightness(resources, "CellBorderColor", minimumAverage: 220);
+            AssertColorNotOrangeBrown(resources, "BoardBorderColor");
+            AssertColorNotOrangeBrown(resources, "BoardInnerColor");
+            AssertColorNotOrangeBrown(resources, "CellBorderColor");
+            AssertColorNotOrangeBrown(resources, "CellBackgroundColor");
+        });
+    }
+
+    [Fact]
+    public void MainBoardFrameUsesLightweightBoardChrome()
+    {
+        var document = LoadMainWindowXaml();
+        var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
+        var mainBoardFrame = document.Descendants()
+            .First(element => element.Name.LocalName == "Border"
+                && element.Attribute(x + "Name")?.Value == "MainBoardFrame");
+
+        Assert.Equal("1", mainBoardFrame.Attribute("BorderThickness")?.Value);
+        Assert.Equal("16", mainBoardFrame.Attribute("Padding")?.Value);
+        Assert.Equal("{StaticResource BoardBorderBrush}", mainBoardFrame.Attribute("BorderBrush")?.Value);
+        Assert.Equal("{StaticResource BoardInnerBrush}", mainBoardFrame.Attribute("Background")?.Value);
+    }
+
+    [Fact]
+    public void BoardCellStyleUsesLowNoiseModernChrome()
+    {
+        var document = LoadMainWindowXaml();
+        var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
+        var boardCellStyle = document.Descendants()
+            .First(element => element.Name.LocalName == "Style"
+                && element.Attribute(x + "Key")?.Value == "BoardCellButton");
+        var markup = boardCellStyle.ToString(SaveOptions.DisableFormatting);
+
+        Assert.Contains("CellBorderBrush", markup, StringComparison.Ordinal);
+        Assert.DoesNotContain("#D9D0A269", markup, StringComparison.Ordinal);
+        Assert.DoesNotContain("#D98B4A", markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void MainWindowStartsWithShellViewModelOnMainMenu()
     {
         RunOnWpfThread(() =>
@@ -812,7 +862,7 @@ public sealed class WpfSmokeTests
             Assert.Equal(shell.PauseRunSummaryText, pauseRunSummaryText.Text);
             Assert.Equal(shell.BoardPressureText, pauseBoardPressureText.Text);
             Assert.True(pauseMenuActionList.Children.Count >= 5);
-            Assert.True(mainBoardFrame.Padding.Left >= 18);
+            Assert.True(mainBoardFrame.Padding.Left >= 16);
             Assert.Equal(shell.Game.BoardSize, boardGrid.Rows);
             Assert.Equal(shell.Game.BoardSize, boardGrid.Columns);
             Assert.Same(shell.OpenPauseMenuCommand, menuButton.Command);
@@ -998,7 +1048,7 @@ public sealed class WpfSmokeTests
         var markup = glow.ToString(SaveOptions.DisableFormatting);
 
         Assert.Contains("IsClearOpportunity", markup, StringComparison.Ordinal);
-        Assert.Contains("#FFFFB65A", markup, StringComparison.Ordinal);
+        Assert.Contains("#FFD7839A", markup, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1239,6 +1289,22 @@ public sealed class WpfSmokeTests
                     UriKind.Relative)
             });
         }
+    }
+
+    private static void AssertColorLightness(ResourceDictionary resources, string key, int minimumAverage)
+    {
+        var color = Assert.IsType<Color>(resources[key]);
+        var average = (color.R + color.G + color.B) / 3;
+
+        Assert.True(average >= minimumAverage, $"{key} should be light; average RGB was {average}.");
+    }
+
+    private static void AssertColorNotOrangeBrown(ResourceDictionary resources, string key)
+    {
+        var color = Assert.IsType<Color>(resources[key]);
+        var orangeBrownSkew = color.R - color.B;
+
+        Assert.True(orangeBrownSkew <= 28, $"{key} should avoid orange-brown skew; red-blue delta was {orangeBrownSkew}.");
     }
 
     private static byte[] ReadResourceBytes(string path)
