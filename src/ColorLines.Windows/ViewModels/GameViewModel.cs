@@ -34,6 +34,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private int selectedReachableCellCount;
     private int selectedClearOpportunityCount;
     private BoardPosition? selectedRecommendedClearTarget;
+    private int selectedRecommendedClearScoreDelta;
     private HashSet<BoardPosition> movedPositions;
     private HashSet<BoardPosition> movePathPositions;
     private HashSet<BoardPosition> spawnedPositions;
@@ -62,6 +63,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         selectedReachableCellCount = 0;
         selectedClearOpportunityCount = 0;
         selectedRecommendedClearTarget = null;
+        selectedRecommendedClearScoreDelta = 0;
         movedPositions = new HashSet<BoardPosition>();
         movePathPositions = new HashSet<BoardPosition>();
         spawnedPositions = new HashSet<BoardPosition>();
@@ -379,8 +381,8 @@ public sealed class GameViewModel : INotifyPropertyChanged
             }
 
             return selectedRecommendedClearTarget is { } target
-                ? text.SelectedActionSummary(SelectedReachableCellCount, SelectedClearOpportunityCount, target.Row + 1, target.Column + 1)
-                : text.SelectedActionSummary(SelectedReachableCellCount, SelectedClearOpportunityCount, null, null);
+                ? text.SelectedActionSummary(SelectedReachableCellCount, SelectedClearOpportunityCount, selectedRecommendedClearScoreDelta, target.Row + 1, target.Column + 1)
+                : text.SelectedActionSummary(SelectedReachableCellCount, SelectedClearOpportunityCount, null, null, null);
         }
     }
 
@@ -866,7 +868,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         return text.MoveSpawnsPreview(spawnCount);
     }
 
-    private BoardPosition? GetRecommendedClearTarget(IReadOnlySet<BoardPosition> clearOpportunities)
+    private RecommendedClearMove? GetRecommendedClearTarget(IReadOnlySet<BoardPosition> clearOpportunities)
     {
         if (selectedPosition is null || clearOpportunities.Count == 0)
         {
@@ -887,7 +889,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             .ThenBy(candidate => candidate.Target.Column)
             .FirstOrDefault();
 
-        return bestTarget?.Target;
+        return bestTarget is null ? null : new RecommendedClearMove(bestTarget.Target, bestTarget.ScoreDelta);
     }
 
     private int CalculateMoveScoreDelta(BoardPosition target)
@@ -904,29 +906,32 @@ public sealed class GameViewModel : INotifyPropertyChanged
         return ScoreCalculator.Calculate(lines.Count, clearPositions.Count);
     }
 
-    private void UpdateSelectedActionSummary(int reachableCount, int clearOpportunityCount, BoardPosition? recommendedClearTarget)
+    private void UpdateSelectedActionSummary(int reachableCount, int clearOpportunityCount, RecommendedClearMove? recommendedClearTarget)
     {
         if (selectedPosition is null)
         {
             SelectedReachableCellCount = 0;
             SelectedClearOpportunityCount = 0;
-            SetRecommendedClearTarget(null);
+            SetRecommendedClearTarget(null, 0);
             return;
         }
 
         SelectedReachableCellCount = reachableCount;
         SelectedClearOpportunityCount = clearOpportunityCount;
-        SetRecommendedClearTarget(recommendedClearTarget);
+        SetRecommendedClearTarget(recommendedClearTarget?.Target, recommendedClearTarget?.ScoreDelta ?? 0);
     }
 
-    private void SetRecommendedClearTarget(BoardPosition? value)
+    private void SetRecommendedClearTarget(BoardPosition? target, int scoreDelta)
     {
-        if (selectedRecommendedClearTarget != value)
+        if (selectedRecommendedClearTarget != target || selectedRecommendedClearScoreDelta != scoreDelta)
         {
-            selectedRecommendedClearTarget = value;
+            selectedRecommendedClearTarget = target;
+            selectedRecommendedClearScoreDelta = scoreDelta;
             OnPropertyChanged(nameof(SelectedActionSummaryText));
         }
     }
+
+    private sealed record RecommendedClearMove(BoardPosition Target, int ScoreDelta);
 
     private string BuildStatusText(GameTurnResult result, bool wasSelectedMoveAttempt)
     {

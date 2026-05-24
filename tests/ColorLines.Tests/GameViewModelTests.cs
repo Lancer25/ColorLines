@@ -366,7 +366,7 @@ public sealed class GameViewModelTests
 
         Assert.Contains(viewModel.Cells, cell => cell.Row == 6 && cell.Column == 6 && cell.IsRecommendedClearTarget);
         Assert.DoesNotContain(viewModel.Cells, cell => cell.Row == 2 && cell.Column == 4 && cell.IsRecommendedClearTarget);
-        Assert.Equal("Reachable: 68 | Clears: 4 | Best: R7 C7", viewModel.SelectedActionSummaryText);
+        Assert.Equal("Reachable: 68 | Clears: 4 | Best: +36 at R7 C7", viewModel.SelectedActionSummaryText);
         Assert.Equal("This move clears +36 and skips new cats.", viewModel.MovePreviewText);
     }
 
@@ -409,7 +409,7 @@ public sealed class GameViewModelTests
         Assert.Equal("Selected Orange. 1 clear opportunity.", viewModel.StatusText);
         Assert.Equal(76, viewModel.SelectedReachableCellCount);
         Assert.Equal(1, viewModel.SelectedClearOpportunityCount);
-        Assert.Equal("Reachable: 76 | Clears: 1 | Best: R3 C5", viewModel.SelectedActionSummaryText);
+        Assert.Equal("Reachable: 76 | Clears: 1 | Best: +10 at R3 C5", viewModel.SelectedActionSummaryText);
     }
 
     [Fact]
@@ -428,7 +428,7 @@ public sealed class GameViewModelTests
         viewModel.SelectCellCommand.Execute(source);
         viewModel.SetLanguageCommand.Execute("zh");
 
-        Assert.Equal("\u53ef\u8d70\uff1a76 | \u53ef\u6d88\uff1a1 | \u63a8\u8350\uff1a3\u884c5\u5217", viewModel.SelectedActionSummaryText);
+        Assert.Equal("\u53ef\u8d70\uff1a76 | \u53ef\u6d88\uff1a1 | \u63a8\u8350\uff1a+10\uff0c3\u884c5\u5217", viewModel.SelectedActionSummaryText);
     }
 
     [Fact]
