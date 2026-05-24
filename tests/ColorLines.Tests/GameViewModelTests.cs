@@ -321,6 +321,48 @@ public sealed class GameViewModelTests
     }
 
     [Fact]
+    public void SelectingPiecePreviewsPathToRecommendedClearTarget()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 1), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 3), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+
+        viewModel.SelectCellCommand.Execute(source);
+
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 0 && cell.Column == 0 && cell.IsPathPreview);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 1 && cell.Column == 0 && cell.IsPathPreview);
+        Assert.Contains(viewModel.Cells, cell => cell.Row == 2 && cell.Column == 4 && cell.IsPathPreviewTarget);
+        Assert.Equal("This move clears +10 and skips new cats.", viewModel.MovePreviewText);
+    }
+
+    [Fact]
+    public void DisabledPathHintsDoNotPreviewRecommendedClearPath()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 1), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 3), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+        viewModel.TogglePathHintsCommand.Execute(null);
+
+        viewModel.SelectCellCommand.Execute(source);
+
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreview);
+        Assert.DoesNotContain(viewModel.Cells, cell => cell.IsPathPreviewTarget);
+        Assert.Equal(string.Empty, viewModel.MovePreviewText);
+    }
+
+    [Fact]
     public void SelectingPieceSummarizesClearOpportunities()
     {
         var board = GameBoard.CreateEmpty();

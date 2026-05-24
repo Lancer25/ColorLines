@@ -461,6 +461,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
             Feedback = TurnFeedback.Neutral;
             selectedPosition = position;
             StatusText = BuildSelectedStatusText(piece.Value);
+            PreviewRecommendedClearPath();
             PlaySound(SoundCue.Select);
             RefreshFromState();
             return;
@@ -724,6 +725,25 @@ public sealed class GameViewModel : INotifyPropertyChanged
         pathPreviewTargetPosition = target;
         MovePreviewText = BuildMovePreviewText(target);
         ApplyPathPreview();
+    }
+
+    private void PreviewRecommendedClearPath()
+    {
+        if (!IsPathHintsEnabled || selectedPosition is null || selectedRecommendedClearTarget is null)
+        {
+            return;
+        }
+
+        var target = selectedRecommendedClearTarget.Value;
+        var path = PathFinder.FindPath(state.Board, selectedPosition.Value, target);
+        if (path.Count == 0)
+        {
+            return;
+        }
+
+        pathPreviewPositions = path.ToHashSet();
+        pathPreviewTargetPosition = target;
+        MovePreviewText = BuildMovePreviewText(target);
     }
 
     private void ClearPreviewPath()
