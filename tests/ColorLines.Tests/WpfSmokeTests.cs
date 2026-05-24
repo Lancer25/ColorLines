@@ -1085,6 +1085,23 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
+    public void SelectedPieceHaloUsesGentleBreathingFeedback()
+    {
+        var document = LoadMainWindowXaml();
+        var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
+        var selectedPieceHalo = document.Descendants()
+            .First(element => element.Name.LocalName == "Ellipse"
+                && element.Attribute(x + "Name")?.Value == "SelectedPieceHalo");
+        var markup = selectedPieceHalo.ToString(SaveOptions.DisableFormatting);
+
+        Assert.Contains("SelectedPieceHaloStoryboard", markup, StringComparison.Ordinal);
+        Assert.Contains("Game.IsFullAnimation", markup, StringComparison.Ordinal);
+        Assert.Contains("AutoReverse=\"True\"", markup, StringComparison.Ordinal);
+        Assert.Contains("RepeatBehavior=\"Forever\"", markup, StringComparison.Ordinal);
+        Assert.DoesNotContain("Value=\"1\"", markup, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ClearOpportunityGlowUsesDedicatedVisualLayer()
     {
         var document = LoadMainWindowXaml();

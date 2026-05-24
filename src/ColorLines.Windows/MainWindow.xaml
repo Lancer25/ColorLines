@@ -885,8 +885,36 @@
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                        <Setter Property="Opacity" Value="1" />
+                                                        <Setter Property="Opacity" Value="0.68" />
                                                     </DataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsSelected}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.EnterActions>
+                                                            <BeginStoryboard x:Name="SelectedPieceHaloStoryboard">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                     From="0.42"
+                                                                                     To="0.82"
+                                                                                     Duration="0:0:0.72"
+                                                                                     AutoReverse="True"
+                                                                                     RepeatBehavior="Forever" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </MultiDataTrigger.EnterActions>
+                                                        <MultiDataTrigger.ExitActions>
+                                                            <StopStoryboard BeginStoryboardName="SelectedPieceHaloStoryboard" />
+                                                        </MultiDataTrigger.ExitActions>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsSelected}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.IsFullAnimation, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Opacity" Value="0.68" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Ellipse.Style>
