@@ -95,6 +95,19 @@ public sealed class UiTextProvider
 
     public string MoveBlockedPreview => IsChinese ? "无法到达这个格子。" : "No path to this cell.";
 
+    public string SelectedActionSummary(int reachableCount, int clearOpportunityCount, int? recommendedRow, int? recommendedColumn)
+    {
+        var summary = IsChinese
+            ? $"可走：{reachableCount} | 可消：{clearOpportunityCount}"
+            : $"Reachable: {reachableCount} | Clears: {clearOpportunityCount}";
+
+        return recommendedRow is not null && recommendedColumn is not null
+            ? IsChinese
+                ? $"{summary} | 推荐：{recommendedRow}行{recommendedColumn}列"
+                : $"{summary} | Best: R{recommendedRow} C{recommendedColumn}"
+            : summary;
+    }
+
     public string FinalScore(int score)
     {
         return IsChinese ? $"最终分数：{score}" : $"Final Score: {score}";

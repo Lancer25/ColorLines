@@ -319,7 +319,26 @@ public sealed class GameViewModelTests
         Assert.Equal("Selected Orange. 1 clear opportunity.", viewModel.StatusText);
         Assert.Equal(76, viewModel.SelectedReachableCellCount);
         Assert.Equal(1, viewModel.SelectedClearOpportunityCount);
-        Assert.Equal("Reachable: 76 | Clears: 1", viewModel.SelectedActionSummaryText);
+        Assert.Equal("Reachable: 76 | Clears: 1 | Best: R3 C5", viewModel.SelectedActionSummaryText);
+    }
+
+    [Fact]
+    public void SelectedActionSummaryUsesSelectedLanguage()
+    {
+        var board = GameBoard.CreateEmpty();
+        board.SetPiece(new BoardPosition(0, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 0), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 1), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 2), PieceKind.Orange);
+        board.SetPiece(new BoardPosition(2, 3), PieceKind.Orange);
+        var state = new GameState(board, Array.Empty<PieceKind>(), 0, GameStatus.Playing);
+        var viewModel = new GameViewModel(new GameEngine(new SequenceRandomSource()), state);
+        var source = viewModel.Cells.Single(cell => cell.Row == 0 && cell.Column == 0);
+
+        viewModel.SelectCellCommand.Execute(source);
+        viewModel.SetLanguageCommand.Execute("zh");
+
+        Assert.Equal("\u53ef\u8d70\uff1a76 | \u53ef\u6d88\uff1a1 | \u63a8\u8350\uff1a3\u884c5\u5217", viewModel.SelectedActionSummaryText);
     }
 
     [Fact]

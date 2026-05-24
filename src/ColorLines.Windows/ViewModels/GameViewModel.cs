@@ -33,6 +33,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     private string movePreviewText;
     private int selectedReachableCellCount;
     private int selectedClearOpportunityCount;
+    private BoardPosition? selectedRecommendedClearTarget;
     private HashSet<BoardPosition> movedPositions;
     private HashSet<BoardPosition> movePathPositions;
     private HashSet<BoardPosition> spawnedPositions;
@@ -60,6 +61,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         movePreviewText = string.Empty;
         selectedReachableCellCount = 0;
         selectedClearOpportunityCount = 0;
+        selectedRecommendedClearTarget = null;
         movedPositions = new HashSet<BoardPosition>();
         movePathPositions = new HashSet<BoardPosition>();
         spawnedPositions = new HashSet<BoardPosition>();
@@ -367,9 +369,20 @@ public sealed class GameViewModel : INotifyPropertyChanged
         }
     }
 
-    public string SelectedActionSummaryText => selectedPosition is null
-        ? string.Empty
-        : $"Reachable: {SelectedReachableCellCount} | Clears: {SelectedClearOpportunityCount}";
+    public string SelectedActionSummaryText
+    {
+        get
+        {
+            if (selectedPosition is null)
+            {
+                return string.Empty;
+            }
+
+            return selectedRecommendedClearTarget is { } target
+                ? text.SelectedActionSummary(SelectedReachableCellCount, SelectedClearOpportunityCount, target.Row + 1, target.Column + 1)
+                : text.SelectedActionSummary(SelectedReachableCellCount, SelectedClearOpportunityCount, null, null);
+        }
+    }
 
     public string MovePreviewText
     {
@@ -553,6 +566,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(FinalScoreText));
         OnPropertyChanged(nameof(BestScoreText));
         OnPropertyChanged(nameof(AnimationToggleText));
+        OnPropertyChanged(nameof(SelectedActionSummaryText));
     }
 
     private void SetTheme(object? parameter)
@@ -614,7 +628,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         EnsureCellsInitialized();
         var reachableTargets = GetReachableTargets();
         var clearOpportunities = GetClearOpportunities(reachableTargets);
-        UpdateSelectedActionSummary(reachableTargets.Count, clearOpportunities.Count);
+        UpdateSelectedActionSummary(reachableTargets.Count, clearOpportunities.Count, GetRecommendedClearTarget(clearOpportunities));
         foreach (var cell in state.Board.Cells())
         {
             var isSelected = selectedPosition == cell.Position;
@@ -798,7 +812,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
     {
         var reachableTargets = GetReachableTargets();
         var clearOpportunities = GetClearOpportunities(reachableTargets);
-        UpdateSelectedActionSummary(reachableTargets.Count, clearOpportunities.Count);
+        UpdateSelectedActionSummary(reachableTargets.Count, clearOpportunities.Count, GetRecommendedClearTarget(clearOpportunities));
         if (reachableTargets.Count == 0)
         {
             return text.SelectedPieceWithNoReachableTargets(piece.ToString());
@@ -831,18 +845,50 @@ public sealed class GameViewModel : INotifyPropertyChanged
         return text.MoveSpawnsPreview(spawnCount);
     }
 
-    private void UpdateSelectedActionSummary(int reachableCount, int clearOpportunityCount)
+    private BoardPosition? GetRecommendedClearTarget(IReadOnlySet<BoardPosition> clearOpportunities)
+    {
+        if (selectedPosition is null || clearOpportunities.Count == 0)
+        {
+            return null;
+        }
+
+        var bestTarget = clearOpportunities
+            .Select(target => new
+            {
+                Target = target,
+                PathLength = PathFinder.FindPath(state.Board, selectedPosition.Value, target).Count
+            })
+            .Where(candidate => candidate.PathLength > 0)
+            .OrderBy(candidate => candidate.PathLength)
+            .ThenBy(candidate => candidate.Target.Row)
+            .ThenBy(candidate => candidate.Target.Column)
+            .FirstOrDefault();
+
+        return bestTarget?.Target;
+    }
+
+    private void UpdateSelectedActionSummary(int reachableCount, int clearOpportunityCount, BoardPosition? recommendedClearTarget)
     {
         if (selectedPosition is null)
         {
             SelectedReachableCellCount = 0;
             SelectedClearOpportunityCount = 0;
-            OnPropertyChanged(nameof(SelectedActionSummaryText));
+            SetRecommendedClearTarget(null);
             return;
         }
 
         SelectedReachableCellCount = reachableCount;
         SelectedClearOpportunityCount = clearOpportunityCount;
+        SetRecommendedClearTarget(recommendedClearTarget);
+    }
+
+    private void SetRecommendedClearTarget(BoardPosition? value)
+    {
+        if (selectedRecommendedClearTarget != value)
+        {
+            selectedRecommendedClearTarget = value;
+            OnPropertyChanged(nameof(SelectedActionSummaryText));
+        }
     }
 
     private string BuildStatusText(GameTurnResult result, bool wasSelectedMoveAttempt)
