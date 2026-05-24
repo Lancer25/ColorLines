@@ -739,6 +739,8 @@ public sealed class WpfSmokeTests
                 .First(ellipse => ellipse.Name == "PieceShadow");
             var pieceBase = FindVisualChildren<Ellipse>(occupiedButton)
                 .First(ellipse => ellipse.Name == "PieceBase");
+            var selectedPieceHalo = FindVisualChildren<Ellipse>(occupiedButton)
+                .First(ellipse => ellipse.Name == "SelectedPieceHalo");
             var moveFeedbackGlow = FindVisualChildren<Ellipse>(occupiedButton)
                 .First(ellipse => ellipse.Name == "MoveFeedbackGlow");
             var movePathPulseGlow = FindVisualChildren<Border>(occupiedButton)
@@ -753,12 +755,13 @@ public sealed class WpfSmokeTests
             var scaleTransform = Assert.IsType<ScaleTransform>(pieceScaleActor.RenderTransform);
 
             Assert.True(pieceImage.Width > 0);
-            Assert.True(pieceImage.Width <= 52);
+            Assert.True(pieceImage.Width >= 52);
+            Assert.True(pieceImage.Width <= 54);
             Assert.Equal(pieceImage.Width, pieceImage.Height);
-            Assert.True(pieceImage.Width >= 48);
             Assert.True(occupiedButton.DataContext is CellViewModel { Piece.UsesEmbeddedShadow: true });
             Assert.True(pieceShadow.Opacity <= 0.5);
             Assert.True(pieceBase.Opacity <= 0.5);
+            Assert.True(selectedPieceHalo.Width >= 44);
             Assert.Equal(Visibility.Visible, gameplayView.Visibility);
             AssertShellTransitionStyle(window, gameplayView);
             AssertShellTransitionStyle(window, pauseMenuView);
@@ -788,6 +791,21 @@ public sealed class WpfSmokeTests
             Assert.NotNull(pathLegendSwatch.Background);
             Assert.Single(gameplayActionBar.Children);
             Assert.NotNull(pauseMenuView);
+            var nextCatPreviewImage = FindVisualChildren<Image>(gameplayNextCatsBlock)
+                .First(image => image.DataContext is PieceViewModel { UsesEmbeddedShadow: true });
+            var nextCatPreviewTile = FindVisualChildren<Border>(gameplayNextCatsBlock)
+                .First(border => border.Name == "NextCatPreviewTile");
+            Assert.True(nextCatPreviewImage.Width >= 52);
+            Assert.True(nextCatPreviewTile.Width >= 66);
+
+            shell.Game.SelectCellCommand.Execute(occupiedButton.DataContext);
+            window.UpdateLayout();
+            var reachableButton = FindVisualChildren<Button>(window)
+                .First(button => button.DataContext is CellViewModel { IsReachableTarget: true });
+            reachableButton.ApplyTemplate();
+            var themedReachableTargetGlow = FindVisualChildren<Border>(reachableButton)
+                .First(border => border.Name == "ReachableTargetGlow");
+            Assert.True(themedReachableTargetGlow.Opacity <= 0.22);
             Assert.Equal(Visibility.Hidden, pauseMenuView.Visibility);
             Assert.True(pauseMenuPanel.Padding.Left >= 24);
             Assert.True(pauseBoardSummaryPanel.Padding.Left >= 14);
@@ -830,7 +848,7 @@ public sealed class WpfSmokeTests
             Assert.Equal(1, pieceImage.Opacity);
             Assert.True(pieceBase.Width >= 40);
             Assert.True(pieceBase.Opacity > 0);
-            Assert.True(pieceShadow.Width >= 36);
+            Assert.True(pieceShadow.Width >= 34);
             Assert.True(pieceShadow.Opacity <= 0.5);
             Assert.Equal(0, moveFeedbackGlow.Opacity);
             Assert.Equal(0, movePathPulseGlow.Opacity);
@@ -959,6 +977,13 @@ public sealed class WpfSmokeTests
         Assert.Contains("PathPreviewFlowStoryboard", previewMarkup, StringComparison.Ordinal);
         Assert.Contains("RepeatBehavior=\"Forever\"", previewMarkup, StringComparison.Ordinal);
         Assert.Contains("AutoReverse=\"True\"", previewMarkup, StringComparison.Ordinal);
+        Assert.Contains("To=\"0.44\"", previewMarkup, StringComparison.Ordinal);
+
+        var movePathPulseGlow = document.Descendants()
+            .First(element => element.Name.LocalName == "Border"
+                && element.Attribute(x + "Name")?.Value == "MovePathPulseGlow");
+
+        Assert.Contains("From=\"0.58\"", movePathPulseGlow.ToString(SaveOptions.DisableFormatting), StringComparison.Ordinal);
     }
 
     [Fact]

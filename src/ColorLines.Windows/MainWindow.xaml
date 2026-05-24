@@ -519,6 +519,16 @@
                                                     <DataTrigger Binding="{Binding IsReachableTarget}" Value="True">
                                                         <Setter Property="Opacity" Value="0.34" />
                                                     </DataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsReachableTarget}" Value="True" />
+                                                            <Condition Binding="{Binding DataContext.Game.ThemeId, RelativeSource={RelativeSource AncestorType=Window}}" Value="3DCatTokens" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Margin" Value="15" />
+                                                        <Setter Property="CornerRadius" Value="18" />
+                                                        <Setter Property="Background" Value="#FFFFE9B8" />
+                                                        <Setter Property="Opacity" Value="0.2" />
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Border.Style>
@@ -538,7 +548,7 @@
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                                      From="0.20"
-                                                                                     To="0.56"
+                                                                                     To="0.44"
                                                                                      Duration="0:0:0.42"
                                                                                      AutoReverse="True"
                                                                                      RepeatBehavior="Forever" />
@@ -607,7 +617,7 @@
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                     From="0.78"
+                                                                                     From="0.58"
                                                                                      To="0"
                                                                                      Duration="0:0:0.36" />
                                                                     </Storyboard>
@@ -813,13 +823,13 @@
                                         </Ellipse.Style>
                                     </Ellipse>
                                     <Ellipse x:Name="PieceBase"
-                                             Width="40"
-                                             Height="23"
                                              VerticalAlignment="Bottom"
                                              Fill="#55FFF4DC"
                                              IsHitTestVisible="False">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
+                                                <Setter Property="Width" Value="40" />
+                                                <Setter Property="Height" Value="23" />
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsOccupied}" Value="True">
@@ -831,19 +841,21 @@
                                                             <Condition Binding="{Binding Piece.UsesEmbeddedShadow}" Value="True" />
                                                         </MultiDataTrigger.Conditions>
                                                         <Setter Property="Opacity" Value="0.28" />
+                                                        <Setter Property="Width" Value="42" />
+                                                        <Setter Property="Height" Value="18" />
                                                     </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Ellipse.Style>
                                     </Ellipse>
                                     <Ellipse x:Name="PieceShadow"
-                                             Width="36"
-                                             Height="16"
                                              VerticalAlignment="Bottom"
                                              Fill="#3A24170F"
                                              IsHitTestVisible="False">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
+                                                <Setter Property="Width" Value="36" />
+                                                <Setter Property="Height" Value="16" />
                                                 <Setter Property="Opacity" Value="0" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsOccupied}" Value="True">
@@ -854,16 +866,19 @@
                                                             <Condition Binding="{Binding IsOccupied}" Value="True" />
                                                             <Condition Binding="{Binding Piece.UsesEmbeddedShadow}" Value="True" />
                                                         </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Opacity" Value="0.2" />
+                                                        <Setter Property="Opacity" Value="0.12" />
+                                                        <Setter Property="Width" Value="34" />
+                                                        <Setter Property="Height" Value="12" />
                                                     </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Ellipse.Style>
                                     </Ellipse>
-                                    <Ellipse Width="42"
-                                             Height="34"
+                                    <Ellipse x:Name="SelectedPieceHalo"
+                                             Width="44"
+                                             Height="36"
                                              VerticalAlignment="Bottom"
-                                             Fill="#44FFE06B"
+                                             Fill="#36FFF0A8"
                                              IsHitTestVisible="False">
                                         <Ellipse.Style>
                                             <Style TargetType="Ellipse">
@@ -935,18 +950,26 @@
                                                 </Style>
                                             </Grid.Style>
                                             <Image x:Name="PieceImage"
-                                                   Width="48"
-                                                   Height="48"
                                                    Source="{Binding Piece.AssetPath}"
                                                    Stretch="Uniform"
                                                    RenderOptions.BitmapScalingMode="HighQuality">
                                                 <Image.Style>
                                                     <Style TargetType="Image">
+                                                        <Setter Property="Width" Value="48" />
+                                                        <Setter Property="Height" Value="48" />
                                                         <Setter Property="Opacity" Value="0" />
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsOccupied}" Value="True">
                                                                 <Setter Property="Opacity" Value="1" />
                                                             </DataTrigger>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding IsOccupied}" Value="True" />
+                                                                    <Condition Binding="{Binding Piece.UsesEmbeddedShadow}" Value="True" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Width" Value="54" />
+                                                                <Setter Property="Height" Value="54" />
+                                                            </MultiDataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Image.Style>
@@ -1109,16 +1132,40 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Width="64"
-                                                    Height="64"
+                                            <Border x:Name="NextCatPreviewTile"
                                                     Margin="0,0,10,0"
                                                     Background="{StaticResource GameplayHudAccentBrush}"
                                                     CornerRadius="14">
-                                                <Image Source="{Binding AssetPath}"
-                                                       Width="48"
-                                                       Height="48"
+                                                <Image x:Name="NextCatPreviewImage"
+                                                       Source="{Binding AssetPath}"
                                                        Stretch="Uniform"
-                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                                       RenderOptions.BitmapScalingMode="HighQuality">
+                                                    <Image.Style>
+                                                        <Style TargetType="Image">
+                                                            <Setter Property="Width" Value="48" />
+                                                            <Setter Property="Height" Value="48" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding UsesEmbeddedShadow}" Value="True">
+                                                                    <Setter Property="Width" Value="54" />
+                                                                    <Setter Property="Height" Value="54" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Width" Value="64" />
+                                                        <Setter Property="Height" Value="64" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding UsesEmbeddedShadow}" Value="True">
+                                                                <Setter Property="Width" Value="66" />
+                                                                <Setter Property="Height" Value="66" />
+                                                                <Setter Property="CornerRadius" Value="16" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
