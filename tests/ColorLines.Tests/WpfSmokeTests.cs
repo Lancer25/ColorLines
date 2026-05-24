@@ -853,8 +853,8 @@ public sealed class WpfSmokeTests
             var scaleTransform = Assert.IsType<ScaleTransform>(pieceScaleActor.RenderTransform);
 
             Assert.True(pieceImage.Width > 0);
-            Assert.True(pieceImage.Width >= 52);
-            Assert.True(pieceImage.Width <= 54);
+            Assert.True(pieceImage.Width >= 48);
+            Assert.True(pieceImage.Width <= 50);
             Assert.Equal(pieceImage.Width, pieceImage.Height);
             Assert.True(occupiedButton.DataContext is CellViewModel { Piece.UsesEmbeddedShadow: true });
             Assert.True(pieceShadow.Opacity <= 0.5);
