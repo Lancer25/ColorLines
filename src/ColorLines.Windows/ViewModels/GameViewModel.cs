@@ -758,6 +758,7 @@ public sealed class GameViewModel : INotifyPropertyChanged
         pathPreviewPositions.Clear();
         pathPreviewTargetPosition = null;
         MovePreviewText = string.Empty;
+        PreviewRecommendedClearPath();
         ApplyPathPreview();
     }
 
