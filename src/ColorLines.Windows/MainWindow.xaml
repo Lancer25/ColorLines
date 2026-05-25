@@ -1585,6 +1585,7 @@
                         </Grid.RowDefinitions>
 
                         <TabControl x:Name="SettingsTabs"
+                                    MinHeight="382"
                                     Style="{StaticResource SettingsTabControl}">
                             <TabItem x:Name="GameplaySettingsTab"
                                      Header="{Binding GameplayTabText}"

@@ -485,6 +485,7 @@ public sealed class WpfSmokeTests
 
             settingsTabs.SelectedItem = gameplaySettingsTab;
             window.UpdateLayout();
+            var gameplaySettingsPanelHeight = settingsContentPanel.ActualHeight;
 
             var difficultySettingRow = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "DifficultySettingRow");
@@ -503,6 +504,7 @@ public sealed class WpfSmokeTests
 
             settingsTabs.SelectedItem = audioSettingsTab;
             window.UpdateLayout();
+            var audioSettingsPanelHeight = settingsContentPanel.ActualHeight;
 
             var soundSettingRow = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "SoundSettingRow");
@@ -511,6 +513,7 @@ public sealed class WpfSmokeTests
 
             settingsTabs.SelectedItem = displaySettingsTab;
             window.UpdateLayout();
+            var displaySettingsPanelHeight = settingsContentPanel.ActualHeight;
 
             var animationSettingRow = FindVisualChildren<Border>(window)
                 .First(border => border.Name == "AnimationSettingRow");
@@ -545,6 +548,8 @@ public sealed class WpfSmokeTests
             Assert.Equal(gameplaySettingsTab.Width, audioSettingsTab.Width);
             Assert.Equal(gameplaySettingsTab.Width, displaySettingsTab.Width);
             Assert.True(gameplaySettingsTab.MinHeight >= 40);
+            Assert.Equal(gameplaySettingsPanelHeight, audioSettingsPanelHeight);
+            Assert.Equal(gameplaySettingsPanelHeight, displaySettingsPanelHeight);
             Assert.True(animationSettingRow.MinHeight >= 82);
             Assert.True(soundSettingRow.MinHeight >= 82);
             Assert.True(themeSettingRow.MinHeight >= 82);
