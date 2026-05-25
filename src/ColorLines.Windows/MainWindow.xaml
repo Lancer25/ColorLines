@@ -7,7 +7,7 @@
         Height="760"
         MinWidth="820"
         MinHeight="620"
-        Background="{StaticResource AppBackgroundBrush}">
+        Background="{DynamicResource AppBackgroundBrush}">
     <Window.InputBindings>
         <KeyBinding Key="Escape"
                     Command="{Binding EscapeCommand}" />
@@ -102,9 +102,9 @@
             <Setter Property="Tag" Value="MenuSecondaryButton" />
             <Setter Property="Height" Value="46" />
             <Setter Property="Padding" Value="16,0" />
-            <Setter Property="Background" Value="{StaticResource MenuSecondaryButtonBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource CellBorderBrush}" />
+            <Setter Property="Background" Value="{DynamicResource MenuSecondaryButtonBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CellBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -210,8 +210,8 @@
         <Style x:Key="BoardCellButton" TargetType="Button">
             <Setter Property="Margin" Value="4" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="{StaticResource CellBackgroundBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource CellBorderBrush}" />
+            <Setter Property="Background" Value="{DynamicResource CellBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CellBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -227,7 +227,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="CellFrame" Property="Background" Value="{StaticResource CellHoverBrush}" />
+                                <Setter TargetName="CellFrame" Property="Background" Value="{DynamicResource CellHoverBrush}" />
                                 <Setter TargetName="CellFrame" Property="BorderBrush" Value="#99D7839A" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -268,19 +268,19 @@
                             Margin="0,30,0,0"
                             Width="460"
                             Height="460"
-                            Background="{StaticResource BoardShadowBrush}"
-                            BorderBrush="{StaticResource BoardBorderBrush}"
+                            Background="{DynamicResource BoardShadowBrush}"
+                            BorderBrush="{DynamicResource BoardBorderBrush}"
                             BorderThickness="2"
                             CornerRadius="22"
                             Padding="18"
                             HorizontalAlignment="Left">
-                        <Border Background="{StaticResource BoardInnerBrush}"
+                        <Border Background="{DynamicResource BoardInnerBrush}"
                                 CornerRadius="16"
                                 Padding="16">
                             <UniformGrid Rows="5" Columns="5">
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatOrange"
                                        Source="{Binding MenuPreviewOrangeAssetPath}"
                                        Width="56"
@@ -288,9 +288,9 @@
                                        Stretch="Uniform"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Border>
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatBlueGray"
                                        Source="{Binding MenuPreviewBlueGrayAssetPath}"
                                        Width="56"
@@ -298,10 +298,10 @@
                                        Stretch="Uniform"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Border>
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatTuxedo"
                                        Source="{Binding MenuPreviewTuxedoAssetPath}"
                                        Width="56"
@@ -309,8 +309,8 @@
                                        Stretch="Uniform"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Border>
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatCalico"
                                        Source="{Binding MenuPreviewCalicoAssetPath}"
                                        Width="56"
@@ -318,12 +318,12 @@
                                        Stretch="Uniform"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Border>
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatWhite"
                                        Source="{Binding MenuPreviewWhiteAssetPath}"
                                        Width="56"
@@ -331,11 +331,11 @@
                                        Stretch="Uniform"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Border>
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4">
                                 <Image x:Name="MenuPreviewCatGray"
                                        Source="{Binding MenuPreviewGrayAssetPath}"
                                        Width="56"
@@ -343,7 +343,7 @@
                                        Stretch="Uniform"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Border>
-                            <Border Background="{StaticResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
+                            <Border Background="{DynamicResource CellBackgroundBrush}" CornerRadius="10" Margin="4" />
                             </UniformGrid>
                         </Border>
                     </Border>
@@ -483,12 +483,12 @@
                     </Grid.ColumnDefinitions>
 
                     <Border x:Name="MainBoardFrame"
-                            Background="{StaticResource BoardInnerBrush}"
-                            BorderBrush="{StaticResource BoardBorderBrush}"
+                            Background="{DynamicResource BoardInnerBrush}"
+                            BorderBrush="{DynamicResource BoardBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="24"
                             Padding="16">
-                        <Border Background="{StaticResource BoardInnerBrush}"
+                        <Border Background="{DynamicResource BoardInnerBrush}"
                                 CornerRadius="20"
                                 Padding="10">
                             <Viewbox Stretch="Uniform">

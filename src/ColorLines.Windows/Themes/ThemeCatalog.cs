@@ -34,4 +34,9 @@ public static class ThemeCatalog
         var nextIndex = (index + 1) % AvailableThemes.Count;
         return AvailableThemes[nextIndex];
     }
+
+    public static Uri GetResourceUri(string? id)
+    {
+        return new Uri($"/ColorLines.Windows;component/Themes/{Normalize(id)}.xaml", UriKind.Relative);
+    }
 }

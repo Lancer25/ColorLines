@@ -150,22 +150,38 @@ public sealed class WpfSmokeTests
     }
 
     [Fact]
-    public void CozyBoardThemeUsesLightModernBoardPalette()
+    public void CozyBoardThemeUsesWarmTabletopBoardPalette()
     {
         RunOnWpfThread(() =>
         {
-            EnsureThemeResources();
-            var resources = Application.Current!.Resources;
+            var resources = LoadThemeResources("CozyBoard");
 
-            AssertColorLightness(resources, "BoardBackgroundColor", minimumAverage: 235);
-            AssertColorLightness(resources, "BoardInnerColor", minimumAverage: 235);
-            AssertColorLightness(resources, "BoardBorderColor", minimumAverage: 205);
+            AssertColorWarmth(resources, "BoardInnerColor", minimumRedBlueDelta: 34);
+            AssertColorWarmth(resources, "BoardBorderColor", minimumRedBlueDelta: 42);
+            AssertColorWarmth(resources, "CellBorderColor", minimumRedBlueDelta: 30);
             AssertColorLightness(resources, "CellBackgroundColor", minimumAverage: 245);
-            AssertColorLightness(resources, "CellBorderColor", minimumAverage: 220);
-            AssertColorNotOrangeBrown(resources, "BoardBorderColor");
-            AssertColorNotOrangeBrown(resources, "BoardInnerColor");
-            AssertColorNotOrangeBrown(resources, "CellBorderColor");
-            AssertColorNotOrangeBrown(resources, "CellBackgroundColor");
+        });
+    }
+
+    [Fact]
+    public void ThreeDCatTokensThemeUsesDistinctCleanBoardPalette()
+    {
+        RunOnWpfThread(() =>
+        {
+            var cozy = LoadThemeResources("CozyBoard");
+            var threeD = LoadThemeResources("3DCatTokens");
+
+            Assert.NotEqual(cozy["BoardInnerColor"], threeD["BoardInnerColor"]);
+            Assert.NotEqual(cozy["BoardBorderColor"], threeD["BoardBorderColor"]);
+            AssertColorLightness(threeD, "BoardBackgroundColor", minimumAverage: 235);
+            AssertColorLightness(threeD, "BoardInnerColor", minimumAverage: 235);
+            AssertColorLightness(threeD, "BoardBorderColor", minimumAverage: 205);
+            AssertColorLightness(threeD, "CellBackgroundColor", minimumAverage: 245);
+            AssertColorLightness(threeD, "CellBorderColor", minimumAverage: 220);
+            AssertColorNotOrangeBrown(threeD, "BoardBorderColor");
+            AssertColorNotOrangeBrown(threeD, "BoardInnerColor");
+            AssertColorNotOrangeBrown(threeD, "CellBorderColor");
+            AssertColorNotOrangeBrown(threeD, "CellBackgroundColor");
         });
     }
 
@@ -180,8 +196,41 @@ public sealed class WpfSmokeTests
 
         Assert.Equal("1", mainBoardFrame.Attribute("BorderThickness")?.Value);
         Assert.Equal("16", mainBoardFrame.Attribute("Padding")?.Value);
-        Assert.Equal("{StaticResource BoardBorderBrush}", mainBoardFrame.Attribute("BorderBrush")?.Value);
-        Assert.Equal("{StaticResource BoardInnerBrush}", mainBoardFrame.Attribute("Background")?.Value);
+        Assert.Equal("{DynamicResource BoardBorderBrush}", mainBoardFrame.Attribute("BorderBrush")?.Value);
+        Assert.Equal("{DynamicResource BoardInnerBrush}", mainBoardFrame.Attribute("Background")?.Value);
+    }
+
+    [Fact]
+    public void ThemeSwitchUpdatesGameplayBoardPalette()
+    {
+        RunOnWpfThread(() =>
+        {
+            EnsureThemeResources();
+            var savePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"color-lines-window-{Guid.NewGuid():N}.json");
+            var window = new MainWindow(new LocalSaveService(savePath))
+            {
+                ShowInTaskbar = false,
+                WindowState = WindowState.Minimized
+            };
+            window.Show();
+            window.UpdateLayout();
+
+            var shell = Assert.IsType<ShellViewModel>(window.DataContext);
+            shell.ContinueCommand.Execute(null);
+            window.UpdateLayout();
+
+            var mainBoardFrame = FindVisualChildren<Border>(window)
+                .First(border => border.Name == "MainBoardFrame");
+            var cozyBorder = Assert.IsType<SolidColorBrush>(mainBoardFrame.BorderBrush).Color;
+
+            shell.Game.SetThemeCommand.Execute("3DCatTokens");
+            window.UpdateLayout();
+
+            var threeDBorder = Assert.IsType<SolidColorBrush>(mainBoardFrame.BorderBrush).Color;
+            Assert.NotEqual(cozyBorder, threeDBorder);
+            Assert.Equal(Assert.IsType<Color>(Application.Current!.Resources["BoardBorderColor"]), threeDBorder);
+            window.Close();
+        });
     }
 
     [Fact]
@@ -1385,15 +1434,26 @@ public sealed class WpfSmokeTests
             Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
         }
 
-        if (!resources.Contains("AppBackgroundBrush"))
+        var existingThemeDictionaries = resources.MergedDictionaries
+            .Where(dictionary => dictionary.Source?.OriginalString.Contains("/Themes/", StringComparison.OrdinalIgnoreCase) == true)
+            .ToList();
+
+        foreach (var dictionary in existingThemeDictionaries)
         {
-            resources.MergedDictionaries.Add(new ResourceDictionary
-            {
-                Source = new Uri(
-                    "/ColorLines.Windows;component/Themes/CozyBoard.xaml",
-                    UriKind.Relative)
-            });
+            resources.MergedDictionaries.Remove(dictionary);
         }
+
+        resources.MergedDictionaries.Add(LoadThemeResources("CozyBoard"));
+    }
+
+    private static ResourceDictionary LoadThemeResources(string themeId)
+    {
+        return new ResourceDictionary
+        {
+            Source = new Uri(
+                $"/ColorLines.Windows;component/Themes/{themeId}.xaml",
+                UriKind.Relative)
+        };
     }
 
     private static void AssertColorLightness(ResourceDictionary resources, string key, int minimumAverage)
@@ -1410,6 +1470,14 @@ public sealed class WpfSmokeTests
         var orangeBrownSkew = color.R - color.B;
 
         Assert.True(orangeBrownSkew <= 28, $"{key} should avoid orange-brown skew; red-blue delta was {orangeBrownSkew}.");
+    }
+
+    private static void AssertColorWarmth(ResourceDictionary resources, string key, int minimumRedBlueDelta)
+    {
+        var color = Assert.IsType<Color>(resources[key]);
+        var redBlueDelta = color.R - color.B;
+
+        Assert.True(redBlueDelta >= minimumRedBlueDelta, $"{key} should read as warm; red-blue delta was {redBlueDelta}.");
     }
 
     private static byte[] ReadResourceBytes(string path)

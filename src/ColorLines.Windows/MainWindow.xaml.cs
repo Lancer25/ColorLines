@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Input;
 using ColorLines.Windows.Services;
+using ColorLines.Windows.Themes;
 using ColorLines.Windows.ViewModels;
 
 namespace ColorLines.Windows;
@@ -38,6 +39,13 @@ public partial class MainWindow : Window
         }
 
         shellViewModel.ExitRequested += (_, _) => Close();
+        shellViewModel.Game.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(GameViewModel.ThemeId))
+            {
+                ApplyThemeResources(shellViewModel.Game.ThemeId);
+            }
+        };
         shellViewModel.SaveRequested += (_, args) =>
         {
             if (SaveCurrentGame())
@@ -48,6 +56,7 @@ public partial class MainWindow : Window
 
             args.MarkFailed();
         };
+        ApplyThemeResources(shellViewModel.Game.ThemeId);
         DataContext = shellViewModel;
 
         if (save?.Window is not null)
@@ -55,6 +64,29 @@ public partial class MainWindow : Window
             Width = Math.Max(MinWidth, save.Window.Width);
             Height = Math.Max(MinHeight, save.Window.Height);
         }
+    }
+
+    private static void ApplyThemeResources(string themeId)
+    {
+        var resources = Application.Current?.Resources;
+        if (resources is null)
+        {
+            return;
+        }
+
+        var existingThemeDictionaries = resources.MergedDictionaries
+            .Where(dictionary => dictionary.Source?.OriginalString.Contains("/Themes/", StringComparison.OrdinalIgnoreCase) == true)
+            .ToList();
+
+        foreach (var dictionary in existingThemeDictionaries)
+        {
+            resources.MergedDictionaries.Remove(dictionary);
+        }
+
+        resources.MergedDictionaries.Add(new ResourceDictionary
+        {
+            Source = ThemeCatalog.GetResourceUri(themeId)
+        });
     }
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
